@@ -1,5 +1,32 @@
 # LEC -- Phase 1 deploy (lec.libraengine.com)
 
+> **DEPLOYED 2026-06-15 -- LIVE at https://lec.libraengine.com.** What actually
+> happened (the checklist below was written before; these are the real specifics):
+> - **Location:** `/home/deploy/libra-engine-compass` (the `deploy` user can't
+>   write `/root`; it owns its home and is in the `docker` group). Code shipped
+>   via `git archive | scp | tar` (the server's deploy key can't clone the
+>   private repo). `.env` is the local `backend/.env` scp'd, then
+>   `LEC_DATABASE_URL` + `LEC_AUTH_REQUIRED=true` set in place (chmod 600).
+> - **DB:** `libra_engine_compass` + user `lec_app` on the shared DO cluster,
+>   reached **direct on :25060** (not the pool). **Gotcha:** Postgres 15+ doesn't
+>   let a fresh user create in `public`; fix was `ALTER SCHEMA public OWNER TO
+>   lec_app` (run once as doadmin). Then create_all succeeded.
+> - **Web:** NOT RC's nginx. There is a central shared proxy `le-nginx` at
+>   `/root/proxy/` on the `le-proxy` network. Added
+>   `/root/proxy/nginx/conf.d/lec.conf` (mirrors `leit-dashboard.conf`,
+>   `proxy_pass http://lec:8012`, 180s timeout), cert via `le-certbot`
+>   (`docker exec le-certbot certbot certonly --webroot -w /var/www/certbot -d
+>   lec.libraengine.com`), then `docker exec le-nginx nginx -t && nginx -s reload`.
+>   `deploy/nginx-lec.conf` in this repo is the reference block; the live one is
+>   the proxy copy.
+> - **Verified:** `/health` 200; `/api/rubric` 401 without key / 200 with;
+>   admin login 200, bad token 404; a real `/api/score` returned a scored result
+>   through the public domain (180s timeout held). LT key issued (`lec_gxJz…`).
+> - **Remaining:** cut LT over (point its `RC_API_BASE_URL` at LEC + the LT key);
+>   issue RC's key when RC's Phase 2 deploys. Consider moving to `lec_app` on the
+>   pool (:25061) + rotating `doadmin` (its password transited a transcript).
+
+
 Deploys the Compass scoring service to **le-projects-01** (the same droplet as
 Rising Compass), on its own domain, with its own `libra_engine_compass` Postgres
 DB on the shared DO Managed cluster. RC reaches it internally at

@@ -14,8 +14,13 @@ another key to the same client (rotation); revoke old keys in the DB.
 
 import argparse
 import hashlib
+import os
 import secrets
 import sys
+
+# Make `app` importable when run as `python scripts/issue_key.py` (adds the
+# backend/ root to sys.path, so no PYTHONPATH is needed).
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from app.database import Base, SessionLocal, engine
 from app import models  # noqa: F401  (register models on Base)
