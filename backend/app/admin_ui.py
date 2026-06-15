@@ -1,45 +1,44 @@
 """Self-contained HTML for the LEC admin console.
 
-Structure replicates the Rising Compass admin (sidebar shell + grouped nav +
-stat cards + data tables + fixed logout), recolored to Libra Engine corporate
-branding: dark ground, warm bone ink, a single gold accent, NO rainbow. Type is
-serif + mono -- Cormorant SC (tracked small-caps) for the brand/nav/headings,
-Cardo for prose, a monospace stack for all data (numbers, tokens, tables).
+A full port of the Rising Compass admin: same light color scheme, same fonts
+('Segoe UI' + monospace for data), same sidebar-shell structure (grouped nav,
+stat cards, mono data tables, fixed sign-out, collapse toggle). The ONLY palette
+change is RC's green accent (#008f72 / #007360) swapped for the Libra Engine warm
+brown (#8a6d3b / #6f5630) -- the LE gold darkened so it reads on the white admin.
+The rainbow tier spectrum is omitted (RC branding); the rubric shows as a plain
+monochrome ladder.
 
-No template engine and no static mount (LEC stays dependency-lean): pages are
-composed here as strings and the data rides in as JSON from /admin/api/summary.
-__LOGIN_ACTION__ in LOGIN_HTML is replaced with the obscured login POST path at
-serve time (the token lives only in the URL, never hard-coded here).
+No template engine and no static mount: pages are composed here as strings and
+the data rides in as JSON from /admin/api/summary. __LOGIN_ACTION__ in LOGIN_HTML
+is replaced with the obscured login POST path at serve time.
 """
 
-# --- Shared chrome ---------------------------------------------------------
-
-_FONTS = """
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cardo:ital,wght@0,400;0,700;1,400&family=Cormorant+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
-"""
-
+# RC admin base CSS, ported verbatim in structure; tokens carry RC's exact light
+# values, with --accent / --accent-strong (and the green rgba tints) swapped to
+# the LE brown.
 _BASE_CSS = """
 <style>
   :root {
-    --bg: #0a0a12; --panel: #0e0e18; --panel-strong: #15151f;
-    --border: #353049; --border-soft: #242235;
-    --text: #e2ddd0; --text-bright: #f5f1e6; --text-dim: #b3aa96; --text-hint: #857f6e;
-    --gold: #d2b06a; --gold-strong: #e6cd92; --gold-dim: #4a3f28;
-    --red: #cf6a4e;
-    --mono: ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, Consolas, monospace;
-    --serif: 'Cardo', Georgia, 'Times New Roman', serif;
-    --display: 'Cormorant SC', serif;
-    --sidebar-w: 230px; --sidebar-rail: 46px;
+    --bg: #ffffff;
+    --panel: #f3f3f9;
+    --panel-strong: #e5e5ee;
+    --border: #a8a8b8;
+    --border-soft: #d2d2dc;
+    --text: #15151f;
+    --text-dim: #555566;
+    --text-hint: #7a7a8a;
+    --accent: #8a6d3b;          /* LE brown (was RC green #008f72) */
+    --accent-strong: #6f5630;   /* (was #007360) */
+    --accent-tint: rgba(138,109,59,0.06);
+    --accent-tint-2: rgba(138,109,59,0.12);
+    --red: #c03a1e;
+    --mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+    --sidebar-w: 220px; --sidebar-rail: 48px;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: var(--serif); background: var(--bg); color: var(--text);
-    -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+  body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg); color: var(--text); }
   a { color: inherit; }
-  h1 { font-family: var(--display); font-weight: 600; color: var(--gold);
-    font-size: 1.7rem; letter-spacing: .06em; margin-bottom: 1.2rem; }
-  .sc { font-family: var(--display); }
+  h1 { color: var(--accent); margin-bottom: 1rem; font-size: 1.5rem; }
   .mono { font-family: var(--mono); }
 
   /* ---- Sidebar shell ---- */
@@ -47,111 +46,111 @@ _BASE_CSS = """
   .admin-sidebar { width: var(--sidebar-w); flex-shrink: 0; background: var(--panel);
     border-right: 1px solid var(--border); padding: 1rem 0; position: sticky; top: 0;
     height: 100vh; overflow-y: auto; transition: width .25s ease; }
-  .admin-sidebar-brand { font-family: var(--display); padding: .35rem 1.1rem 1rem 3rem;
-    font-size: 1.05rem; font-weight: 600; color: var(--text-bright); letter-spacing: .12em;
-    border-bottom: 1px solid var(--border-soft); margin-bottom: .75rem; min-height: 34px; display: flex; align-items: center; }
-  .admin-nav-group { margin: 1.1rem 0 .25rem; }
+  .admin-sidebar-brand { padding: .15rem 1.1rem .9rem 3rem; font-size: .78rem; font-weight: 700;
+    color: var(--accent); letter-spacing: .06em; text-transform: uppercase;
+    border-bottom: 1px solid var(--border-soft); margin-bottom: .75rem; min-height: 32px; display: flex; align-items: center; }
+  .admin-nav-group { margin: 1rem 0 .25rem; }
   .admin-nav-group:first-of-type { margin-top: 0; }
-  .admin-nav-group-label { font-family: var(--display); padding: .35rem 1.1rem; font-size: .74rem;
-    font-weight: 600; color: var(--text-hint); text-transform: uppercase; letter-spacing: .16em; }
-  .admin-nav-item { display: block; padding: .5rem 1.1rem; font-family: var(--display); font-size: 1rem;
-    letter-spacing: .04em; color: var(--text-dim); text-decoration: none; border-left: 2px solid transparent; }
-  .admin-nav-item:hover { color: var(--text-bright); background: rgba(210,176,106,.05); }
-  .admin-nav-item.active { color: var(--gold); background: var(--panel-strong); border-left-color: var(--gold); }
-  .admin-main { flex: 1; min-width: 0; padding: 1.6rem 2rem 3rem; max-width: 1200px; }
+  .admin-nav-group-label { padding: .35rem 1.1rem; font-size: .66rem; font-weight: 700;
+    color: var(--text-hint); text-transform: uppercase; letter-spacing: .1em; }
+  .admin-nav-item { display: block; padding: .5rem 1.1rem; font-size: .85rem; color: var(--text-dim);
+    text-decoration: none; border-left: 3px solid transparent; font-weight: 500; }
+  .admin-nav-item:hover { color: var(--text); background: var(--accent-tint); }
+  .admin-nav-item.active { color: var(--accent); background: #ffffff; border-left-color: var(--accent); font-weight: 600; }
+  .admin-main { flex: 1; min-width: 0; padding: 1.5rem 2rem 2rem; max-width: 1200px; }
 
   .sidebar-toggle { position: fixed; top: .6rem; left: .6rem; z-index: 1100; width: 32px; height: 32px;
     padding: 0; background: var(--panel); border: 1px solid var(--border); color: var(--text-dim);
-    border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-  .sidebar-toggle:hover { color: var(--gold); border-color: var(--gold-dim); }
+    border-radius: 5px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-weight: 700; }
+  .sidebar-toggle:hover { background: var(--panel-strong); color: var(--text); }
   body.sidebar-collapsed .admin-sidebar { width: var(--sidebar-rail); overflow: hidden; }
   body.sidebar-collapsed .admin-sidebar-brand, body.sidebar-collapsed .admin-nav-group { opacity: 0; pointer-events: none; transition: opacity .12s ease; }
   @media (max-width: 800px) {
-    .admin-sidebar { position: fixed; z-index: 1000; box-shadow: 4px 0 16px rgba(0,0,0,.5); }
-    .admin-main { padding: 2.6rem 1rem 2rem calc(var(--sidebar-rail) + .8rem); }
+    .admin-sidebar { position: fixed; z-index: 1000; box-shadow: 4px 0 12px rgba(0,0,0,.08); }
+    .admin-main { padding: 3rem 1rem 1rem calc(var(--sidebar-rail) + .8rem); }
     body:not(.sidebar-open) .admin-sidebar { width: var(--sidebar-rail); overflow: hidden; }
     body:not(.sidebar-open) .admin-sidebar-brand, body:not(.sidebar-open) .admin-nav-group { opacity: 0; pointer-events: none; }
     body.sidebar-open .admin-sidebar { width: var(--sidebar-w); }
   }
 
-  .logout-btn { position: fixed; top: 1rem; right: 1rem; z-index: 100; padding: .35rem .9rem;
-    font-family: var(--display); font-size: .82rem; letter-spacing: .08em; background: var(--panel);
-    border: 1px solid var(--border); color: var(--text-dim); border-radius: 4px; cursor: pointer; }
-  .logout-btn:hover { border-color: var(--gold); color: var(--gold); }
+  .logout-btn { position: fixed; top: 1rem; right: 1rem; z-index: 100; padding: .3rem .8rem; font-size: .75rem;
+    background: #ffffff; border: 1px solid var(--border); color: var(--text-dim); border-radius: 4px; cursor: pointer; font-weight: 600; }
+  .logout-btn:hover { border-color: var(--red); color: var(--red); }
 
-  /* ---- Content primitives (mirrors RC admin, recolored) ---- */
-  .topmeta { display: flex; gap: .5rem; flex-wrap: wrap; align-items: center; margin: -.4rem 0 1.4rem; }
-  .chip { font-family: var(--mono); font-size: .74rem; padding: .25rem .6rem; border-radius: 3px;
-    background: var(--panel); border: 1px solid var(--border); color: var(--text-dim); text-decoration: none; }
-  .chip.gold { color: var(--gold); border-color: var(--gold-dim); }
-  .chip .dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--gold);
-    box-shadow: 0 0 7px var(--gold); margin-right: 6px; vertical-align: middle; }
+  /* ---- Content ---- */
+  .topmeta { display: flex; gap: .5rem; flex-wrap: wrap; align-items: center; margin: -.2rem 0 1.4rem; }
+  .chip { font-family: var(--mono); font-size: .74rem; padding: .25rem .6rem; border-radius: 4px;
+    background: var(--panel); border: 1px solid var(--border-soft); color: var(--text-dim); text-decoration: none; }
+  .chip.gold { color: var(--accent); border-color: var(--accent); }
+  .chip .dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--accent);
+    margin-right: 6px; vertical-align: middle; }
 
-  .section-title { font-family: var(--display); color: var(--text-dim); font-size: .95rem; letter-spacing: .14em;
-    text-transform: uppercase; margin: 1.6rem 0 .7rem; }
-  .section-title:first-child { margin-top: 0; }
-  .card { background: var(--panel); border: 1px solid var(--border-soft); border-radius: 6px; padding: 1.1rem 1.25rem; }
+  h2.section-title { color: var(--text-dim); font-size: 1rem; margin: 1.5rem 0 .5rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: .04em; }
+  h2.section-title:first-child { margin-top: 0; }
+  .card { background: var(--panel); border: 1px solid var(--border-soft); border-radius: 6px; padding: 1rem 1.2rem; }
 
-  .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: .9rem; margin-bottom: 1.4rem; }
-  .stat-card { background: var(--panel); border: 1px solid var(--border-soft); border-radius: 6px; padding: 1rem 1.1rem; }
-  .stat-card .val { font-family: var(--mono); font-size: 1.55rem; font-weight: 700; color: var(--gold); letter-spacing: -.01em; }
-  .stat-card .label { font-family: var(--display); font-size: .76rem; letter-spacing: .12em; text-transform: uppercase; color: var(--text-dim); margin-top: .35rem; }
+  .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: .8rem; margin-bottom: 1.5rem; }
+  .stat-card { background: var(--panel); border: 1px solid var(--border-soft); border-radius: 6px; padding: .9rem 1rem; text-align: center; }
+  .stat-card .val { font-size: 1.6rem; font-weight: bold; color: var(--accent); }
+  .stat-card .label { font-size: .75rem; color: var(--text-dim); margin-top: .2rem; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; }
 
-  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: .9rem; margin-bottom: 1.4rem; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: .8rem; margin-bottom: 1.5rem; }
   @media (max-width: 760px) { .grid2 { grid-template-columns: 1fr; } }
 
-  /* data tables (mono) */
-  table.data { width: 100%; border-collapse: collapse; font-family: var(--mono); font-size: .8rem; }
-  table.data th { text-align: left; padding: .5rem .6rem; border-bottom: 1px solid var(--border);
-    color: var(--text-hint); font-weight: 600; font-size: .68rem; letter-spacing: .08em; text-transform: uppercase; }
-  table.data td { padding: .5rem .6rem; border-bottom: 1px solid var(--border-soft); color: var(--text); vertical-align: top; }
+  table.data { width: 100%; border-collapse: collapse; font-family: var(--mono); font-size: .78rem; }
+  table.data th { text-align: left; padding: .5rem .6rem; border-bottom: 2px solid var(--border);
+    color: var(--text); font-weight: 700; font-size: .7rem; letter-spacing: .03em; text-transform: uppercase; }
+  table.data td { padding: .45rem .6rem; border-bottom: 1px solid var(--border-soft); color: var(--text); vertical-align: top; }
   table.data tr:last-child td { border-bottom: 0; }
-  table.data td.num { text-align: right; color: var(--gold); }
+  table.data tr:hover td { background: var(--accent-tint); }
+  table.data td.num { text-align: right; color: var(--accent-strong); font-weight: 700; }
   table.data td.dim { color: var(--text-dim); }
-  table.data .title { font-family: var(--serif); font-size: .95rem; color: var(--text-bright); }
-  .empty { color: var(--text-dim); font-style: italic; padding: .7rem 0; }
+  table.data .title { font-family: 'Segoe UI', sans-serif; font-weight: 600; color: var(--text); }
+  .empty { color: var(--text-dim); padding: .8rem 0; }
   .bad { color: var(--red); }
 
   /* rubric ladder (monochrome -- no RC rainbow) */
   .ladder { display: flex; flex-wrap: wrap; align-items: baseline; }
-  .ladder .t { font-family: var(--display); font-size: 1.15rem; letter-spacing: .08em; color: var(--text-bright); }
-  .ladder .sep { color: var(--border); margin: 0 .7rem; }
-  .rubric-meta { font-family: var(--mono); margin-top: .9rem; color: var(--text-dim); font-size: .82rem; }
-  .rubric-meta b { color: var(--gold); font-weight: 700; }
-  .rubric-types { font-family: var(--mono); margin-top: .4rem; color: var(--text-hint); font-size: .78rem; }
+  .ladder .t { font-size: 1.05rem; font-weight: 600; color: var(--text); }
+  .ladder .sep { color: var(--border); margin: 0 .6rem; }
+  .rubric-meta { font-family: var(--mono); margin-top: .8rem; color: var(--text-dim); font-size: .8rem; }
+  .rubric-meta b { color: var(--accent-strong); font-weight: 700; }
+  .rubric-types { font-family: var(--mono); margin-top: .35rem; color: var(--text-hint); font-size: .76rem; }
 
-  /* spend sparkline (gold) */
-  .spark { display: flex; align-items: flex-end; gap: 2px; height: 80px; margin-top: .3rem; }
-  .spark .b { flex: 1; background: var(--border); border-radius: 1px; min-height: 2px; }
-  .spark .b.hot { background: var(--gold); opacity: .85; }
+  /* spend sparkline */
+  .spark { display: flex; align-items: flex-end; gap: 2px; height: 78px; margin-top: .3rem; }
+  .spark .b { flex: 1; background: var(--panel-strong); border-radius: 1px; min-height: 2px; }
+  .spark .b.hot { background: var(--accent); }
   .spark-cap { font-family: var(--mono); font-size: .72rem; color: var(--text-hint); margin-top: .5rem; }
 
   /* pipeline */
-  .lane-head { font-family: var(--display); font-size: .9rem; letter-spacing: .14em; text-transform: uppercase;
-    color: var(--text-dim); margin: 1.4rem 0 .7rem; display: flex; gap: .7rem; align-items: baseline; }
-  .lane-head .file { font-family: var(--mono); color: var(--text-hint); letter-spacing: 0; text-transform: none; font-size: .7rem; }
-  .stage { position: relative; background: var(--panel); border: 1px solid var(--border-soft); border-radius: 6px; padding: .85rem 1.05rem; margin-bottom: .5rem; }
-  .stage .t { font-family: var(--serif); color: var(--text-bright); font-size: 1.05rem; }
-  .stage .t .n { font-family: var(--mono); color: var(--gold); font-weight: 700; margin-right: .5rem; }
+  .lane-head { font-size: .85rem; letter-spacing: .04em; text-transform: uppercase; font-weight: 700;
+    color: var(--text-dim); margin: 1.5rem 0 .6rem; display: flex; gap: .7rem; align-items: baseline; }
+  .lane-head .file { font-family: var(--mono); color: var(--text-hint); letter-spacing: 0; text-transform: none; font-size: .7rem; font-weight: 400; }
+  .stage { position: relative; background: var(--panel); border: 1px solid var(--border-soft); border-radius: 6px; padding: .8rem 1rem; margin-bottom: .5rem; }
+  .stage .t { font-weight: 600; color: var(--text); font-size: .95rem; }
+  .stage .t .n { font-family: var(--mono); color: var(--accent); font-weight: 700; margin-right: .5rem; }
   .stage .sub { font-family: var(--mono); font-size: .74rem; color: var(--text-hint); margin-left: .4rem; }
-  .stage .d { color: var(--text-dim); font-size: .9rem; margin-top: .35rem; }
-  .stage .io { font-family: var(--mono); font-size: .74rem; color: var(--text-dim); background: var(--bg);
-    border: 1px solid var(--border); border-radius: 4px; padding: .55rem .7rem; margin-top: .6rem; overflow-x: auto; white-space: pre-wrap; }
-  .tag { float: right; font-family: var(--display); font-size: .72rem; letter-spacing: .12em; padding: .15rem .55rem; border-radius: 3px; }
-  .tag.opus { color: var(--gold); border: 1px solid var(--gold-dim); }
-  .tag.auth, .tag.meter { color: var(--text-dim); border: 1px solid var(--border); }
-  .tag.meter { margin-left: .4rem; }
-  .branch { margin: 0 0 .5rem 1.4rem; font-family: var(--mono); font-size: .78rem; color: var(--gold);
-    border-left: 1px solid var(--gold-dim); padding: .2rem 0 .2rem .8rem; }
-  .branch b { color: var(--gold-strong); }
+  .stage .d { color: var(--text-dim); font-size: .85rem; margin-top: .35rem; }
+  .stage .io { font-family: var(--mono); font-size: .74rem; color: var(--text-dim); background: #ffffff;
+    border: 1px solid var(--border-soft); border-radius: 4px; padding: .55rem .7rem; margin-top: .6rem; overflow-x: auto; white-space: pre-wrap; }
+  .tag { float: right; font-size: .68rem; letter-spacing: .06em; padding: .15rem .55rem; border-radius: 3px; font-weight: 700; text-transform: uppercase; }
+  .tag.opus { color: #ffffff; background: var(--accent); }
+  .tag.auth { color: var(--text-dim); border: 1px solid var(--border); }
+  .tag.meter { color: var(--accent-strong); border: 1px solid var(--accent); margin-left: .4rem; }
+  .branch { margin: 0 0 .5rem 1.4rem; font-family: var(--mono); font-size: .76rem; color: var(--accent-strong);
+    border-left: 2px solid var(--accent); padding: .2rem 0 .2rem .8rem; }
+  .branch b { color: var(--accent-strong); font-weight: 700; }
   .arrow { text-align: center; color: var(--border); font-size: 1rem; margin: -.1rem 0 .4rem; }
-  .stage.opusrow { border-color: var(--gold-dim); }
+  .stage.opusrow { border-color: var(--accent); }
   .stage.boundary::after { content: 'Compass boundary'; position: absolute; right: 12px; bottom: -9px;
-    font-family: var(--display); font-size: .72rem; letter-spacing: .1em; color: var(--gold); background: var(--bg); padding: 0 7px; }
-  .lane.downstream .stage { background: var(--panel-strong); border-style: dashed; }
+    font-size: .68rem; letter-spacing: .04em; text-transform: uppercase; font-weight: 700;
+    color: var(--accent); background: var(--bg); padding: 0 7px; }
+  .lane.downstream .stage { background: #fbfbfd; border-style: dashed; }
   .lane.downstream .lane-head { color: var(--text-hint); }
-  .legend { margin-top: 1.6rem; color: var(--text-dim); font-size: .82rem; display: flex; gap: 1.4rem; flex-wrap: wrap; font-style: italic; }
-  .legend b { color: var(--gold); font-weight: 700; font-style: normal; }
+  .legend { margin-top: 1.6rem; color: var(--text-dim); font-size: .8rem; display: flex; gap: 1.4rem; flex-wrap: wrap; }
+  .legend b { color: var(--accent-strong); font-weight: 700; }
 </style>
 """
 
@@ -224,7 +223,7 @@ def _page(title: str, active: str, body: str, page_script: str) -> str:
         "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">"
         "<meta name=\"robots\" content=\"noindex, nofollow\">"
         f"<title>{title} - Libra Engine Compass</title>"
-        + _FONTS + _BASE_CSS +
+        + _BASE_CSS +
         "</head><body>"
         + _TOGGLE +
         '<button class="logout-btn" onclick="doLogout()">Sign out</button>'
@@ -245,31 +244,30 @@ LOGIN_HTML = (
     "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">"
     "<meta name=\"robots\" content=\"noindex, nofollow\">"
     "<title>Libra Engine Compass</title>"
-    + _FONTS + _BASE_CSS +
+    + _BASE_CSS +
     "<style>"
     "  body { display: grid; place-items: center; min-height: 100vh; }"
     "  .login-box { width: 360px; max-width: 90vw; background: var(--panel); border: 1px solid var(--border);"
-    "    border-radius: 8px; padding: 2.4rem 2rem; }"
-    "  .login-box h2 { font-family: var(--display); font-size: 1.4rem; line-height: 1.15; color: var(--text-bright); letter-spacing: .1em; }"
-    "  .login-box .rule { height: 1px; background: linear-gradient(90deg, var(--gold), transparent); margin: .9rem 0 1rem; }"
-    "  .login-box p { font-family: var(--serif); font-style: italic; color: var(--text-dim); margin-bottom: 1.6rem; }"
-    "  label { display: block; font-family: var(--display); font-size: .78rem; letter-spacing: .12em; text-transform: uppercase; color: var(--text-dim); margin-bottom: .4rem; }"
-    "  input { width: 100%; padding: .65rem .75rem; margin-bottom: 1rem; background: var(--panel-strong); color: var(--text-bright);"
-    "    border: 1px solid var(--border); border-radius: 4px; font-family: var(--serif); font-size: 1rem; }"
-    "  input:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px rgba(210,176,106,.12); }"
-    "  button { width: 100%; margin-top: .3rem; padding: .7rem; font-family: var(--display); font-size: 1rem; letter-spacing: .14em;"
-    "    text-transform: uppercase; background: transparent; color: var(--gold); border: 1px solid var(--gold); border-radius: 4px; cursor: pointer; }"
-    "  button:hover { background: var(--gold); color: var(--bg); }"
-    "  .err { color: var(--red); font-size: .85rem; margin-top: .9rem; min-height: 18px; }"
+    "    border-radius: 8px; padding: 2.5rem 2rem; box-shadow: 0 4px 16px rgba(0,0,0,.06); }"
+    "  .login-box h2 { color: var(--accent); font-size: 1.25rem; line-height: 1.2; margin-bottom: .3rem; }"
+    "  .login-box p { font-size: .82rem; color: var(--text-dim); margin-bottom: 1.5rem; }"
+    "  label { display: block; margin-bottom: .3rem; font-size: .8rem; color: var(--text-dim); font-weight: 600; }"
+    "  input { width: 100%; padding: .55rem; margin-bottom: 1rem; background: #ffffff; border: 1px solid var(--border);"
+    "    color: var(--text); border-radius: 4px; font-size: .9rem; }"
+    "  input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-tint-2); }"
+    "  button { width: 100%; margin-top: .3rem; padding: .6rem; background: var(--accent); color: #fff; border: none;"
+    "    border-radius: 4px; cursor: pointer; font-weight: bold; font-size: .9rem; }"
+    "  button:hover { background: var(--accent-strong); }"
+    "  .err { color: var(--red); font-size: .82rem; margin-top: .6rem; min-height: 18px; }"
     "</style></head><body>"
     "<form class=\"login-box\" id=\"f\">"
-    "<h2 class=\"sc\">Libra Engine<br>Compass</h2><div class=\"rule\"></div>"
+    "<h2>Libra Engine Compass</h2>"
     "<p>Admin console</p>"
     "<label for=\"user\">Username</label>"
     "<input id=\"user\" type=\"text\" autocomplete=\"username\" autofocus>"
     "<label for=\"pw\">Password</label>"
     "<input id=\"pw\" type=\"password\" autocomplete=\"current-password\">"
-    "<button type=\"submit\">Enter</button>"
+    "<button type=\"submit\">Sign in</button>"
     "<div class=\"err\" id=\"err\"></div>"
     "</form><script>"
     "const f=document.getElementById('f'),err=document.getElementById('err');"
@@ -293,7 +291,7 @@ _CONSOLE_BODY = (
     '<span class="chip" id="updated">...</span>'
     '</div>'
     '<h2 class="section-title">The rubric</h2>'
-    '<div class="card" style="margin-bottom:1.4rem">'
+    '<div class="card" style="margin-bottom:1.5rem">'
     '<div class="ladder" id="ladder"></div>'
     '<div class="rubric-meta" id="rubricmeta"></div>'
     '<div class="rubric-types" id="types"></div>'
@@ -380,11 +378,11 @@ _PIPELINE_BODY = (
     '<span class="chip" id="rubver">rubric ...</span>'
     '<span class="chip" id="model">...</span>'
     '</div>'
-    '<p style="color:var(--text-dim);font-style:italic;margin-bottom:1.4rem">The path one artifact travels after a consumer posts it to /api/score. The Compass runs the scoring half only; enrichment and persistence happen on the consumer side, shown dashed at the end.</p>'
+    '<p style="color:var(--text-dim);margin-bottom:1.4rem">The path one artifact travels after a consumer posts it to /api/score. The Compass runs the scoring half only; enrichment and persistence happen on the consumer side, shown dashed at the end.</p>'
     '<div id="flow"></div>'
     '<div class="legend">'
     '<span><b>OPUS</b> a Claude call, metered to claude_api_usage</span>'
-    '<span><b>gold rule</b> a branch that returns early</span>'
+    '<span><b>brown rule</b> a branch that returns early</span>'
     '<span><b>dashed</b> outside the Compass (consumer side)</span>'
     '</div>'
 )
