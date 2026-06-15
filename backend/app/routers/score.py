@@ -140,11 +140,13 @@ async def post_score(body: ScoreIn, _: None = Depends(require_api_key)):
         "color_key": color,  # consumer maps to its OWN palette; LEC hex != LT/charger hex
         "charge_value": calibration.get("charge_value"),
         "confidence": calibration.get("confidence", 0.0),
-        # v3 LISTENER components -- the pieces LT's Mirror re-voices first-person.
+        # v3 LISTENER component -- the gut read LT's Mirror grounds on first-person.
         "visceral_charge": calibration.get("visceral_charge"),
-        # listener_effects_prose / deadpan_line / topics are RC ENRICHMENT (not
-        # LEC's scoring half), so they are absent here. Who owns the listener
-        # prose for external clients (LT's Mirror needs it) is a Phase 1 decision.
+        # listener_effects_prose / deadpan_line / topics are ENRICHMENT, not the
+        # scoring half. DECIDED 2026-06-15: each client enriches its own listener
+        # prose -- LEC stays the pure scoring brain and intentionally returns this
+        # null. RC generates it post-/api/score via _ensure_generation; LT's Mirror
+        # degrades gracefully on visceral_charge until it ports its own.
         "listener_effects_prose": calibration.get("listener_effects_prose"),
         # charge package extras.
         "charge_summary": calibration.get("charge_summary"),
