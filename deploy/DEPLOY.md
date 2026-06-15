@@ -18,10 +18,12 @@ Artifacts in this repo: `backend/Dockerfile`, `docker-compose.yml`,
 
 ## Prerequisites (decide / confirm first)
 
-- [ ] **DNS registrar for `libraengine.com`** -- still OPEN. Need to add an `A`
-      record `lec.libraengine.com -> 138.197.111.66`. Confirm where the zone is
-      managed (Cloudflare / DO / registrar) before starting; the cert step blocks
-      on this resolving.
+- [ ] **DNS: `libraengine.com` is on GoDaddy.** Add an `A` record so the cert
+      step can resolve:
+      GoDaddy -> My Products -> Domains -> `libraengine.com` -> DNS / Manage DNS
+      -> Add New Record: **Type** `A`, **Name** `lec`, **Value** `138.197.111.66`,
+      **TTL** 600s (or 1 hour). Save. Verify: `dig +short lec.libraengine.com`
+      returns `138.197.111.66` (propagation: minutes, up to ~1h).
 - [ ] **LEC's own Anthropic key** -- already provisioned (in local `backend/.env`).
       Reuse it or mint a prod-scoped one.
 - [ ] GitHub: repo pushed. `deploy.sh` does `git pull` on the server.
