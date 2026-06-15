@@ -1,0 +1,59 @@
+# Libra Engine Compass -- production compose. Runs ONE service (the lec backend)
+# on the same droplet (le-projects-01) as Rising Compass. It does NOT run its
+# own nginx/certbot: the host nginx (RC's, the only thing binding 80/443) serves
+# lec.libraengine.com via the server block in deploy/nginx-lec.conf and proxies
+# to this container over the shared external `le-proxy` network.
+#
+# Env is substituted from a root-level .env next to this file
+# (/root/libra-engine-compass/.env on the server); the container reads the real
+# env vars, which pydantic-settings prefers over backend/.env. See deploy/DEPLOY.md.
+services:
+  lec:
+    build: ./backend
+    container_name: lec-backend
+    networks:
+      default:
+      le-proxy:
+        aliases:
+          - lec            # RC + LT reach scoring at http://lec:8012 (internal)
+    # Internal only -- the host nginx proxies to it over le-proxy. Bound to
+    # localhost so the port is reachable on the droplet for debugging but never
+    # exposed publicly.
+    ports:
+      - "127.0.0.1:8012:8012"
+    volumes:
+      - lec-data:/app/data     # sqlite fallback only; prod uses the Postgres DSN
+    environment:
+      # --- Anthropic (LEC's own workspace key) ---
+      - LEC_ANTHROPIC_API_KEY=${LEC_ANTHROPIC_API_KEY}
+      - LEC_AGENT_MODEL=${LEC_AGENT_MODEL:-claude-opus-4-6}
+      - LEC_ESCALATION_MODEL=${LEC_ESCALATION_MODEL:-}
+      - LEC_ESCALATION_REPASS_ENABLED=${LEC_ESCALATION_REPASS_ENABLED:-false}
+      - LEC_ESCALATION_CONFIDENCE_FLOOR=${LEC_ESCALATION_CONFIDENCE_FLOOR:-0.6}
+      # --- LEC's own DB (dedicated libra_engine_compass on the shared DO cluster,
+      #     via the PgBouncer pool, port 25061) ---
+      - LEC_DATABASE_URL=${LEC_DATABASE_URL}
+      # --- Service-key auth on /api/score (X-Api-Key). TRUE in prod once keys
+      #     are issued (deploy/issue_key.py). ---
+      - LEC_AUTH_REQUIRED=${LEC_AUTH_REQUIRED:-true}
+      # --- Admin console (obscured login + signed cookie). ALL FOUR required
+      #     or the panel 404s. ---
+      - LEC_ADMIN_LOGIN_TOKEN=${LEC_ADMIN_LOGIN_TOKEN}
+      - LEC_ADMIN_USERNAME=${LEC_ADMIN_USERNAME}
+      - LEC_ADMIN_PASSWORD=${LEC_ADMIN_PASSWORD}
+      - LEC_ADMIN_SECRET=${LEC_ADMIN_SECRET}
+      - LEC_ADMIN_SESSION_HOURS=${LEC_ADMIN_SESSION_HOURS:-12}
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8012/health').status==200 else 1)\""]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+    restart: unless-stopped
+
+networks:
+  le-proxy:
+    external: true
+
+volumes:
+  lec-data:
