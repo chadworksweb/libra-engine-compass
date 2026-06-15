@@ -16,7 +16,7 @@ from app.admin_ui import DASHBOARD_HTML, LOGIN_HTML, PIPELINE_HTML
 from app.config import settings
 from app.database import SessionLocal
 from app.services.admin_auth import (
-    COOKIE_NAME, check_login_token, check_password, mint_session, require_admin,
+    COOKIE_NAME, check_credentials, check_login_token, mint_session, require_admin,
 )
 from app.services.dashboard import build_summary
 
@@ -24,6 +24,7 @@ router = APIRouter(tags=["admin"])
 
 
 class LoginIn(BaseModel):
+    username: str
     password: str
 
 
@@ -40,8 +41,8 @@ def login_page(token: str):
 def login(token: str, body: LoginIn, request: Request):
     if not check_login_token(token):
         raise HTTPException(status_code=404, detail="Not found")
-    if not check_password(body.password):
-        raise HTTPException(status_code=401, detail="Wrong password")
+    if not check_credentials(body.username, body.password):
+        raise HTTPException(status_code=401, detail="Wrong username or password")
     resp = JSONResponse({"ok": True, "redirect": "/admin"})
     ttl = settings.admin_session_hours * 3600
     resp.set_cookie(

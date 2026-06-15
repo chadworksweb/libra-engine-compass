@@ -24,6 +24,7 @@ COOKIE_NAME = "lec_admin_session"
 def admin_configured() -> bool:
     return bool(
         settings.admin_login_token
+        and settings.admin_username
         and settings.admin_password
         and settings.admin_secret
     )
@@ -77,10 +78,14 @@ def check_login_token(token: str) -> bool:
     return hmac.compare_digest(token, settings.admin_login_token)
 
 
-def check_password(password: str) -> bool:
+def check_credentials(username: str, password: str) -> bool:
+    """Constant-time match of both username and password. Both are compared even
+    on a username miss so the response time does not leak which one was wrong."""
     if not admin_configured():
         return False
-    return hmac.compare_digest(password or "", settings.admin_password)
+    user_ok = hmac.compare_digest(username or "", settings.admin_username)
+    pass_ok = hmac.compare_digest(password or "", settings.admin_password)
+    return user_ok and pass_ok
 
 
 def require_admin(request: Request) -> None:

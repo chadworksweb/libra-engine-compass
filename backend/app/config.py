@@ -35,9 +35,10 @@ class Settings(BaseSettings):
     # (/lec-admin-<admin_login_token>) plus an HttpOnly signed session cookie,
     # mirroring RC's admin pattern. ALL THREE values must be set or every admin
     # route 404s (fail-closed, so the panel is simply absent until configured).
-    # LEC_-prefixed env: LEC_ADMIN_LOGIN_TOKEN, LEC_ADMIN_PASSWORD,
-    # LEC_ADMIN_SECRET.
+    # LEC_-prefixed env: LEC_ADMIN_LOGIN_TOKEN, LEC_ADMIN_USERNAME,
+    # LEC_ADMIN_PASSWORD, LEC_ADMIN_SECRET.
     admin_login_token: str = ""
+    admin_username: str = ""
     admin_password: str = ""
     admin_secret: str = ""  # HMAC key signing the session cookie
     admin_session_hours: int = 12
