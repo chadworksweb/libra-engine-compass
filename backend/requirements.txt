@@ -1,0 +1,10 @@
+# Libra Engine Compass -- the standalone calibration brain. Deliberately lean:
+# only what the scoring service + its own DB + the parity harness need. No
+# Stripe/Playwright/boto3/PostHog/etc. (those are RC application concerns).
+fastapi>=0.115.6,<1.0
+uvicorn[standard]>=0.34.0,<1.0
+sqlalchemy>=2.0.36,<3.0
+psycopg[binary]>=3.2.0,<4.0
+pydantic-settings>=2.7.1,<3.0
+anthropic>=0.42.0,<1.0
+httpx>=0.28.1,<1.0

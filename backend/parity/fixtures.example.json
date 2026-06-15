@@ -1,0 +1,14 @@
+[
+  {
+    "title": "Hope is the thing with feathers",
+    "artist": "Emily Dickinson",
+    "type": "poem",
+    "text": "Hope is the thing with feathers that perches in the soul, and sings the tune without the words, and never stops at all, and sweetest in the gale is heard; and sore must be the storm that could abash the little bird that kept so many warm."
+  },
+  {
+    "title": "Row Your Boat",
+    "artist": "Traditional",
+    "type": "lyric",
+    "text": "Row, row, row your boat gently down the stream. Merrily, merrily, merrily, merrily, life is but a dream."
+  }
+]

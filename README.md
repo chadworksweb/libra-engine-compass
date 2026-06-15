@@ -19,23 +19,40 @@ Full plan: `Dropbox/Libra Engine/Libra Engine Compass (LEC)/plans and docs/LEC-E
 - **Domain:** `lec.libraengine.com`.
 - **API:** `POST /api/score` (with optional `use_precedents`), `GET /api/rubric`. Service-key auth.
 
-## Status: Phase 0 in progress (extract + parity)
+## Status: Phase 0 -- brain stands up locally; parity-ready
 
-**Done:** brain-core modules lifted VERBATIM from RC (for parity diffing) into a mirrored `backend/app/...` layout:
-- `services/charge_composition.py`, `services/agents/{calibrator,compass_agent_rubric,rubric_builder,summary_guard}.py`
-- `services/agents/tenets/{core.json,precedents.json,satire.md}`
+The full scoring service boots locally (`POST /api/score`, `GET /api/rubric`,
+`/health`) against LEC's own DB. The lyric system prompt is **byte-for-byte
+identical to RC master** (verified by sha256), so the scoring is unchanged.
 
-**Next (new session):**
-1. `app/constants.py` (lift COLOR_LABELS/COLOR_HEX + add ARTIFACT_TYPES/labels from the RC WIP commit `042d995`).
-2. `app/config.py` (LEC settings: own Anthropic key/model, DB URL) so the lifted `from app.config import settings` resolves to LEC's config.
-3. `app/services/claude_meter.py` (LEC's metered Anthropic wrapper -> own `claude_api_usage`, correct $5/$25 Opus pricing) so `from app.services.claude_meter import tracked_create_async` resolves to LEC's.
-4. Coupling cuts in `calibrator.py`: remove the db-gated enrichment branch (`if db and not skip_cache: ensure_full_calibration`) + the `Song` query - LEC is the SCORING half only; RC keeps enrichment/persistence.
-5. `compass_agent_rubric.py`: rewire the precedent query off `app.models.Song` to LEC's own corpus (defer; stateless `use_precedents=false` parity first).
-6. `app/routers/score.py` (from RC WIP `routers/shared_brain.py`) + `main.py` (FastAPI).
-7. DB models for LEC's own DB (`api_client_keys`, `claude_api_usage`, precedent corpus).
-8. **Parity harness:** LEC-as-service vs RC's calibrator on known songs (server-side Anthropic only - never terminal, per the RC rule). Stateless parity first.
+**Done:**
+- Brain-core lifted VERBATIM from RC (commit `390963e`): `services/charge_composition.py`,
+  `services/agents/{calibrator,compass_agent_rubric,rubric_builder,summary_guard}.py`,
+  `services/agents/tenets/{core.json,precedents.json,satire.md}`.
+- `app/constants.py` (COLOR_* + TIER_ORDER + ARTIFACT_TYPES/labels).
+- `app/config.py` (LEC settings, `LEC_` env prefix; matches RC attribute names so the lift resolves).
+- `app/services/claude_meter.py` (LEC's own meter -> own `claude_api_usage`, CORRECT $5/$25 Opus pricing).
+- **Coupling cuts in `calibrator.py`:** removed the db-gated cache branch, the
+  `lookup_calibrated` / `ensure_full_calibration` / `_ensure_generation` chain,
+  the `Song` import, and the final enrichment call. LEC is the SCORING half only;
+  RC keeps enrichment + persistence. Added the `artifact_type` param.
+- **`compass_agent_rubric.py`:** dropped the Song-backed `build_few_shot_examples`
+  (dead in v2) + the RC narrative/editorial builders; added the `artifact_type`
+  prompt framing. `rubric_builder.py`: per-type precedent corpus loader (lyric fallback).
+- `app/services/lyric_quote_guard.py` (lifted; the verbatim-quote scrub in the scoring path).
+- `app/routers/score.py` (from RC WIP `shared_brain.py`) + `app/deps.py` (X-Api-Key auth) + `app/main.py`.
+- `app/models.py` (`api_clients` / `api_client_keys`, `claude_api_usage`, `precedent_songs`) +
+  `migrations/001_lec_baseline.py` (create_all baseline; main.py also ensures it on startup).
+- **Parity harness** `parity/run_parity.py` -- HTTP client, server-side Anthropic
+  only, stateless (`use_precedents=false`); diffs tier + charge_value + contamination.
+
+**Open (Phase 1):**
+- Run the parity harness on real songs (start LEC + an RC `/api/score` scorer; needs a live Anthropic key).
+- Precedent corpus sync mechanism (the `precedent_songs` projection is schema-only; `use_precedents=true` scores stateless for now).
+- LEC's own Anthropic workspace/key; `libraengine.com` DNS registrar for `lec.libraengine.com`.
+- Listener-prose ownership for external clients (LT's Mirror needs `listener_effects_prose`, which is currently RC enrichment, so LEC returns it null).
 
 ## Provenance
 
-Lifted from `rising-compass` at master (2026-06-14). The verbatim modules can be
-diffed against RC to prove no scoring logic changed during extraction.
+Lifted from `rising-compass` at master (2026-06-14). The verbatim modules diff
+clean against RC; the lyric prompt sha256 matches RC master exactly.

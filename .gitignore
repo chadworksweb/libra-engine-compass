@@ -20,3 +20,8 @@ venv/
 # Logs / local data
 *.log
 logs/
+data/
+
+# Parity harness output (may reference private fixtures)
+backend/parity/report.json
+backend/parity/fixtures.private.json

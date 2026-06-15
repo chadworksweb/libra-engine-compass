@@ -13,10 +13,16 @@ historical hardcoded rubric.
 """
 
 import json
+import logging
 from pathlib import Path
 
 TENETS_PATH = Path(__file__).parent / "tenets" / "core.json"
 PRECEDENTS_PATH = Path(__file__).parent / "tenets" / "precedents.json"
+# Per-type benchmark corpora (one file per non-lyric artifact type, e.g.
+# precedents/poem.json). `lyric` uses the canonical PRECEDENTS_PATH above.
+PRECEDENTS_DIR = Path(__file__).parent / "tenets" / "precedents"
+
+logger = logging.getLogger(__name__)
 
 
 def load_tenets() -> dict:
@@ -25,18 +31,32 @@ def load_tenets() -> dict:
         return json.load(f)
 
 
-def load_precedents() -> dict:
-    """Load the v3 precedent table (founding anchors + banked rulings)."""
+def load_precedents(artifact_type: str = "lyric") -> dict:
+    """Load the v3 precedent table for an artifact type. `lyric` (the default)
+    uses the canonical song precedents. Other types use precedents/<type>.json
+    when it exists; until a type's corpus is authored it falls back to the lyric
+    table (logged)."""
+    if artifact_type and artifact_type != "lyric":
+        type_path = PRECEDENTS_DIR / f"{artifact_type}.json"
+        if type_path.exists():
+            with open(type_path, encoding="utf-8") as f:
+                data = json.load(f)
+            if data.get("entries"):
+                return data
+            logger.info("Precedent corpus for type '%s' is empty; using lyric precedents", artifact_type)
+        else:
+            logger.info("No precedent corpus for type '%s' yet; using lyric precedents", artifact_type)
     with open(PRECEDENTS_PATH, encoding="utf-8") as f:
         return json.load(f)
 
 
-def render_precedent_table() -> str:
+def render_precedent_table(artifact_type: str = "lyric") -> str:
     """Render the precedent table for PRECEDENT PLACEMENT: every entry as
     `id (tier): signature`, sorted by charge descending. The relative-placement
     framing (never equal to an entry; always stronger/weaker/between) lives in
-    the CALIBRATION_FORMAT step that consumes this table."""
-    data = load_precedents()
+    the CALIBRATION_FORMAT step that consumes this table. `artifact_type` selects
+    the corpus (lyric default; per-type otherwise)."""
+    data = load_precedents(artifact_type)
     entries = sorted(data["entries"], key=lambda e: e["charge"], reverse=True)
     lines = []
     for e in entries:
