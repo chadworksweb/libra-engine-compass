@@ -124,33 +124,56 @@ _BASE_CSS = """
   .spark .b.hot { background: var(--accent); }
   .spark-cap { font-family: var(--mono); font-size: .72rem; color: var(--text-hint); margin-top: .5rem; }
 
-  /* pipeline */
-  .lane-head { font-size: .85rem; letter-spacing: .04em; text-transform: uppercase; font-weight: 700;
-    color: var(--text-dim); margin: 1.5rem 0 .6rem; display: flex; gap: .7rem; align-items: baseline; }
-  .lane-head .file { font-family: var(--mono); color: var(--text-hint); letter-spacing: 0; text-transform: none; font-size: .7rem; font-weight: 400; }
-  .stage { position: relative; background: var(--panel); border: 1px solid var(--border-soft); border-radius: 6px; padding: .8rem 1rem; margin-bottom: .5rem; }
-  .stage .t { font-weight: 600; color: var(--text); font-size: .95rem; }
-  .stage .t .n { font-family: var(--mono); color: var(--accent); font-weight: 700; margin-right: .5rem; }
-  .stage .sub { font-family: var(--mono); font-size: .74rem; color: var(--text-hint); margin-left: .4rem; }
-  .stage .d { color: var(--text-dim); font-size: .85rem; margin-top: .35rem; }
-  .stage .io { font-family: var(--mono); font-size: .74rem; color: var(--text-dim); background: #ffffff;
-    border: 1px solid var(--border-soft); border-radius: 4px; padding: .55rem .7rem; margin-top: .6rem; overflow-x: auto; white-space: pre-wrap; }
+  /* pipeline -- flow chart */
+  .fc { display: flex; flex-direction: column; align-items: center; --node-w: 470px; padding: .25rem 0 .5rem; }
+  .fc-phase { text-align: center; font-size: .72rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--text-hint); }
+  .fc-phase .file { display: block; font-family: var(--mono); font-weight: 400; letter-spacing: 0; text-transform: none; font-size: .66rem; color: var(--text-hint); margin-top: 2px; }
+  /* vertical connector with an arrowhead */
+  .fc-arrow { width: 2px; height: 26px; background: var(--border); position: relative; flex: none; }
+  .fc-arrow::after { content: ''; position: absolute; left: 50%; bottom: -1px; transform: translateX(-50%);
+    border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 7px solid var(--border); }
+  /* a node sits in a fixed-width centered row; branches overflow to the right
+     so the spine stays aligned whether or not a node branches */
+  .fc-row { position: relative; width: var(--node-w); max-width: 92vw; }
+  .fc-node { background: var(--panel); border: 1px solid var(--border); border-radius: 6px; padding: .7rem .9rem; position: relative; }
+  .fc-node .t { font-weight: 600; color: var(--text); font-size: .92rem; }
+  .fc-node .t .n { font-family: var(--mono); color: var(--accent); font-weight: 700; margin-right: .45rem; }
+  .fc-node .sub { font-family: var(--mono); font-size: .72rem; color: var(--text-hint); margin-left: .35rem; }
+  .fc-node .d { color: var(--text-dim); font-size: .82rem; margin-top: .3rem; }
+  .fc-node .io { font-family: var(--mono); font-size: .72rem; color: var(--text-dim); background: #ffffff;
+    border: 1px solid var(--border-soft); border-radius: 4px; padding: .5rem .65rem; margin-top: .5rem; overflow-x: auto; white-space: pre-wrap; }
+  /* node shapes: terminators are pill-rounded, the gate gets an accent edge,
+     the Opus call is heavier, downstream is dashed */
+  .fc-node.start, .fc-node.output { border-radius: 22px; border-color: var(--accent); background: #fbf7ef; }
+  .fc-node.opus { border: 2px solid var(--accent); }
+  .fc-node.decision { border-left: 4px solid var(--accent); }
+  .fc-node.downstream { border-style: dashed; background: #fbfbfd; }
+  .fc-node.boundary::after { content: 'Compass boundary'; position: absolute; right: 12px; bottom: -9px;
+    font-size: .66rem; letter-spacing: .04em; text-transform: uppercase; font-weight: 700;
+    color: var(--accent); background: var(--bg); padding: 0 7px; }
+  /* side branch: elbow line + arrowhead into an exit node */
+  .fc-branch { position: absolute; left: 100%; top: 50%; transform: translateY(-50%); display: flex; align-items: center; }
+  .fc-branch .line { width: 30px; height: 2px; background: var(--accent); position: relative; flex: none; }
+  .fc-branch .line::after { content: ''; position: absolute; right: -1px; top: 50%; transform: translateY(-50%);
+    border-top: 5px solid transparent; border-bottom: 5px solid transparent; border-left: 7px solid var(--accent); }
+  .fc-exit { font-family: var(--mono); font-size: .72rem; padding: .3rem .6rem; border: 1px solid var(--border);
+    border-radius: 4px; background: #fff; color: var(--text-dim); white-space: nowrap; }
+  .fc-exit.err { border-color: var(--red); color: var(--red); background: #fdf1ee; }
+  .fc-exit b { font-weight: 700; }
   .tag { float: right; font-size: .68rem; letter-spacing: .06em; padding: .15rem .55rem; border-radius: 3px; font-weight: 700; text-transform: uppercase; }
   .tag.opus { color: #ffffff; background: var(--accent); }
   .tag.auth { color: var(--text-dim); border: 1px solid var(--border); }
   .tag.meter { color: var(--accent-strong); border: 1px solid var(--accent); margin-left: .4rem; }
-  .branch { margin: 0 0 .5rem 1.4rem; font-family: var(--mono); font-size: .76rem; color: var(--accent-strong);
-    border-left: 2px solid var(--accent); padding: .2rem 0 .2rem .8rem; }
-  .branch b { color: var(--accent-strong); font-weight: 700; }
-  .arrow { text-align: center; color: var(--border); font-size: 1rem; margin: -.1rem 0 .4rem; }
-  .stage.opusrow { border-color: var(--accent); }
-  .stage.boundary::after { content: 'Compass boundary'; position: absolute; right: 12px; bottom: -9px;
-    font-size: .68rem; letter-spacing: .04em; text-transform: uppercase; font-weight: 700;
-    color: var(--accent); background: var(--bg); padding: 0 7px; }
-  .lane.downstream .stage { background: #fbfbfd; border-style: dashed; }
-  .lane.downstream .lane-head { color: var(--text-hint); }
-  .legend { margin-top: 1.6rem; color: var(--text-dim); font-size: .8rem; display: flex; gap: 1.4rem; flex-wrap: wrap; }
+  /* downstream fan-out: parallel sibling consumers, not a chain. A horizontal
+     bus drops into each sibling so they read as concurrent, not sequential. */
+  .fc-sibs { display: flex; gap: 18px; justify-content: center; align-items: flex-start; width: min(980px, 96%); margin: 0 auto; position: relative; }
+  .fc-sibs::before { content: ''; position: absolute; top: 0; left: 16.66%; right: 16.66%; height: 2px; background: var(--border); }
+  .fc-sib { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; align-items: center; }
+  .fc-sib .fc-node { width: 100%; }
+  @media (max-width: 760px) { .fc-sibs { flex-direction: column; align-items: center; } .fc-sibs::before { display: none; } }
+  .legend { margin: 1.6rem auto 0; color: var(--text-dim); font-size: .8rem; display: flex; gap: 1.4rem; flex-wrap: wrap; justify-content: center; }
   .legend b { color: var(--accent-strong); font-weight: 700; }
+  @media (max-width: 760px) { .fc { --node-w: 280px; } }
 </style>
 """
 
@@ -379,10 +402,10 @@ _PIPELINE_BODY = (
     '<span class="chip" id="model">...</span>'
     '</div>'
     '<p style="color:var(--text-dim);margin-bottom:1.4rem">The path one artifact travels after a consumer posts it to /api/score. The Compass runs the scoring half only; enrichment and persistence happen on the consumer side, shown dashed at the end.</p>'
-    '<div id="flow"></div>'
+    '<div id="flow" style="overflow-x:auto"></div>'
     '<div class="legend">'
     '<span><b>OPUS</b> a Claude call, metered to claude_api_usage</span>'
-    '<span><b>brown rule</b> a branch that returns early</span>'
+    '<span><b>side branch</b> an early return (4xx / null / fallback)</span>'
     '<span><b>dashed</b> outside the Compass (consumer side)</span>'
     '</div>'
 )
@@ -440,24 +463,55 @@ const FLOW = [
       d: 'Pushes the non-lyric artifact types (poem / essay / script / message / email / article) through the same /api/score.' },
   ]},
 ];
-function stageHTML(s) {
+function nodeClass(lane, s) {
+  if (lane.kind === 'consumer') return 'start';
+  if (lane.kind === 'downstream') return 'downstream';
+  if (s.opus) return 'opus';
+  if (s.branch) return 'decision';
+  if (s.io && s.n === 12) return 'output';
+  return 'process';
+}
+function rowHTML(lane, s) {
   let tag = '';
   if (s.tag === 'opus') tag = '<span class="tag opus">OPUS</span><span class="tag meter">metered</span>';
   else if (s.tag === 'auth') tag = '<span class="tag auth">AUTH</span>';
   const num = s.n != null ? `<span class="n">${s.n}</span>` : '';
   const sub = s.sub ? `<span class="sub">${s.sub}</span>` : '';
-  const io = s.io ? `<div class="io">${s.io.replace(/</g,'&lt;').replace(/\\n/g,'<br>')}</div>` : '';
-  const cls = 'stage' + (s.opus ? ' opusrow' : '') + (s.boundary ? ' boundary' : '');
   const dyn = s.dyn ? ` <span class="sub" id="dyn-${s.dyn}"></span>` : '';
-  return `<div class="${cls}">${tag}<div class="t">${num}${s.title}${sub}${dyn}</div><div class="d">${s.d}</div>${io}</div>`
-       + (s.branch ? `<div class="branch">${s.branch}</div>` : '');
+  const io = s.io ? `<div class="io">${s.io.replace(/</g,'&lt;').replace(/\\n/g,'<br>')}</div>` : '';
+  const cls = 'fc-node ' + nodeClass(lane, s) + (s.boundary ? ' boundary' : '');
+  const node = `<div class="${cls}">${tag}<div class="t">${num}${s.title}${sub}${dyn}</div>`
+    + (s.d ? `<div class="d">${s.d}</div>` : '') + io + `</div>`;
+  let branch = '';
+  if (s.branch) {
+    const err = /\\b4\\d\\d\\b/.test(s.branch);
+    branch = `<div class="fc-branch"><span class="line"></span><div class="fc-exit ${err ? 'err' : ''}">${s.branch}</div></div>`;
+  }
+  return `<div class="fc-row">${node}${branch}</div>`;
 }
-function laneHTML(l, i) {
-  const head = `<div class="lane-head">${l.lane}${l.file ? `<span class="file">${l.file}</span>` : ''}</div>`;
-  const body = l.stages.map(stageHTML).join('<div class="arrow">&darr;</div>');
-  return `<div class="lane ${l.kind || ''}">${head}${body}</div>` + (i < FLOW.length - 1 ? '<div class="arrow">&darr;</div>' : '');
+function phaseHTML(lane) {
+  const file = lane.file ? `<span class="file">${lane.file}</span>` : '';
+  return `<div class="fc-phase">${lane.lane}${file}</div>`;
 }
-$('flow').innerHTML = FLOW.map(laneHTML).join('');
+function forkHTML(lane) {
+  const sibs = lane.stages.map(s =>
+    `<div class="fc-sib"><div class="fc-arrow"></div><div class="fc-node downstream">`
+    + `<div class="t">${s.title}</div>${s.d ? `<div class="d">${s.d}</div>` : ''}</div></div>`
+  ).join('');
+  return phaseHTML(lane) + `<div class="fc-sibs">${sibs}</div>`;
+}
+const seq = [];
+FLOW.forEach(lane => {
+  if (lane.kind === 'downstream') { seq.push({ t: 'fork', lane }); return; }
+  seq.push({ t: 'phase', lane });
+  lane.stages.forEach(s => seq.push({ t: 'node', lane, s }));
+});
+$('flow').innerHTML = '<div class="fc">' + seq.map((it, i) => {
+  const arrow = i > 0 ? '<div class="fc-arrow"></div>' : '';
+  if (it.t === 'phase') return arrow + phaseHTML(it.lane);
+  if (it.t === 'fork') return arrow + forkHTML(it.lane);
+  return arrow + rowHTML(it.lane, it.s);
+}).join('') + '</div>';
 async function overlay() {
   try {
     const r = await fetch('/admin/api/summary', { headers: { 'Accept': 'application/json' } });
