@@ -30,6 +30,18 @@ class Settings(BaseSettings):
     # cluster via the PgBouncer pool.
     database_url: str = "sqlite:///./data/lec.db"
 
+    # --- Admin panel (obscured-token login + signed session cookie) ---
+    # The dashboard at /admin is gated behind a secret login URL
+    # (/lec-admin-<admin_login_token>) plus an HttpOnly signed session cookie,
+    # mirroring RC's admin pattern. ALL THREE values must be set or every admin
+    # route 404s (fail-closed, so the panel is simply absent until configured).
+    # LEC_-prefixed env: LEC_ADMIN_LOGIN_TOKEN, LEC_ADMIN_PASSWORD,
+    # LEC_ADMIN_SECRET.
+    admin_login_token: str = ""
+    admin_password: str = ""
+    admin_secret: str = ""  # HMAC key signing the session cookie
+    admin_session_hours: int = 12
+
     # --- Service-key auth on /api/score (X-Api-Key) ---
     # False (local/parity default) leaves scoring open. True enforces a valid key
     # from api_client_keys. LEC issues + verifies its own keys for its clients

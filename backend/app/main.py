@@ -14,7 +14,7 @@ from fastapi import FastAPI
 
 from app.database import Base, engine
 from app import models  # noqa: F401  (registers the models on Base before create_all)
-from app.routers import score
+from app.routers import admin, score
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -37,6 +37,7 @@ app = FastAPI(
 )
 
 app.include_router(score.router)
+app.include_router(admin.router)
 
 
 @app.get("/health")
