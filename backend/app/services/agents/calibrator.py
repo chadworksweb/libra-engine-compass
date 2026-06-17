@@ -401,7 +401,7 @@ def _fallback_result(title: str, artist: str, raw_response: str) -> dict:
         "contamination_note": None,
         "dogma_referenced": False,
         "dogma_note": None,
-        "charge_summary": f"Calibration failed — manual review needed for {title} by {artist}",
+        "charge_summary": f"Calibration failed: manual review needed for {title} by {artist}",
         "confidence": 0.0,
         "calibration_failed": True,
     }
