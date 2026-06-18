@@ -54,6 +54,13 @@
       "target": "tiers + CALIBRATION_FORMAT",
       "summary": "Calibrator v3: every tier is assigned to its axis (orange/red = harm, blue/violet = transcendence, green = the neutral zone of both); tenet text unchanged. The read procedure is rewritten (visceral read first, explicit route classification, two-axis read, precedent placement, pole-agnostic intensity vernier, gut-vs-verdict reconciliation), R1-R14 keep their numbers and canonical examples but reorganize into the per-route decision tree, the 15 charge anchors are promoted to the founding precedent table (joined by the -97 deep-red floor ruled 2026-06-11; see tenets/precedents.json), and the model stops naming the tier and the final number: the server composes the charge from components and derives the tier everywhere.",
       "source": "RISING-COMPASS-CALIBRATOR-V3.md (spec + section 5 rulings, 2026-06-11)"
+    },
+    {
+      "at": "2026-06-18",
+      "change": "add",
+      "target": "R15",
+      "summary": "Add R15, the reverence-halo / cultural-sanctity strip: a state-sanctioned, patriotic, memorial, civic-ritual, or institutional sanctity (fallen soldiers, the flag, a sacred site, a martyr, a hallowed tradition) is an inherited frame the lyrics must earn on the page, not pre-loaded charge. The civic and institutional generalization of R14's religious reverence-halo, and the same error class as R3 (sacred vocabulary is not substance), R6 (reputation the audience supplies), and R12 (era reverence the listener back-fills). Procedure: separate what the song asserts (the cause was just, the place is holy) from what it delivers (fidelity, consolation, witness); only the delivered content scores, and unexamined valorization dilutes rather than elevates. Strip-test: remove the sacred wrapper and score what survives.",
+      "source": "Daily Downloads 2026-06-18, 'The Twenty-One Steps' (PayTreeIt, Tomb of the Unknown Soldier), violet/+83 -> blue/+72 -> blue/+37 across two Chad corrections"
     }
   ],
   "tiers": [
@@ -755,6 +762,14 @@
       "status": "ratified",
       "version": "1.0",
       "ratified_at": "2026-06-08"
+    },
+    {
+      "id": "R15",
+      "title": "Cultural sanctity is a halo, not a charge; strip the inherited reverence and score what the lyrics earn.",
+      "text": "When a song invokes a sanctity the culture already venerates (a state-sanctioned, patriotic, memorial, civic-ritual, or institutional reverence: fallen soldiers, the flag, a sacred site, a martyr, a hallowed tradition), that reverence is an inherited frame the song must earn on the page, not pre-loaded substance that lifts the tier on its own. This is the civic and institutional generalization of the reverence-halo R14 names for load-bearing religious dogma, and it is the same error class as R6 (a reputation the audience supplies) and R12 (an era's reverence the listener back-fills): a frame the culture confers that the lyrics never delivered. Procedure, the reverence-halo strip: separate what the song ASSERTS from what it DELIVERS. Asserted and borrowed (does not count): that the deaths were honorable, that the cause was just, that the place is holy, that the institution is sacred. None of it is examined; it rests on the listener's pre-existing veneration, and R3 already discounts naming the sacred as vocabulary rather than substance. Delivered and earned (counts): demonstrated selfless fidelity on the page, genuine consolation of the bereaved, examined collective witness, a stance the lyrics actually enact rather than a sanctity they cite. Score the delivered content on its real routes like any other song; the borrowed sanctity neither lifts the tier nor adds charge, and unexamined valorization (of war, martyrdom, or a hallowed institution) dilutes rather than elevates. Test: strip the sacred wrapper and ask what fidelity, consolation, or witness the lyrics still demonstrate; if little survives the strip, the song lands where its earned content sits, not where the culture pre-assigns it. Dying for a cause does not make the cause just; a funded ritual coded holy is not demonstrated transcendence.",
+      "status": "ratified",
+      "version": "1.0",
+      "ratified_at": "2026-06-18"
     }
   ]
 }
