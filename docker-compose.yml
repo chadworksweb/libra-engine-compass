@@ -43,6 +43,12 @@ services:
       - LEC_ADMIN_PASSWORD=${LEC_ADMIN_PASSWORD}
       - LEC_ADMIN_SECRET=${LEC_ADMIN_SECRET}
       - LEC_ADMIN_SESSION_HOURS=${LEC_ADMIN_SESSION_HOURS:-12}
+      # --- Decoupling cutover (Part 1). Dark by default; flip to true in the
+      #     root .env to score the lyric path through gospel + rc-lyric. The
+      #     container reads ONLY the vars listed here, so the flag must be
+      #     forwarded explicitly (not just set in .env). Fail-closed in the
+      #     calibrator. ---
+      - LEC_COMPOSE_RUBRIC=${LEC_COMPOSE_RUBRIC:-false}
     healthcheck:
       test: ["CMD-SHELL", "python -c \"import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8012/health').status==200 else 1)\""]
       interval: 30s
