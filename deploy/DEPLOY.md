@@ -70,7 +70,7 @@ Via the DO console (Databases -> the cluster) or `doctl`:
       `postgresql+psycopg://lec_app:PASS@<cluster-host>:25061/lec-pool?sslmode=require`
 
 LEC self-creates its schema on startup (`Base.metadata.create_all` in
-`app/main.py`), so there is no separate migration step for the baseline.
+`app/lec_main.py`), so there is no separate migration step for the baseline.
 
 ## 2. Server: clone + prod .env
 

@@ -16,7 +16,7 @@ import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, DeclarativeBase
 
-from app.config import settings
+from app.lec_config import settings
 
 logger = logging.getLogger(__name__)
 

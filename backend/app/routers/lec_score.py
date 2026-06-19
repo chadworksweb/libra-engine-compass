@@ -23,11 +23,11 @@ from functools import lru_cache
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel, Field
 
-from app.config import settings
+from app.lec_config import settings
 from app.lec_constants import (
     ARTIFACT_TYPES, COLOR_HEX, COLOR_LABELS, TIER_ORDER,
 )
-from app.deps import require_api_key
+from app.lec_deps import require_api_key
 from app.services.agents.lec_calibrator import calibrate_song_async
 from app.services.agents.lec_rubric_builder import RUBRIC_DEFINITION, load_tenets
 

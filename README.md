@@ -21,7 +21,7 @@ Full plan: `Dropbox/Libra Engine/Libra Engine Compass (LEC)/plans and docs/LEC-E
 
 ## Status: Phase 0 COMPLETE -- LEC scores end-to-end locally
 
-The scoring service runs locally (`uvicorn app.main:app --port 8012`) against
+The scoring service runs locally (`uvicorn app.lec_main:app --port 8012`) against
 LEC's own DB and **makes real Opus calls** (`POST /api/score`, `GET /api/rubric`,
 `/health`). Verified: the Dickinson poem reads Ascended/violet, "Row Your Boat"
 Decent/green; the meter logs each call at the correct $5/$25 Opus rate. The lyric
@@ -30,7 +30,7 @@ system prompt + the scoring core (`charge_composition`, `summary_guard`, tenets,
 scoring is unchanged. Committed `6b80eac` (local, not pushed).
 
 **Run it:** put a dedicated key in `backend/.env` (`LEC_ANTHROPIC_API_KEY`), then
-`cd backend && .venv/Scripts/uvicorn app.main:app --port 8012`.
+`cd backend && .venv/Scripts/uvicorn app.lec_main:app --port 8012`.
 
 **North star:** LEC is the prerequisite for the **Lyric Transformer** and
 **Creative Charger** launches -- they consume it over HTTP. Finish LEC (deploy +
@@ -41,7 +41,7 @@ the listener-prose decision), then ship those. Full sequence in the plan doc.
   `services/agents/{calibrator,compass_agent_rubric,rubric_builder,summary_guard}.py`,
   `services/agents/tenets/{core.json,precedents.json,satire.md}`.
 - `app/constants.py` (COLOR_* + TIER_ORDER + ARTIFACT_TYPES/labels).
-- `app/config.py` (LEC settings, `LEC_` env prefix; matches RC attribute names so the lift resolves).
+- `app/lec_config.py` (LEC settings, `LEC_` env prefix; matches RC attribute names so the lift resolves).
 - `app/services/claude_meter.py` (LEC's own meter -> own `claude_api_usage`, CORRECT $5/$25 Opus pricing).
 - **Coupling cuts in `calibrator.py`:** removed the db-gated cache branch, the
   `lookup_calibrated` / `ensure_full_calibration` / `_ensure_generation` chain,
@@ -51,8 +51,8 @@ the listener-prose decision), then ship those. Full sequence in the plan doc.
   (dead in v2) + the RC narrative/editorial builders; added the `artifact_type`
   prompt framing. `rubric_builder.py`: per-type precedent corpus loader (lyric fallback).
 - `app/services/lyric_quote_guard.py` (lifted; the verbatim-quote scrub in the scoring path).
-- `app/routers/score.py` (from RC WIP `shared_brain.py`) + `app/deps.py` (X-Api-Key auth) + `app/main.py`.
-- `app/models.py` (`api_clients` / `api_client_keys`, `claude_api_usage`, `precedent_songs`) +
+- `app/routers/lec_score.py` (from RC WIP `shared_brain.py`) + `app/lec_deps.py` (X-Api-Key auth) + `app/lec_main.py`.
+- `app/lec_models.py` (`api_clients` / `api_client_keys`, `claude_api_usage`, `precedent_songs`) +
   `migrations/001_lec_baseline.py` (create_all baseline; main.py also ensures it on startup).
 - **Parity harness** `parity/run_parity.py` -- HTTP client, server-side Anthropic
   only, stateless (`use_precedents=false`); diffs tier + charge_value + contamination.

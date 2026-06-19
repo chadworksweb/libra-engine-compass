@@ -1,6 +1,6 @@
 """LEC configuration.
 
-The lifted brain reads `from app.config import settings`; the attribute names
+The lifted brain reads `from app.lec_config import settings`; the attribute names
 here (anthropic_api_key, agent_model, escalation_*) MATCH RC's so the verbatim
 calibrator resolves unchanged. Every env var carries the `LEC_` prefix so LEC's
 config can never collide with RC's when both run on the same droplet.

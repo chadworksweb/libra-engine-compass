@@ -21,7 +21,7 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import relationship
 
-from app.database import Base
+from app.lec_database import Base
 
 
 class ApiClient(Base):

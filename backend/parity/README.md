@@ -21,7 +21,7 @@ RC's verbatim, so at temperature=0 the reads should match.
 
    ```
    cd backend
-   .venv/Scripts/uvicorn app.main:app --port 8012
+   .venv/Scripts/uvicorn app.lec_main:app --port 8012
    ```
 
 2. Start an RC scorer exposing the same `POST /api/score` contract -- the WIP

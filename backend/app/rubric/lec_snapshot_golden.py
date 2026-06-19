@@ -22,10 +22,10 @@ from pathlib import Path
 
 from app.services.agents.lec_compass_agent_rubric import build_calibration_prompt
 from app.services.agents.lec_rubric_builder import load_tenets
-from app.routers.score import rubric_version
+from app.routers.lec_score import rubric_version
 
 try:
-    from app.config import settings
+    from app.lec_config import settings
     MODEL = settings.agent_model
 except Exception:  # pragma: no cover - config should always import
     MODEL = "unknown"

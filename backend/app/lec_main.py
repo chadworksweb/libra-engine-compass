@@ -12,9 +12,9 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 
-from app.database import Base, engine
-from app import models  # noqa: F401  (registers the models on Base before create_all)
-from app.routers import admin, score
+from app.lec_database import Base, engine
+from app import lec_models  # noqa: F401  (registers the models on Base before create_all)
+from app.routers import lec_admin, lec_score
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -36,8 +36,8 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-app.include_router(score.router)
-app.include_router(admin.router)
+app.include_router(lec_score.router)
+app.include_router(lec_admin.router)
 
 
 @app.get("/health")

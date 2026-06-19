@@ -1,7 +1,7 @@
 """LEC admin console routes.
 
 A single dashboard at /admin, gated behind an obscured login URL
-(/lec-admin-<token>) + an HttpOnly signed session cookie (app.services.admin_auth).
+(/lec-admin-<token>) + an HttpOnly signed session cookie (app.services.lec_admin_auth).
 All routes 404 unless admin is configured (LEC_ADMIN_LOGIN_TOKEN /
 LEC_ADMIN_PASSWORD / LEC_ADMIN_SECRET all set), so the surface is invisible
 until then. The dashboard markup is served whole; its data comes from
@@ -12,13 +12,13 @@ from fastapi import APIRouter, Depends, HTTPException, Request
 from fastapi.responses import HTMLResponse, JSONResponse
 from pydantic import BaseModel
 
-from app.admin_ui import DASHBOARD_HTML, LOGIN_HTML, PIPELINE_HTML
-from app.config import settings
-from app.database import SessionLocal
-from app.services.admin_auth import (
+from app.lec_admin_ui import DASHBOARD_HTML, LOGIN_HTML, PIPELINE_HTML
+from app.lec_config import settings
+from app.lec_database import SessionLocal
+from app.services.lec_admin_auth import (
     COOKIE_NAME, check_credentials, check_login_token, mint_session, require_admin,
 )
-from app.services.dashboard import build_summary
+from app.services.lec_dashboard import build_summary
 
 router = APIRouter(tags=["admin"])
 

@@ -12,9 +12,9 @@ from datetime import datetime
 
 from fastapi import Header, HTTPException
 
-from app.config import settings
-from app.database import SessionLocal
-from app.models import ApiClientKey
+from app.lec_config import settings
+from app.lec_database import SessionLocal
+from app.lec_models import ApiClientKey
 
 
 def require_api_key(x_api_key: str | None = Header(default=None)) -> None:

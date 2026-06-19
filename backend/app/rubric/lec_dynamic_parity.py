@@ -41,7 +41,7 @@ from pathlib import Path
 
 from anthropic import AsyncAnthropic
 
-from app.config import settings
+from app.lec_config import settings
 from app.rubric.lec_full_prompt import compose_full_prompt
 from app.rubric.lec_lens import get_lens, load_gospel
 from app.services.agents.lec_calibrator import _read_v3

@@ -17,16 +17,16 @@ from typing import Callable
 from anthropic import AsyncAnthropic
 from sqlalchemy.orm import Session
 
-from app.config import settings
+from app.lec_config import settings
 from app.services.lec_charge_composition import (
     CompositionError,
     compose,
     evaluate_escalation,
     validate_components,
 )
-from app.services.claude_meter import tracked_create_async
+from app.services.lec_claude_meter import tracked_create_async
 from app.services.agents.lec_compass_agent_rubric import build_calibration_prompt
-from app.services.agents.summary_guard import (
+from app.services.agents.lec_summary_guard import (
     CORRECTIVE_NUDGE as _SUMMARY_NUDGE,
     summary_from_json_text,
     summary_has_absence_framing,
@@ -375,7 +375,7 @@ async def calibrate_song_async(
     # ever ships. contaminated / dogma_referenced flags stay set, so the indicators
     # still show and the page falls back to generic copy.
     if lyrics:
-        from app.services.lyric_quote_guard import has_verbatim_overlap
+        from app.services.lec_lyric_quote_guard import has_verbatim_overlap
         for _field in ("contamination_note", "dogma_note"):
             if calibration.get(_field) and has_verbatim_overlap(calibration[_field], lyrics):
                 logger.warning("%s carried verbatim lyric quotes for %s / %s; cleared",

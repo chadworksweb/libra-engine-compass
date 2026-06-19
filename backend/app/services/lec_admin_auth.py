@@ -16,7 +16,7 @@ import time
 
 from fastapi import HTTPException, Request
 
-from app.config import settings
+from app.lec_config import settings
 
 COOKIE_NAME = "lec_admin_session"
 

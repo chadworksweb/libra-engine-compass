@@ -27,8 +27,8 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import Any
 
-from app.database import SessionLocal
-from app.models import ClaudeApiUsage
+from app.lec_database import SessionLocal
+from app.lec_models import ClaudeApiUsage
 
 logger = logging.getLogger(__name__)
 

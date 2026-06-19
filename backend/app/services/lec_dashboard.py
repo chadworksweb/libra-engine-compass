@@ -10,12 +10,12 @@ from datetime import datetime, timedelta
 
 from sqlalchemy.orm import Session
 
-from app.config import settings
+from app.lec_config import settings
 from app.lec_constants import (
     ARTIFACT_TYPE_LABELS, COLOR_BG, COLOR_HEX, COLOR_LABELS, TIER_ORDER,
 )
-from app.database import engine
-from app.models import ApiClient, ApiClientKey, ClaudeApiUsage, PrecedentSong
+from app.lec_database import engine
+from app.lec_models import ApiClient, ApiClientKey, ClaudeApiUsage, PrecedentSong
 
 SPEND_WINDOW_DAYS = 30
 RECENT_LIMIT = 12
@@ -24,7 +24,7 @@ RECENT_LIMIT = 12
 def _rubric_block() -> dict:
     # Imported here to avoid a circular import at module load (score imports
     # constants, dashboard imports score).
-    from app.routers.score import _tenet_count, rubric_version
+    from app.routers.lec_score import _tenet_count, rubric_version
 
     tiers = [
         {
