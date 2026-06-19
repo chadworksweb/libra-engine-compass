@@ -228,6 +228,23 @@ async def calibrate_song_async(
         title, artist, lyrics=lyrics, examples=examples, artifact_type=artifact_type
     )
 
+    # Decoupling cutover (Part 1), dark by default. When LEC_COMPOSE_RUBRIC is on,
+    # swap the lyric rubric-definition for the composed gospel + rc-lyric lens (the
+    # score-parity-validated path: compose_cutover_prompt == arm A of the
+    # 2026-06-18 dynamic run). Fail-closed: any composition error keeps the
+    # monolith prompt built above, so a bad lens can never blank a calibration.
+    # Lazy import so the flag-off path never touches app.rubric.
+    if settings.compose_rubric and artifact_type == "lyric":
+        try:
+            from app.rubric.lec_full_prompt import compose_cutover_prompt
+            from app.rubric.lec_lens import get_lens, load_gospel
+            system_prompt = compose_cutover_prompt(load_gospel(), get_lens("rc-lyric"))
+        except Exception:
+            logger.exception(
+                "composed rubric failed for '%s' by %s; using the monolith rubric",
+                title, artist,
+            )
+
     # First pass at the default model. The model emits components only; the
     # server composes the charge and derives the tier (charge_composition).
     if progress_cb:

@@ -1,0 +1,231 @@
+{
+  "schema_version": "le-0.1-part1-cores",
+  "note": "Domain-neutral baseline cores: the universal moral law, with the lyric-domain nouns (lyrics, narrator, song, listener) abstracted to neutral terms (the work, the speaker, the text, the audience). This is the layer the public ratifies once and that new lenses (Lyric Transformer, Creative Charger) derive their own wording from via their glossary. It does NOT participate in the lyric render (RC renders from rc-lyric/rc-lyric-text.json), so it is parity-safe by construction. AUTHORED: all five tiers (violet, blue, green, orange, red), the contamination modifier, the dogma_referenced flag, and the baseline-layer rules R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R13, R14, plus the universal siblings of R1 and R12. R1 and R12 are lyric-lens rules (their full, case-bound calibration text lives in rc-lyric/rc-lyric-text.json); what lives here is only the thin universal rule of construction each one leaves behind, tagged kind=universal_sibling with operative_rule_layer=lyric. Every rule therefore has a baseline core, thin for R1/R12 and rich for the rest. Rules are a distinct case-law layer beside the tenets: forged from cases, versioned and amended on their own clock (governance metadata moves home in Part 2). Canonical named examples were lifted to the lens per ruling 4; each core that had one now references an exemplar the lens supplies.",
+  "glossary_contract": {
+    "the work": "the artifact being read (a song for RC, a poem/essay/letter for other lenses)",
+    "the speaker": "the voice on the page, whoever is speaking",
+    "the text": "the words on the page",
+    "the audience": "those receiving the work (listeners for a song, readers for a poem or essay)"
+  },
+  "tiers": [
+    {
+      "slug": "violet",
+      "status": "authored",
+      "definition_core": "Collective perspective. The work speaks from, to, or about something larger than any one person.",
+      "tenets": [
+        {"id": "violet-01", "core": "Subject matter extends beyond the self or the couple to community, humanity, or the divine."},
+        {"id": "violet-02", "core": "The work articulates universal truth or spiritual reality."},
+        {"id": "violet-03", "core": "Content addresses collective healing, justice, or sovereignty."},
+        {"id": "violet-04", "core": "The work names a systemic or collective condition, not just a personal one."},
+        {"id": "violet-05", "core": "The speaker addresses or speaks for a people, not just 'I' to 'you'."},
+        {"id": "violet-06", "core": "The work demonstrates surrender to something larger than the self. Not naming it, enacting it on the page."},
+        {"id": "violet-07", "core": "The work confronts mortality, existence, or the meaning of life as the actual subject, not as a metaphor for personal loss."},
+        {"id": "violet-08", "core": "The work directly challenges a cultural or societal default. Names what is broken and points toward what is whole."},
+        {"id": "violet-09", "core": "The work carries prophetic or testimonial weight. Warning or witnessing beyond the speaker's personal stakes."},
+        {"id": "violet-10", "core": "The work's core message requires collective context. It cannot be reduced to one person's specific experience."},
+        {"id": "violet-11", "core": "Love expressed as a universal or collective force, not a private 1:1 bond."},
+        {"id": "violet-12", "core": "The work gives language to something the culture has no words for. Makes the invisible visible."},
+        {"id": "violet-13", "core": "The work's purpose on the page is selfless. It serves something beyond the speaker."}
+      ],
+      "notes": [
+        {
+          "id": "violet-note-specifics",
+          "title_core": "Specifics challenge Ascended, not grant it.",
+          "core": "A work framed as a rallying piece for a specific identifiable group (by identity, ideology, geography, subculture, faith, or tribe) does NOT auto-qualify for Ascended just because it calls for that group's protection, pride, or liberation. Ascended requires a frequency that transmits universally, one any member of the audience, including those outside the named group, can be elevated by. If the work's elevation is contingent on the audience belonging to (or siding with) the group, its ceiling is Elevated, not Ascended. Universal-frequency works (wisdom, gratitude, pure love, non-group-specific transcendence) still earn Ascended.\n\nSubject vs. lens, the resolving test. What decides the cap is the OBJECT OF THE DEMAND, not the mere presence of a named group. Group-as-SUBJECT: the work's END is advocacy FOR a specific identifiable group; its rights, pride, protection, liberation, or restoration is the thing being sought. The group is the destination. Ceiling is Elevated. Group-as-LENS: the work holds up a specific or lived group experience as a WINDOW onto a universal value (justice, human dignity, anti-brutality) any member of the audience already stands inside, the named experience offered as proof or witness, not as the ask. The group is the window. Clears to Ascended. Test phrase: 'justice FOR [group]' caps; 'justice, period, here is what I lived' clears. A named group never decides the cap by itself; whether that group is the work's destination or its window does."
+        }
+      ]
+    },
+    {
+      "slug": "blue",
+      "status": "authored",
+      "definition_core": "Self without ego. Honest internal work on the page. Questioning, accountability, acceptance, processing, growth.",
+      "tenets": [
+        {"id": "blue-01", "core": "The speaker questions their own assumptions or behavior."},
+        {"id": "blue-02", "core": "The work demonstrates accountability. Owning mistakes, facing consequences."},
+        {"id": "blue-03", "core": "The work shows acceptance of a hard truth, not just naming it."},
+        {"id": "blue-04", "core": "The work processes through something with visible movement. Starts one place, ends another."},
+        {"id": "blue-05", "core": "Growth is demonstrated, not just wished for."},
+        {"id": "blue-06", "core": "The work shows vulnerability without performance. The speaker is exposed, not curating an image."},
+        {"id": "blue-07", "core": "The speaker confronts their own role in a problem rather than blaming externally."},
+        {"id": "blue-08", "core": "The work contains genuine self-examination. Looking inward with honesty, not self-pity."},
+        {"id": "blue-09", "core": "The work arrives at a perspective earned through the struggle described. Wisdom on the page, not borrowed."},
+        {"id": "blue-10", "core": "The speaker lets go of something: control, resentment, certainty. And it is visible in the text."},
+        {"id": "blue-11", "core": "The speaker demonstrates genuine empathy, forgiveness, or humility on the page. Not as performance, as posture."}
+      ],
+      "notes": []
+    },
+    {
+      "slug": "green",
+      "status": "authored",
+      "definition_core": "Catch-all. The work does not push in either direction. Pleasant, fun, romantic, sad, nostalgic, but no internal work being done and no ego being served. The work is what it is.",
+      "tenets": [
+        {"id": "green-01", "core": "Describes a feeling or situation without developing or moving through it."},
+        {"id": "green-02", "core": "Tells a story without transformative substance."},
+        {"id": "green-03", "core": "Expresses 1:1 romance, attraction, or relationship sentiment at face value."},
+        {"id": "green-04", "core": "Creates atmosphere or mood that does not go beyond the feeling itself."},
+        {"id": "green-05", "core": "The speaker observes or describes but does not examine."},
+        {"id": "green-06", "core": "The work evokes a mood or meets the audience in a feeling, but does not move them through it or say something beyond it."},
+        {"id": "green-07", "core": "The work stays on the surface of a single subject, describing what it looks or feels like without examining what is underneath."},
+        {"id": "green-08", "core": "The work is pure entertainment or fun with nothing underneath."},
+        {"id": "green-09", "core": "The work references something deeper but does not develop it. Gestures at meaning without delivering."},
+        {"id": "green-10", "core": "Inspirational or uplifting language without earned substance. 'You can do it' without the effort behind it."}
+      ],
+      "notes": []
+    },
+    {
+      "slug": "orange",
+      "status": "authored",
+      "definition_core": "Ego self perspective. The work serves the speaker's ego, promotes avoidance, or steers away from growth.",
+      "tenets": [
+        {"id": "orange-01", "core": "The work celebrates surface-level markers as aspiration. Wealth, status, image, possessions as measures of worth."},
+        {"id": "orange-02", "core": "The speaker frames manipulation or control as romance or love."},
+        {"id": "orange-03", "core": "The work wallows in pain without any movement toward processing."},
+        {"id": "orange-04", "core": "The work promotes emotional avoidance or bypassing. Numbing instead of feeling."},
+        {"id": "orange-05", "core": "Content centers the speaker's ego. I am better, I am tougher, I deserve more."},
+        {"id": "orange-06", "core": "The work frames self-destructive behavior as strength or identity."},
+        {"id": "orange-07", "core": "The speaker refuses accountability. Blames externally, ignores consequences, or treats responsibility as someone else's problem."},
+        {"id": "orange-08", "core": "Subtle objectification or dehumanization of others, treating people as accessories or conquests."},
+        {"id": "orange-09", "core": "Soft us-vs-them framing. Others are lesser, outside, or beneath the speaker without full contempt."},
+        {"id": "orange-10", "core": "The work feeds insecurity or self-doubt as identity rather than something to work through."},
+        {"id": "orange-11", "core": "The work reinforces scarcity, lack, or limitation as the speaker's worldview."}
+      ],
+      "notes": []
+    },
+    {
+      "slug": "red",
+      "status": "authored",
+      "definition_core": "Ego black-hole. The work actively destroys, dehumanizes, or consumes. Self or others.",
+      "tenets": [
+        {"id": "red-01", "core": "Explicit sexual objectification or dehumanization."},
+        {"id": "red-02", "core": "The work celebrates substance abuse as lifestyle or identity."},
+        {"id": "red-03", "core": "Promotes violence as entertainment or solution."},
+        {"id": "red-04", "core": "Contempt for a specific target. Naming, mocking, asserting dominance."},
+        {"id": "red-05", "core": "Treats possession or control of another person as desirable."},
+        {"id": "red-06", "core": "Revenge fantasized or celebrated, not processed."},
+        {"id": "red-07", "core": "The speaker knows something is wrong and leans into it. Self-destruction with open eyes."},
+        {"id": "red-08", "core": "The work strips dignity from a person or group for entertainment."},
+        {"id": "red-09", "core": "Glorifies exploitation. Using people, systems, or trust for personal gain."},
+        {"id": "red-10", "core": "The work's core stance is destruction. Of self, of others, of meaning itself."},
+        {"id": "red-11", "core": "Total emotional shutdown. Catatonic numbness as the work's stance."},
+        {"id": "red-12", "core": "Active nihilism. Rejecting meaning, hope, or the sacred."},
+        {"id": "red-13", "core": "Pure rage as the work's engine. Not processing anger, being consumed by it."}
+      ],
+      "notes": []
+    }
+  ],
+  "modifiers": [
+    {
+      "id": "contamination",
+      "status": "authored",
+      "label": "Contaminated",
+      "core": "Contaminated is NOT a separate tier, it is a modifier that can ONLY attach to violet, blue, or green works. Red and orange works CANNOT be contaminated: they already calibrate as harmful, there is no higher-tier substance being undermined. Contamination means a work that meets Decent, Elevated, or Ascended criteria in its overall messaging, but contains specific passages or content that meet Degraded or Corrupted criteria. The work keeps its tier. The contaminating content is flagged separately. Contamination requires the presence of specific content that meets Degraded or Corrupted tenet criteria. A work that is simply not deep enough to be Elevated is NOT contaminated, it is just Decent.",
+      "lens_owned": "the worked examples of contaminated works"
+    }
+  ],
+  "flags": [
+    {
+      "id": "dogma_referenced",
+      "status": "authored",
+      "label": "Dogma referenced",
+      "core": "Dogma referenced is a parallel tag, not a tier and not a score modifier. It never moves the charge; its only purpose is to make doctrinal coverage visible over time, kept separate from the charge. It fires when a specific doctrinal framework is load-bearing to the work. Judge it on the dominant arc, never an isolated line. The question is not whether a doctrinal reference appears, but whether the doctrine is doing the work's work: whether the work exists to worship within, proclaim, convert to, or assert that doctrine as true and normative. A passing allusion to a doctrine-rooted event, figure, or miracle used to illustrate, ornament, or lend authority to an otherwise secular arc does NOT fire; the doctrine has to be the destination, not the decoration.\n\nFires when the framework is load-bearing, across these families: Christian (crucifixion, resurrection, salvation by grace, the only-way claim, sin and redemption mechanics, sacraments invoked as normative); Islamic (the oneness creed, the final-prophet claim, the five pillars invoked as normative, halal and haram as doctrinal rule); Karmic or Dharmic (karma as a metaphysical mechanism rather than a loose metaphor, samsara, caste, dharma as normative rule, a specific reincarnation doctrine); Institutional or ecclesiastical (a specific sect, denomination, clergy authority, membership requirement, or salvation tied to a specific institution).\n\nDoes NOT fire on: cross-traditional spiritual vocabulary used openly (god, universe, soul, spirit, divine, sacred, heaven, prayer, meditation, faith, grace, blessing, mercy); metaphorical use of tradition-rooted words ('it's karma' as casual idiom, 'crucified' as hyperbole for shame, 'preach' as slang for agreement); generic devotional language with no specific doctrine attached; or a scriptural allusion used as illustration inside an otherwise secular work.\n\nDecisive swap test, run it before firing: strip the doctrine-specific image and swap in a cross-traditional one (a named miracle of provision becomes 'as nature feeds every creature'; a named act of mercy becomes 'as kindness is repaid'). If the work's central message survives intact, the doctrine was decoration and the flag does NOT fire. The flag fires only when the message collapses under the swap, when the work's whole rhetorical engine IS the specific framework.",
+      "lens_owned": "the worked fires/does-not-fire contrasts (the worship-anthem vs humanitarian-anthem pair)",
+      "instrument_owned": "the rendered prompt block format and the dogma_note field instruction (name the framework, paraphrase rather than quote the triggering moment)"
+    }
+  ],
+  "rules": [
+    {
+      "id": "R1",
+      "status": "authored",
+      "layer": "baseline",
+      "kind": "universal_sibling",
+      "operative_rule_layer": "lyric",
+      "core": "Hyperbole is not literal evidence. Figurative intensifiers and exaggeration name the intensity of a feeling, not a literal fact about the speaker. Do not grade a work for the extreme thing its hyperbole asserts unless the text demonstrates that extreme thing actually occurring (actual loss of self, boundaries, or agency, not merely the language of it). This is the universal residue of R1; the domain lens carries the full calibration correction for the conventional hyperbole of its own form."
+    },
+    {
+      "id": "R2",
+      "status": "authored",
+      "layer": "baseline",
+      "core": "Zero is a narrow, specific score, not a fallback. 0 means the work's message is precisely centered, with as much elevation as drag and neither side winning, and you can articulate what holds it at center. 'Start at zero' is the methodology for where to begin analysis. Landing at zero requires a case. If you cannot decide whether a work reads as high-Decent or low-Decent, resolve the analysis and commit; do not split the difference at 0. The Decent tier spans the full range between -24 and +24. Use it. Scores like -14, -8, -4, +6, +12, +18 are all valid Decent placements and should land where the work actually sits. Only land at exactly 0 when you can name the equilibrium. Separately, do not default to multiples of 5 or 10 out of habit; score the value you actually read. Round numbers are not preferred; accurate numbers are."
+    },
+    {
+      "id": "R3",
+      "status": "authored",
+      "layer": "baseline",
+      "core": "Vocabulary is not substance. Naming the sacred (god, spirit, universe, soul, divine) does not activate Ascended tenets. The work must deliver what those tenets require (subject beyond self, universal address, surrender, collective perspective). Test: mentally swap the spiritual noun (god to universe to self). If the activation would change, the activation is vocabulary-driven and should be zero. A work that says 'god' but is structurally a 1:1 transaction does not earn Ascended on vocabulary alone. A work that never names the divine but genuinely delivers collective witness earns it fully. Activation is about what the text does, not what it invokes."
+    },
+    {
+      "id": "R4",
+      "status": "authored",
+      "layer": "baseline",
+      "core": "Heartbreak distortion vs. predatory control. When a work contains both possessive or controlling language AND clear evidence of grief, loss, or being left, classify the possessive language as distorted heartbreak (Degraded), not predatory intent (Corrupted). Two cases: (a) Clinging-after-loss, the target has already left or is leaving and the surveillance or possession language is the symptom of being unable to release them. Lands in Degraded, severity from high (~-25) to mid (~-50) depending on intensity. (b) Active control over someone present, the speaker threatens, monitors, or asserts ownership over someone still in their orbit, or someone they are trying to keep down. Lands in Corrupted. The test is power: a speaker clinging to an absence has none, they are mourning out loud; a speaker wielding ownership over someone in their orbit has it and is using it. Pathological inability to let go of someone who left is not contempt; it is distorted attachment. The lens supplies the worked exemplar."
+    },
+    {
+      "id": "R5",
+      "status": "authored",
+      "layer": "baseline",
+      "core": "Speaker perspective: observer or warning vs. first-person endorsement. When a work describes Degraded or Corrupted behavior, the speaker's relational position to that behavior determines tier. Three cases: (a) First-person endorsement, the speaker IS the actor, models the behavior as desirable, or invites participation. The dehumanization, objectification, or control language activates Degraded or Corrupted tenets at full weight. (b) Observer warning, the speaker describes a third party's harmful pattern in cautionary terms, typically third-person ('she', 'he', 'watch out'), often addressed to another member of the audience. The descriptive language can sound dehumanizing in isolation but the work's stance is warning, not celebrating. Lands Decent (often slightly negative, since cautioning about harm is not uplifting), unless the warning escalates into contempt or attack-piece territory. (c) Witness or critique, the speaker names harm without enacting it and the work exposes or counsels around the pattern. Can land Elevated when it processes or transforms (a work that both warns AND counsels survival). Test: where does the speaker stand relative to the harmful behavior, inside it, warning about it from outside, or critiquing it as a framing?\n\n(d) Witness-slur and contamination. The witness/critique position in (c) governs the contamination flag as well as the tier. A slur or epithet reproduced from the victim or attacked position, where the speaker IS the target voicing the abuse to expose it, or speaks AS the oppressed, does NOT set contaminated, because contamination is a lower-tier element that UNDERMINES a higher-tier message and a witness-slur does the opposite: it serves the message by naming the harm done. Only a slur the speaker DEPLOYS as contempt against a target contaminates. Test: is the slur aimed BY the speaker at someone, or suffered and voiced by the speaker as the one it is aimed at? Aimed-by contaminates; voiced-as-witness does not. The lens supplies the worked exemplar."
+    },
+    {
+      "id": "R6",
+      "status": "authored",
+      "layer": "baseline",
+      "core": "Anonymous reading: the creator's context does not enter the score. A work's score must be derivable from the text on the page. The creator's identity, public reputation, prior body of work, audience discourse, marketing positioning, critical reception, and the cultural narratives that have grown around them are not evidence and must not influence the calibration. Read the work, not the persona. This applies in both directions: reputation cannot lift a work toward Elevated or Ascended on the strength of perceived sincerity, vulnerability, or depth; nor can it push a work toward Degraded or Corrupted on the strength of perceived persona, category, or affiliation. Anonymity is the precondition for accurate reading."
+    },
+    {
+      "id": "R7",
+      "status": "authored",
+      "layer": "baseline",
+      "core": "SCOPE: This rule applies only to works reaching Elevated via the internal-work route, that is, on the strength of blue tenets that measure self-examination, accountability, processing, letting-go, vulnerability, or empathy in the speaker (blue 1-11). It does NOT apply to works reaching Elevated via collective-stance routes: protest, advocacy, calling for justice, rights, or equality, witness, systemic critique, or content that would qualify as Ascended on violet tenets but is capped to Elevated by violet-note-specifics (a work that rallies for a specific identifiable group). Collective-stance works measure the speaker's posture toward the world, not the speaker's change; transformation is not the relevant axis, and these works can land in Elevated without any speaker transformation on the page. A work calling for better treatment of a community lands in Elevated on the strength of the stance.\n\nWhen the route IS internal-work: a work earns Elevated only when the speaker demonstrates a change in posture, understanding, or state across the text, not when the speaker merely describes self-awareness, vulnerability, or letting-go in static terms. The test is structural: where does the speaker end up materially different from where they began? If the work opens with a description of a state and closes in the same state (however vivid, however self-aware, however articulate), the tier ceiling is Decent. The blue tenets (vulnerability, accountability, processing, letting-go, empathy) measure transformation in motion, not the language of transformation. A speaker who says 'I am damaged, I cannot change, here is why' with full clarity is naming a state, not moving through it. Naming earns honesty; movement earns elevation. Without demonstrated movement, even the most articulate self-portrait stays Decent. This rule caps the tier; it does not lower the score within Decent, a vividly honest static self-portrait can still land at the high end of Decent (~+20). Hypothetical, conditional, or wish-form language does not satisfy this rule. Constructions like 'I wish I could,' 'I'd be,' 'if we found a way,' 'someday,' 'if only' are the speaker imagining a different posture, not occupying one. A wish is not a movement. A condition is not a change. The speaker must actually do the thing on the page, actually let go, actually take accountability, actually offer repair without reservation, not name what they would do under different circumstances. If the closing posture relies on subjunctive constructions to claim its transformation, the work stays in Decent. Wishes earn high-Decent at most."
+    },
+    {
+      "id": "R8",
+      "status": "authored",
+      "layer": "baseline",
+      "core": "When a work names a systemic, generational, or community-level dysfunction (economic extraction, addiction culture, generational poverty, political apathy, small-town stagnation, and the like) and the speaker's stance toward that condition is ownership, belonging, or identity-claim ('it's ours now,' 'this is who we are,' 'welcome to my town'), the work does NOT activate Ascended tenets that reward collective scope (especially tenets 4 and 5), and the systemic naming becomes contamination rather than elevation. Read collective resignation as collective resignation, not as transformative witness. To activate Ascended on systemic content, the work must demonstrate one of: (a) explicit critique that names the brokenness AND points toward what would be whole, or (b) a speaker who refuses the inherited dysfunction rather than absorbing it as identity. Naming a broken system and then claiming it as home is two negatives, not a positive. Cumulative pattern principle: multiple Degraded signals individually framed as 'honest confession' become endorsement when the work's repeated structural claim (its refrain or recurring line) takes the catalogue as collective identity. R5 distinguishes endorsement from warning on the Degraded or Corrupted side; R8 makes the parallel distinction on the Ascended side, between critique and absorption."
+    },
+    {
+      "id": "R9",
+      "status": "authored",
+      "layer": "baseline",
+      "core": "SCOPE: Inherits from R7. This rule applies only to works reaching Elevated via the internal-work route. It does NOT apply to collective-stance routes (protest, advocacy, justice-seeking, witness, systemic critique, or violet-content capped to Elevated by violet-note-specifics). Those routes earn Elevated on the strength of the stance, not the speaker's movement, and outward imperatives directed at the world ('set us free,' 'stop the war,' 'let my people go') are the legitimate vocabulary of advocacy, not failed transformation.\n\nWhen the route IS internal-work: a work earns Elevated only when the speaker's own posture, internal state, or behavior changes across the text. Movement cannot be demanded of the world, the other person, or circumstances. Imperatives addressed to others ('stay gone,' 'leave me alone,' 'come back,' 'be different'), interrogative requests ('won't you,' 'can you'), and conditional preconditions ('if you'd just,' 'when you finally') are wishes directed outward, they describe what the speaker wants from someone else, not a change in the speaker. A wish addressed to another person is still a wish. Aesthetic markers of transformation (vivid imagery, conditional verbs, collective vocabulary, dignified resignation, idealized memory) do not constitute transformation. Vividness is not movement. Honesty is not movement. The presence of craft is not movement. Measure what the speaker does on the page, not what the text performs around the speaker's stasis. If the work's most defensible argument for Elevated (via the internal-work route) relies on stylistic markers rather than a cited change in the speaker, the work stays Decent. R9 is the synthesis cap for the internal-work route: when R7 (subjunctive transformation) and R8 (collective ownership) have closed their specific failure modes and a work still finds a narrow band that performs movement without enacting it, R9 names the meta-pattern and holds the tier at Decent."
+    },
+    {
+      "id": "R10",
+      "status": "authored",
+      "layer": "baseline",
+      "core": "A work's closing posture caps the tier on collective-stance routes. On witness, protest, advocacy, and systemic-critique routes, the routes R7/R9 explicitly exempt from internal-work transformation requirements, the final stance the work leaves the audience in determines how high the tier can land. A work that names injustice, dysfunction, or apathy throughout and refuses it in the body but ENDS by repeating, accepting, or sinking back into the same stance cannot reach Ascended, and may be capped at high Elevated or below depending on how thoroughly the closing reverts. The test is asymmetric: read the closing passage, the final lines or section, as the work's stated thesis. If the closing relands in the very condition the body was critiquing, treat it as a structural cap pulling the calibration toward the negative direction. The mirror also holds: a work that struggles through doubt, pain, or witness and ENDS at substantive affirmation, refusal, or resolve gets the elevation that closing earns. R10 differs from R7/R9 (which cap the internal-work route on the speaker's non-movement) and from R8 (which catches collective ownership of dysfunction): R10 is about the structural weight of the final stance on routes that do not require speaker transformation. The lens supplies the worked exemplar."
+    },
+    {
+      "id": "R11",
+      "status": "authored",
+      "layer": "baseline",
+      "core": "R11 creates a positive route to Elevated for works whose primary mode is direct second-person address delivering substantive affirmation to the audience. When the text names a specific inner dignity, capacity, courage, strength, or worth in the addressee, and the case for moving up rests on that substance, not on the speaker's internal work, the encouragement route activates. The route lands low to mid Elevated (+25 to +39) by default. Higher elevation requires the affirmation to be precise about a specific kind of dignity AND carried by concrete imagery or metaphor that delivers the truth without diluting it. Vague platitudes ('you can do anything,' 'you are amazing,' 'you are special') do not activate, they stay Decent. Specifics ('the strength to carry on inside you,' 'courage to face fears,' 'look inside your heart and find the answer,' 'you have always been the hero of your own story') do activate. The speaker does not need to transform on this route; the speaker is messenger or witness to the addressee's truth, not a self-examiner. The transformation check (inward subjunctive, outward wish, aesthetic markers) does not cap on the encouragement route, mirroring the collective-stance exemption in R7/R9. R11 differs from R7/R9 (which cap the internal-work route on the speaker's non-movement), R8 (collective ownership of dysfunction), and R10 (closing-stance cap on collective-stance routes): R11 speaks directly to the addressee about the addressee's inner state. The lens supplies the worked exemplar."
+    },
+    {
+      "id": "R12",
+      "status": "authored",
+      "layer": "baseline",
+      "kind": "universal_sibling",
+      "operative_rule_layer": "lyric",
+      "core": "Read a work in its own period's conventions; do not retrofit a later interpretive frame onto an older work. Importing a frame that did not exist when the work was made, and treating it as the work's intended meaning, is the time-axis form of the anonymous-read error (R6): it substitutes a frame the text never delivered for the text itself. This is the universal residue of R12; the domain lens carries the full calibration correction for the era conventions of its own form."
+    },
+    {
+      "id": "R13",
+      "status": "authored",
+      "layer": "baseline",
+      "core": "Profanity is not graded; profanity weaponized as a targeted insult is. Swearing on its own is neutral register ('damn good night,' 'f**k yeah') and does not move the charge, the mirror of R3. But profanity aimed as contempt or a put-down at a target (an ex, a rival, a bystander, the self) carries the contempt tenets (Degraded 9, Corrupted 4) at the weight the targeting earns. Test: strip the profanity; if a cruelty survives ('I hate you,' 'you're beneath me'), it grades; if only emphasis remains, it does not. The lens supplies the worked exemplar."
+    },
+    {
+      "id": "R14",
+      "status": "authored",
+      "layer": "baseline",
+      "core": "When a work's dominant arc is load-bearing doctrine (the dogma_referenced conditions: proclaiming, worshipping inside, asserting the truth of, or instructing the audience in a specific framework), the presence of that doctrine RAISES the bar for Ascended rather than clearing it. The standard postures of doctrinal submission, asserting one's own unworthiness ('I don't deserve it,' 'I couldn't earn it'), crediting a framework for unmerited rescue, proclaiming the doctrine as normative, are NOT in themselves ascension or internal work. Self-diminishment inside a hierarchy is doctrinal positioning, not the ego-less universal surrender violet-06 measures. Do not grant elevation on the cultural reflex that worship or devotional work is inherently transcendent; that is the reverence-halo mirror of the bias error (R6/R12), a frame the culture supplies that the text never earned. A doctrinal work earns Ascended only when it transmits a truth that survives the dogma-swap test (strip the specific framework and the central message stands) AND its surrender, gratitude, or love registers as universal rather than framework-contingent. Absent that, the work lands on its actual routes like any other: it must still demonstrate internal-work movement (R7/R9) or a collective-stance witness to reach Elevated, and proclaiming a doctrine is not witnessing injustice. Run the flag and the tier together: when dogma_referenced fires on the dominant arc, state explicitly why the work does or does not clear the raised bar."
+    },
+    {
+      "id": "R15",
+      "status": "authored",
+      "layer": "baseline",
+      "core": "Culturally-conferred sanctity is an inherited frame, not earned substance. When the work invokes a sanctity the surrounding culture already venerates (state-sanctioned, patriotic, memorial, civic-ritual, or institutional: the fallen, the flag, a sacred site, a martyr, a hallowed tradition), that reverence is a borrowed frame the work must earn on the page, not pre-loaded charge that raises the tier on its own. This is the civic and institutional generalization of the reverence-halo R14 names for load-bearing religious dogma, and the same error class as R6 (a reputation the audience supplies) and R12 (an era's reverence the audience back-fills): a frame the culture confers that the text never delivered. Separate what the work ASSERTS (the deaths were honorable, the cause was just, the place is holy, the institution is sacred) from what it DELIVERS (demonstrated fidelity, genuine consolation, examined collective witness, a stance the work actually enacts). Only the delivered content scores; the borrowed sanctity neither lifts the tier nor adds charge, and unexamined valorization dilutes rather than elevates. R3 already discounts naming the sacred as vocabulary; this rule discounts the cultural veneration that naming rides on. Test: strip the sacred wrapper and ask what fidelity, consolation, or witness survives; the work lands on its earned content, not where the culture pre-assigns it. Dying for a cause does not make the cause just; a funded ritual coded holy is not demonstrated transcendence. The lens supplies the worked exemplar."
+    }
+  ]
+}

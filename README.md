@@ -14,16 +14,27 @@ Full plan: `Dropbox/Libra Engine/Libra Engine Compass (LEC)/plans and docs/LEC-E
 
 - **HTTP-everywhere.** RC + LT both call LEC over HTTP. No in-process path.
 - **Co-located** on the same DO cluster/droplet as RC (loopback hop, negligible next to the Opus call).
-- **Owns the rubric.** `tenets/core.json` + `precedents.json` are canonical here. RC's Motion Desk proposes amendments applied to LEC's tenets.
+- **Owns the rubric.** `tenets/rc-lyric-rubric.json` + `rc-lyric-precedents.json` are canonical here. RC's Motion Desk proposes amendments applied to LEC's tenets.
 - **Own database** (`libra_engine_compass` on the shared DO cluster): service keys, the calibration-spend meter, and the precedent corpus (projected from RC).
 - **Domain:** `lec.libraengine.com`.
 - **API:** `POST /api/score` (with optional `use_precedents`), `GET /api/rubric`. Service-key auth.
 
-## Status: Phase 0 -- brain stands up locally; parity-ready
+## Status: Phase 0 COMPLETE -- LEC scores end-to-end locally
 
-The full scoring service boots locally (`POST /api/score`, `GET /api/rubric`,
-`/health`) against LEC's own DB. The lyric system prompt is **byte-for-byte
-identical to RC master** (verified by sha256), so the scoring is unchanged.
+The scoring service runs locally (`uvicorn app.main:app --port 8012`) against
+LEC's own DB and **makes real Opus calls** (`POST /api/score`, `GET /api/rubric`,
+`/health`). Verified: the Dickinson poem reads Ascended/violet, "Row Your Boat"
+Decent/green; the meter logs each call at the correct $5/$25 Opus rate. The lyric
+system prompt + the scoring core (`charge_composition`, `summary_guard`, tenets,
+`_read_v3`) are **byte-for-byte identical to RC master** (sha256-verified), so the
+scoring is unchanged. Committed `6b80eac` (local, not pushed).
+
+**Run it:** put a dedicated key in `backend/.env` (`LEC_ANTHROPIC_API_KEY`), then
+`cd backend && .venv/Scripts/uvicorn app.main:app --port 8012`.
+
+**North star:** LEC is the prerequisite for the **Lyric Transformer** and
+**Creative Charger** launches -- they consume it over HTTP. Finish LEC (deploy +
+the listener-prose decision), then ship those. Full sequence in the plan doc.
 
 **Done:**
 - Brain-core lifted VERBATIM from RC (commit `390963e`): `services/charge_composition.py`,

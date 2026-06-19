@@ -1,0 +1,20 @@
+{
+  "lens_version": "cc-0.1-part1-essay",
+  "pinned_baseline": "le-0.1-part1-cores",
+  "note": "THIN second lens (Creative Charger, prose/essay content type), authored to PROVE the >1-lens seam (Decoupling Part 1, step 3). It binds only the glossary + product framing and leaves the worked examples empty: the point is that the SAME universal gospel (le-cores + le-scaffold + le-method) renders through a different domain's vocabulary with no change to the law. A production essay lens would fill tenet_examples / rule_examples / domain_rules (R1/R12 for prose) / summary_voice / guard_config the way rc-lyric does; this stub deliberately does not, so compose(gospel, cc-essay) shows the gospel law in essay terms and nothing else. content_type is the lens id + dispatch key; precedents_key selects the corpus (prose_essay, which falls back to the lyric table until a prose corpus is authored). lens_version/pinned_baseline/note are metadata, ignored by load_lens_bundle.",
+
+  "content_type": "cc-essay",
+  "label": "essay",
+  "product_framing": "You are a prose calibration agent for the Creative Charger, a diagnostic tool that reads the energetic charge of a piece of writing by assessing the messages its prose carries.",
+
+  "glossary": {
+    "the work": "the essay",
+    "the speaker": "the writer",
+    "the text": "the prose",
+    "the audience": "the reader"
+  },
+
+  "precedents_key": "prose_essay",
+  "use_precedents_default": false,
+  "satire_available": false
+}

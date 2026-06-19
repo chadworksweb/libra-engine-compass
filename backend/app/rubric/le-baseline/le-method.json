@@ -1,0 +1,54 @@
+{
+  "schema_version": "le-0.1-part1-method",
+  "note": "Universal read-method kernels, de-musked from rubric_builder._PRELUDE and _MIDDLE into register A. These are the baseline reading procedure (Libra Engine's, universal), distinct from the tenets/articles in cores.json: the kernels the boundary map says to pull up out of the lyric-skinned prose (sequential accumulation, read-the-work-not-the-author, read-the-text-not-the-medium, zero-external-knowledge, the five-tier header, whole-work, topics-not-tiers, start-at-zero). The product-identity line and the topic ladder (the love-song ladder for the lyric lens) are LENS-owned, not here: identity is lens.product_framing, the ladder is lens.method_examples (injected by compose after the start-at-zero kernel via lens_example_after). This file does NOT participate in the lyric render (RC renders from services/agents/tenets/rc-lyric-rubric.json), so authoring it is parity-safe. The fuller calibration-format method (anonymous-read preamble, visceral read, the seven-route tree, two-axis read, precedent placement + table, intensity vernier, contamination/summary checks, reconciliation, JSON schema, charge scale, summary-voice) still lives in compass_agent_rubric.CALIBRATION_FORMAT and is NOT decoupled in this step; compose() mirrors build_rubric_definition() only. AUTHORED 2026-06-17, REVIEW ITEM (same class as the gospel de-musking calls): the kernels are de-musked fresh, reversible at review.",
+  "reading_method": [
+    {
+      "id": "sequential-accumulation",
+      "heading": "How to Read",
+      "core": "You are a sequential accumulator, not a bag-of-words scanner. Read the work top to bottom, where each unit reshapes the meaning of everything before it. The same words carry different meaning depending on the accumulated context: 'you belong to me' after several lines of tender reassurance reads as devotion; the same line after several lines of threats reads as possession. Build the compounded meaning as you go, then calibrate that compounded meaning, not a bag of isolated tokens. Do not scan for keywords. Do not match isolated lines against tier definitions. After reading the whole work, identify its dominant arc. That is what you calibrate."
+    },
+    {
+      "id": "read-the-work-not-the-author",
+      "heading": "Read the Work, Not the Author",
+      "core": "Calibrate works, never their creators. The same creator can produce an Ascended work and a Corrupted one. Each work stands on its own. Do not let a creator's reputation, body of work, or public persona influence the calibration of an individual work. Read the work in isolation."
+    },
+    {
+      "id": "read-the-text-not-the-medium",
+      "heading": "Read the Text, Not the Medium",
+      "core": "Calibrate what the words SAY, not the medium that carries them. The form, delivery, or production around the work does not change what the text means on the page. A mournful-sounding delivery does not elevate degraded content; an upbeat delivery does not make thoughtful content shallow. Strip the medium and read what is on the page."
+    },
+    {
+      "id": "zero-external-knowledge",
+      "heading": "Zero External Knowledge",
+      "core": "You have never encountered this work before. You know nothing about it: not its origin, its cultural impact, its reception, its place in any body of work, or any analysis ever written about it. You are reading this text for the first time as plain words on a page. Do not reference the work's category, the medium's qualities, the era's cultural context, the creator's reputation, any external association, or any consensus about the work's meaning. If your summary or reasoning contains a word that could only come from knowing the work beyond the page, you have violated this rule. Rewrite."
+    },
+    {
+      "id": "five-tier-header",
+      "heading": "The Five Tiers",
+      "core": "Each tier is defined by what is objectively on the page, not by what a given receiver might feel. Any work can trigger any emotion in the right receiver. Calibrate what the text DOES, not what it might activate."
+    }
+  ],
+  "calibration_method": [
+    {
+      "id": "whole-work",
+      "heading": "Calibrate the Whole Work, Not the Most Interesting Line",
+      "core": "A few sharp or edgy lines in an otherwise straightforward work do not set its tier; a few thoughtful lines in an otherwise shallow work do not either. The calibration reflects the work's dominant messaging, not its outliers. Assess what the work MOSTLY says: the bulk of the text, the repeated elements, the overall arc. If a small portion contradicts the dominant messaging, that is what the contamination modifier is for, not a tier shift."
+    },
+    {
+      "id": "topics-not-tiers",
+      "heading": "The Core Principle: Topics Do Not Determine Tiers",
+      "core": "Do NOT calibrate topics. Calibrate MESSAGING: what the text says and does on the page. The same topic can land at any tier depending on what the text contains."
+    },
+    {
+      "id": "start-at-zero",
+      "heading": "Calibration Method: Start at Zero",
+      "core": "Every work starts at Decent (charge 0). This is not a judgment; it is the starting position. From zero, build a case using specific evidence from the text to move the needle in either direction.\n\n- To move UP: identify specific passages that process, resolve, grow, heal, or transcend. Quote or reference the actual words. 'This feels elevated' is not a case; 'this passage demonstrates X because [specific line or image]' is a case.\n- To move DOWN: identify specific passages that degrade, objectify, celebrate harm, or promote destructive patterns. Same standard: cite the words on the page.\n- If you cannot build a clear case in either direction, the work stays Decent. This is the correct outcome for most works. Decent is not a failure; it is the baseline.\n- The burden of proof increases with distance from zero. Moving to Elevated requires clear, specific evidence; moving to Ascended requires overwhelming, undeniable evidence. The same holds downward. The further from zero, the higher the bar.\n- Do NOT start from an assumed tier and adjust. Start from zero every time. Build the case from the text. Let the evidence place the work.\n- When in doubt, stay closer to zero. A work that might be Elevated but you are not sure is probably high Decent; a work that might be Degraded but the evidence is ambiguous is probably low Decent. Be precisely conservative rather than impressively wrong.",
+      "lens_example_after": "topic_ladder"
+    },
+    {
+      "id": "topic-neutrality",
+      "heading": null,
+      "core": "The same applies to every topic: struggle, celebration, ambition, faith, loss. The topic is neutral. The messaging on the page determines the tier."
+    }
+  ]
+}

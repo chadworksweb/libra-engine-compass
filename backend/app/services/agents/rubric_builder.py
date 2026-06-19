@@ -2,7 +2,7 @@
 
 The tenets (five tiers of numbered criteria, the contamination modifier, and
 the procedural rules) are the public-facing, amendable portion of the rubric.
-They live in tenets/core.json as the single source of truth. The prose that
+They live in tenets/rc-lyric-rubric.json as the single source of truth. The prose that
 surrounds them (how to read lyrics, start-at-zero discipline, love-song
 examples) is agent-only methodology and stays in this module as string
 constants.
@@ -16,11 +16,11 @@ import json
 import logging
 from pathlib import Path
 
-TENETS_PATH = Path(__file__).parent / "tenets" / "core.json"
-PRECEDENTS_PATH = Path(__file__).parent / "tenets" / "precedents.json"
+TENETS_PATH = Path(__file__).parent / "tenets" / "rc-lyric-rubric.json"
+PRECEDENTS_PATH = Path(__file__).parent / "tenets" / "rc-lyric-precedents.json"
 # Per-type benchmark corpora (one file per non-lyric artifact type, e.g.
-# precedents/poem.json). `lyric` uses the canonical PRECEDENTS_PATH above.
-PRECEDENTS_DIR = Path(__file__).parent / "tenets" / "precedents"
+# rc-lyric-precedents/poem.json). `lyric` uses the canonical PRECEDENTS_PATH above.
+PRECEDENTS_DIR = Path(__file__).parent / "tenets" / "rc-lyric-precedents"
 
 logger = logging.getLogger(__name__)
 
@@ -193,7 +193,7 @@ def _render_rules(data: dict) -> str:
 
 
 def _render_dogma(data: dict) -> str:
-    """Render the dogma_referenced flag's full agent text from core.json -- the
+    """Render the dogma_referenced flag's full agent text from rc-lyric-rubric.json -- the
     single source for the calibrator (no dogma prose is hardcoded in this module
     anymore). `prompt_block` is the agent text; the definition/body/examples/
     closing fields are a separate public summary for the Tenets page, mirroring

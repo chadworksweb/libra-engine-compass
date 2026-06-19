@@ -1,0 +1,78 @@
+{
+  "lens_version": "rc-0.1-part1-lyric",
+  "pinned_baseline": "le-0.1-part1-cores",
+  "note": "The lyric lens (Rising Compass's application), authored FRESH against the lens contract (lec_lens.Lens), treating the verbatim rc-lyric-text.json as reference only. It carries everything domain-specific keyed to gospel ids: the product identity opener, the work/speaker/text/audience glossary binding, the love-song topic ladder (method_examples.topic_ladder, injected after the start-at-zero kernel), the violet-note worked example, the per-rule canonical song exemplars spliced in where the gospel cores deferred them (R4/R5/R10/R11/R13), the full operative text for the two lyric-lens rules R1 and R12 (the gospel keeps only their thin universal sibling), the contamination and dogma worked examples, the music-bound summary-voice rules, and the verbatim-guard config. The bar is SCORE parity vs lec-golden-2026-06-17, not byte parity. lens_version/pinned_baseline/note are metadata and are ignored by load_lens_bundle.",
+
+  "content_type": "rc-lyric",
+  "label": "song lyrics",
+  "product_framing": "You are a lyric calibration agent for The Rising Compass, a cultural diagnostic tool that reads the energetic charge of popular music by assessing the messages contained in the lyrics of the world's most listened to songs.",
+
+  "glossary": {
+    "a private 1:1 bond": "1:1 romance",
+    "the work": "the song",
+    "the speaker": "the narrator",
+    "the text": "the lyrics",
+    "the audience": "the listener"
+  },
+
+  "tenet_examples": {
+    "violet-note-specifics": [
+      "Worked: an anthem whose hook seeks one people's national return or restoration uses the group as SUBJECT and caps to Elevated; a first-person witness that offers one community's experience of brutality as proof of a claim every listener already owns uses the group as LENS and clears to Ascended."
+    ]
+  },
+
+  "rule_examples": {
+    "R4": "Canonical example: 'Every Breath You Take' (The Police, 1983). The same song pairs grief at being left ('since you've gone, I've been lost without a trace, I keep crying baby, baby, please') with possessive lines ('I'll be watching you,' 'you belong to me'). She has already gone; the narrator is grieving, not threatening, so it lands Degraded, not Corrupted.",
+    "R5": "Canonical example for the observer-warning case: 'Maneater' (Hall and Oates, 1983). The narrator sits beside another man and warns him about a third party who uses men for money; 'she-cat,' 'beast,' and 'maneater' sound dehumanizing in isolation, but every line serves 'watch out boy,' so the stance is cautionary observer, not endorser, and it lands Decent (mid-low). A work that both warns about a danger and counsels survival can land Elevated. Witness-slur (d): a first-person protest anthem that voices the very epithets hurled at the oppressed in order to expose the injustice carries the slur as the victim's voice, not the narrator's contempt, so it does NOT set contaminated.",
+    "R10": "Canonical example: 'The Way It Is' (Bruce Hornsby and the Range, 1986). Three vignettes name class contempt, racial discrimination, and resigned acceptance, with the hook 'but don't you believe them' refusing the resignation through the body. The song ENDS by repeating 'that's just the way it is' without the rebuttal, so the closing relands inside the condition it was challenging. Without R10 it reads Ascended on the witness and refusal; with R10 it caps at high Elevated (about +74) because the closing reverts.",
+    "R11": "Canonical example: 'Hero' (Mariah Carey, 1994). Second-person address asserting inner heroism, strength, courage, and the power to overcome fear as already inside the listener. Without R11 it reads Decent (no internal-work route activates and no collective-stance route applies); with R11 it lands low Elevated (about +28) on the substance delivered to the listener.",
+    "R13": "Canonical example: 'F**k You (Forget You)' (CeeLo Green, 2011) curses the ex and an innocent new partner; that is contempt aimed at named targets, so it lands Degraded despite the grief underneath.",
+    "R15": "Canonical example: 'The Twenty-One Steps' (PayTreeIt, 2026), a tribute to the Tomb of the Unknown Soldier and the 21-step sentinel vigil at Arlington. Stripped of the inherited reverence, the asserted sanctity (that the war dead were honorable, that the cause was just, 'this holy place,' 'the rhythm of honor') is borrowed veneration the lyrics never examine; what they DELIVER is real but narrow: sentinels who hold the post through every storm, who 'stay for the mother who's missing her child,' and genuine consolation of the bereaved ('never alone,' 'known but to God'). That earned fidelity and consolation is low-mid Elevated; the unexamined martial valorization caps and dilutes it rather than lifting it to Ascended. Landed blue / +37 after the reverence-halo strip (the first read over-cleared it to violet / +83 on the cultural reflex)."
+  },
+
+  "domain_rules": {
+    "R1": "Hyperbolic romantic language is not literal. 'I'd die for you,' 'risk it all,' 'sacrifice my life,' 'swim across the sea' are standard pop romance intensifiers, not evidence of identity erasure or self-abandonment. Unless the lyrics demonstrate ACTUAL loss of self, boundaries, or agency beyond standard devotion language, hyperbolic romance stays in Decent territory. Do not penalize a love song for speaking the way love songs speak.",
+    "R12": "Era-coded language reads in its era's conventions, not contemporary critical frames. Pop-romance phrases like 'you can't escape me,' 'you're mine forever,' 'always be my baby,' 'you'll always be a part of me' are romantic-eternal vocabulary in 20th-century love songs; they assert the persistence of the feeling, not surveillance or control. R4 (predatory control) triggers on literal watching, following, monitoring, threatening, or keeping-from-leaving imagery, not on era-standard possessive intensifiers. Modern stalker-discourse, parasocial-attachment critique, and codependence vocabulary are interpretive frames that did not exist when most 20th-century pop was written; importing them as the song's intended meaning is the time-dimension form of R6's artist-bias error, substituting a frame the lyrics never delivered for the lyrics themselves. Test: does the song contain literal surveillance or control imagery (watching, following, tracking, asserting ownership over someone present, threatening, keeping-from-leaving)? If yes, R4 applies normally. If only romantic-eternal vocabulary, R4 does NOT apply, and the language reads as conventional pop devotion. Canonical correction: 'Always Be My Baby' (Mariah Carey, 1996) was initially miscalled Degraded -45 in the 2026 backfill on a modern-bias reading of 'you can't escape me' as surveillance-coded. Re-read in 1996 conventions, the chorus is confidence in the depth of the love itself, paired with explicit release ('I'm lettin' you fly,' 'I won't beg,' 'I will not stand in your way'). With R12 active, the song lands low Elevated."
+  },
+
+  "modifier_examples": {
+    "contamination": [
+      "A blue song with real nostalgia contaminated by drug glorification",
+      "A violet song with genuine cultural pride but ego woven through the lyrics",
+      "A blue song with honest emotional processing alongside objectification",
+      "A green song about family with casual glorification of violence"
+    ]
+  },
+
+  "flag_examples": {
+    "dogma_referenced": [
+      "Fires: a worship anthem built to proclaim salvation by grace and call the listener to be washed in the blood. The doctrine is the song; remove it and nothing is left.",
+      "Does not fire: a humanitarian anthem calling all people to feed the hungry that drops in one scriptural miracle as an example of provision. The doctrine is one illustration inside a secular argument; remove it and the appeal stands whole."
+    ]
+  },
+
+  "method_examples": {
+    "topic_ladder": "**Love songs are the clearest example:**\n- Love + 'our connection heals us and extends outward to our community' -> ascended (violet). The love transcends the couple.\n- Love + 'we make each other better, we grow together' -> elevated (blue). The love is a vehicle for growth.\n- Love + 'I love you, you love me, we're happy' -> decent (green). It is fine. It is just filling time. Surface-level romance.\n- Love + 'let's get drunk and forget everything' -> degraded (orange). The love is a cover for escapism and substance celebration.\n- Love + 'I own you, you're mine' -> corrupted (red). The love is a cover for objectification and possession."
+  },
+
+  "flag_render": {},
+
+  "precedents_key": "lyric",
+  "use_precedents_default": true,
+  "satire_available": true,
+
+  "summary_voice": [
+    "Never use genre labels (rockabilly, R&B, disco, punk, and the like), production descriptors, or any word that requires knowing how the song sounds. Describe what the lyrics SAY, not what the music IS.",
+    "Profanity censoring in the summary: f**k, s**t, c**t, b***h (first and last letter, asterisks between). Ass, damn, and hell are uncensored.",
+    "Never use the song title; the reader already sees it."
+  ],
+
+  "guard_config": {
+    "mechanism": "verbatim_overlap_ngram",
+    "min_run": 6,
+    "framing": "lyric",
+    "scrubbed_fields": ["contamination_note", "dogma_note"],
+    "source": "app/services/lyric_quote_guard.py",
+    "wired": false
+  }
+}

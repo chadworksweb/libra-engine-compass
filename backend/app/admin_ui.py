@@ -434,7 +434,7 @@ const FLOW = [
       d: 'Empty text returns an explicit null calibration without burning a model call.',
       branch: 'no text &rarr; <b>null result</b> (returns)' },
     { n: 5, title: 'Build the prompt', sub: 'compass_agent_rubric.build_calibration_prompt',
-      d: 'System prompt = the rubric assembled from tenets/core.json + precedents.json; the user prompt is framed by artifact_type. Few-shot examples disabled (the tenets and precedent table carry the anchoring).' },
+      d: 'System prompt = the rubric assembled from tenets/rc-lyric-rubric.json + rc-lyric-precedents.json; the user prompt is framed by artifact_type. Few-shot examples disabled (the tenets and precedent table carry the anchoring).' },
     { n: 6, title: 'Read v3 - the calibration', sub: '_read_v3 -> tracked_create_async', tag: 'opus', opus: true,
       d: 'ONE Opus call (temperature 0, max 3500 tokens). Split reasoning from JSON, run the soft guards (mandatory Contamination line + charge_summary framing), parse and validate_components. A usable read ships immediately; otherwise ONE corrective retry; if it still never validates, returns None.',
       branch: 'None &rarr; <b>_fallback_result</b> (needs human review, returns)' },

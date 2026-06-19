@@ -49,6 +49,16 @@ class Settings(BaseSettings):
     # (RC, LT, future chargers).
     auth_required: bool = False
 
+    # --- Decoupling cutover flag (Part 1) ---
+    # When True, the calibrator builds the lyric system prompt by COMPOSING the
+    # gospel (le-cores/le-scaffold/le-method) + the rc-lyric lens via
+    # lec_full_prompt.compose_cutover_prompt, instead of rendering the monolithic
+    # rc-lyric-rubric.json. Default False (dark): zero behavior change until it is
+    # flipped. Fail-closed -- any composition error falls back to the monolith.
+    # Only the lyric path is wired (the score-parity-validated lens). Env:
+    # LEC_COMPOSE_RUBRIC.
+    compose_rubric: bool = False
+
     model_config = {
         "env_prefix": "LEC_",
         "env_file": ".env",
