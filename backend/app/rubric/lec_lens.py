@@ -48,6 +48,7 @@ BASELINE_DIR = HERE / "le-baseline"
 CORES_PATH = BASELINE_DIR / "le-cores.json"
 SCAFFOLD_PATH = BASELINE_DIR / "le-scaffold.json"
 METHOD_PATH = BASELINE_DIR / "le-method.json"
+SATIRE_PATH = BASELINE_DIR / "le-satire.json"
 
 # Sentinel the gospel rule cores use to defer the worked example to the lens
 # (ruling 4: named exemplars are lens-owned). compose() strips it and splices in
@@ -120,6 +121,11 @@ class Lens:
                                        # (points at the live per-type corpus selector)
     use_precedents_default: bool = True
     satire_available: bool = False     # whether the lens offers a parallel satire re-read
+    satire_skin: dict = field(default_factory=dict)    # the lens's satire SKIN: song-specific
+                                       # worked examples keyed by le-satire tenet id (e.g. S8).
+                                       # The universal satire law is le-satire (the baseline's);
+                                       # this is the only satire content the lens owns. Consumed
+                                       # by compose_satire, not compose().
     summary_voice: list = field(default_factory=list)  # domain output-hygiene rules
                                        # (lyric: no genre labels, no production descriptors).
                                        # Consumed by the calibration-format layer, not compose().
@@ -219,6 +225,14 @@ def load_gospel() -> dict:
         "rules": rules,
         "method": method,
     }
+
+
+def load_satire() -> dict:
+    """Load the universal satire modifier (le-baseline/le-satire.json). This is the
+    domain-neutral satire LAW (the work / the speaker / the text / the audience);
+    compose_satire renders it through a lens. Owned by the baseline (le-), available
+    to every lens; the lens supplies only its satire SKIN (lens.satire_skin)."""
+    return _load_json(SATIRE_PATH)
 
 
 # --- Glossary rendering -----------------------------------------------
@@ -395,3 +409,69 @@ def compose(gospel: dict, lens: Lens) -> str:
     blocks.append(_render_rules(gospel, lens))
 
     return "\n\n".join(b for b in blocks if b).strip() + "\n"
+
+
+# --- The satire composer (the universal modifier, lens-bound) ---------
+
+SATIRE_TITLE = "# Satire Modifier (parallel reading lens)"
+
+
+def compose_satire(satire: dict, lens: Lens) -> str:
+    """Render the universal satire modifier (le-satire) through a lens.
+
+    Mirrors compose() but for the satire OVERLAY: bind the gospel-neutral nouns
+    via lens.glossary and splice the lens's own satire SKIN examples
+    (lens.satire_skin["examples"], keyed by le-satire tenet id) in after the tenet
+    they illustrate. The satire LAW (S1-S8, the depiction/commentary modes, the
+    ceiling rule, the run procedure, the five output fields) is the baseline's; the
+    lens owns only the worked examples, exactly like the rubric-definition carve.
+
+    The output-field schema (LITERAL_SUMMARY / FLIPPED_SUMMARY_TEST /
+    MODE_BREAKDOWN / SATIRE_READING / CEILING_CHECK) is emitted here, so the
+    calibration-format half downstream needs no satire-specific edit.
+
+    Callers gate on lens.satire_available before composing (compose_satire_prompt
+    raises); this function renders unconditionally so the parity harness can render
+    any lens that authors a skin.
+    """
+    g = lens.glossary
+    skin = (lens.satire_skin or {}).get("examples", {})
+
+    def gl(text: str) -> str:
+        return _apply_glossary(text, g)
+
+    parts: list = [SATIRE_TITLE, "", gl(satire["intro"]), "", gl(satire["rationale"])]
+
+    stays = satire["stays_the_same"]
+    parts += ["", f"## {stays['heading']}", ""]
+    parts += [f"- {gl(p)}" for p in stays["points"]]
+
+    changes = satire["what_changes"]
+    parts += ["", f"## {changes['heading']}", "", gl(changes["body"])]
+
+    parts += ["", f"## {satire['tenets_heading']}"]
+    for tenet in satire["tenets"]:
+        parts += ["", f"### {tenet['id']}. {gl(tenet['title'])}", "", gl(tenet["core"])]
+        # The lens's worked example is its OWN domain text (song-specific); it is
+        # attached raw, not glossary-rendered, matching how compose() attaches
+        # lens.rule_examples.
+        example = skin.get(tenet["id"])
+        if example:
+            parts += ["", example.strip()]
+
+    proc = satire["procedure"]
+    parts += ["", f"## {proc['heading']}", ""]
+    for i, step in enumerate(proc["steps"], 1):
+        parts.append(f"{i}. {gl(step)}")
+
+    out = satire["output"]
+    parts += [
+        "", f"## {out['heading']}", "", gl(out["intro"]), "",
+        "Required additional reasoning fields (output BEFORE the JSON, in this order):",
+        "", "```",
+    ]
+    for fld in out["fields"]:
+        parts.append(f"{fld['name']}: [{gl(fld['instruction'])}]")
+    parts += ["```", "", gl(out["closing"])]
+
+    return "\n".join(parts).strip() + "\n"

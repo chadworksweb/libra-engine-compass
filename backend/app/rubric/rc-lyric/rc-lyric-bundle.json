@@ -61,6 +61,13 @@
   "use_precedents_default": true,
   "satire_available": true,
 
+  "satire_skin": {
+    "note": "The rc-lyric satire SKIN: the song-specific worked examples the universal le-satire modifier defers to the lens. The neutral nouns (the work/speaker/text/audience) bind through the same glossary above; this supplies only the canonical song cases. examples is keyed by le-satire tenet id; compose_satire appends each block to its tenet.",
+    "examples": {
+      "S8": "Canonical example: 'This Is A Raid' inhabits the depicted regime's voice for most of its length, but specific lines break frame to comment on what is being depicted. Both modes are present and both must be read."
+    }
+  },
+
   "summary_voice": [
     "Never use genre labels (rockabilly, R&B, disco, punk, and the like), production descriptors, or any word that requires knowing how the song sounds. Describe what the lyrics SAY, not what the music IS.",
     "Profanity censoring in the summary: f**k, s**t, c**t, b***h (first and last letter, asterisks between). Ass, damn, and hell are uncensored.",

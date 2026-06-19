@@ -50,7 +50,9 @@ from __future__ import annotations
 
 import sys
 
-from app.rubric.lec_lens import Lens, compose, get_lens, load_gospel
+from app.rubric.lec_lens import (
+    Lens, compose, compose_satire, get_lens, load_gospel, load_satire,
+)
 from app.services.agents.lec_compass_agent_rubric import (
     CALIBRATION_FORMAT,
     CALIBRATION_FORMAT_POST,
@@ -138,6 +140,55 @@ def compose_cutover_prompt(gospel: dict, lens: Lens) -> str:
     return rubric_def + "\n" + verbatim_format
 
 
+# Instrument-owned framing (lec-) that opens the satire overlay: the short
+# "an admin verified a satire flag; the standard rubric still applies, re-read
+# through the modifier below" note, from RC's recalibrator._build_satire_prompt.
+# Brackets the modifier with a rule above; compose_satire_prompt adds the closing
+# rule before the format half. ASCII-only, no dash in the heading.
+SATIRE_OVERLAY_PREAMBLE = (
+    "\n---\n# SATIRE RECALIBRATION LENS (APPLIES TO THIS WORK ONLY)\n\n"
+    "An admin has verified a satire flag on this work. You are now performing a "
+    "recalibration through the satire modifier defined below. The standard rubric "
+    "above still applies. The satire modifier sits alongside it as a parallel "
+    "reading framework. Apply the standard rubric first, then re-read through the "
+    "modifier.\n\n"
+)
+
+
+def compose_satire_prompt(gospel: dict, lens: Lens) -> str:
+    """The satire recalibration system prompt: the validated cutover prompt with the
+    universal satire modifier (composed through the lens) spliced between the
+    rubric-definition and the calibration-format halves.
+
+        rubric_def     = compose(gospel, lens)                 # the law, bound
+        satire_overlay = compose_satire(load_satire(), lens)   # universal modifier, bound + skinned
+        format_half    = verbatim CALIBRATION_FORMAT (precedent table via lens.precedents_key)
+        -> rubric_def + PREAMBLE + satire_overlay + "---" + format_half
+
+    Apply the full standard rubric first, then re-read through the modifier (mirrors
+    RC's recalibrator._build_satire_prompt order). The satire modifier carries the
+    output-field schema, so the format half is the SAME verbatim half the cutover
+    uses (compose_cutover_prompt); no satire-specific format edit. Fail-closed at
+    the call site (calibrator), exactly like compose_cutover_prompt.
+
+    Raises ValueError if the lens does not offer satire (satire_available False):
+    requesting satire against a lens with no skin is rejected, not silently
+    ignored."""
+    if not lens.satire_available:
+        raise ValueError(
+            f"lens {lens.content_type!r} does not offer a satire re-read "
+            "(satire_available is False)"
+        )
+    rubric_def = compose(gospel, lens)
+    satire_overlay = compose_satire(load_satire(), lens)
+    verbatim_format = (
+        CALIBRATION_FORMAT_PRE
+        + render_precedent_table(lens.precedents_key)
+        + CALIBRATION_FORMAT_POST
+    )
+    return rubric_def + SATIRE_OVERLAY_PREAMBLE + satire_overlay + "\n---\n" + verbatim_format
+
+
 def run_checks():
     gospel = load_gospel()
     lens = get_lens("rc-lyric")
@@ -180,6 +231,35 @@ def run_checks():
     # R15 (the post-golden reverence-halo rule) rides through into the full
     # prompt via the rubric-definition half.
     check("R15 present in full prompt", "\nR15. " in composed_full)
+
+    # --- satire prompt (the universal modifier, lens-bound) ---
+    satire_prompt = compose_satire_prompt(gospel, lens)
+    # The standard rubric (rubric-definition half) is still present and applied
+    # first; then the modifier; then the same verbatim format half.
+    check("satire prompt: rubric-definition present", "## The Five Tiers" in satire_prompt)
+    check("satire prompt: preamble present",
+          "SATIRE RECALIBRATION LENS" in satire_prompt)
+    check("satire prompt: modifier S1 + S8 present",
+          "\n### S1. " in satire_prompt and "\n### S8. " in satire_prompt)
+    for fld in ("LITERAL_SUMMARY:", "FLIPPED_SUMMARY_TEST:", "MODE_BREAKDOWN:",
+                "SATIRE_READING:", "CEILING_CHECK:"):
+        check(f"satire prompt: output field {fld}", fld in satire_prompt)
+    check("satire prompt: verbatim format half is the tail (same as cutover)",
+          satire_prompt.endswith(CALIBRATION_FORMAT_POST))
+    check("satire prompt: ordered rubric -> modifier -> format",
+          satire_prompt.index("## The Five Tiers")
+          < satire_prompt.index("SATIRE RECALIBRATION LENS")
+          < satire_prompt.index("## Required Output"))
+    # The lens's own satire skin landed (rc-lyric's S8 case).
+    check("satire prompt: rc-lyric skin example present",
+          "This Is A Raid" in satire_prompt)
+    # A lens that does not offer satire is rejected, not silently composed.
+    no_satire = Lens(content_type="x-none", label="none", product_framing="")
+    try:
+        compose_satire_prompt(gospel, no_satire)
+        check("satire prompt: rejects a non-satire lens", False, "did not raise")
+    except ValueError:
+        check("satire prompt: rejects a non-satire lens", True)
 
     return composed_full, results
 

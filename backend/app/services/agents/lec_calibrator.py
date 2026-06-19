@@ -42,6 +42,25 @@ AGENT_MODEL = settings.agent_model
 # artifact into the charge and skipping the flag is the failure this guards.
 _CONTAM_LINE_RE = re.compile(r"(?im)^\s*Contamination:\s*\S")
 
+# Appended to the standard user prompt for a satire re-read. The satire MODIFIER
+# (the run procedure + the five required reasoning fields) lives in the system
+# prompt (compose_satire_prompt); this is the per-call instruction to actually run
+# it, mirroring RC's recalibrator._build_satire_prompt user tail. Stateless: the
+# overlay derives its own LITERAL_SUMMARY, so the original calibration is NOT
+# passed (keeps /api/score stateless).
+_SATIRE_USER_SUFFIX = (
+    "\n\nAn admin has verified a satire flag on this work. Run the satire "
+    "recalibration procedure exactly as described in the satire modifier. Output "
+    "the required reasoning fields (LITERAL_SUMMARY, FLIPPED_SUMMARY_TEST, "
+    "MODE_BREAKDOWN, SATIRE_READING, CEILING_CHECK) BEFORE the JSON. Then produce "
+    "the JSON. If the satire reading does not hold, return the literal calibration "
+    "unchanged with a rationale explaining why."
+)
+
+# The satire read emits five extra reasoning fields before the JSON, so it needs
+# more room than the standard read (RC's recalibrator used 8192).
+_SATIRE_MAX_TOKENS = 8192
+
 
 async def _read_v3(
     client: AsyncAnthropic,
@@ -52,6 +71,7 @@ async def _read_v3(
     title: str,
     artist: str,
     target_year: int | None,
+    max_tokens: int = 3500,
 ) -> dict | None:
     """Run ONE calibration read at `model`: call, split reasoning from JSON,
     run the output guards, parse, and validate into v3 components -- with one
@@ -79,7 +99,7 @@ async def _read_v3(
             call_site="calibrator",
             context={"title": title, "artist": artist, "target_year": target_year},
             model=model,
-            max_tokens=3500,
+            max_tokens=max_tokens,
             temperature=0,
             system=system_prompt,
             messages=messages,
@@ -194,6 +214,7 @@ async def calibrate_song_async(
     skip_cache: bool = False,
     progress_cb: Callable[[str], None] | None = None,
     artifact_type: str = "lyric",
+    satire: bool = False,
 ) -> dict:
     """The scoring path -- LEC's whole job. Read an artifact against the rubric
     and return the charge package (tier, charge_value, contamination, the v3
@@ -209,6 +230,13 @@ async def calibrate_song_async(
     `artifact_type` selects how the user prompt frames the read (lyric default,
     byte-for-byte unchanged; poem/essay/script/message/email/article reuse the
     same rubric + precedent discipline).
+
+    `satire` runs the universal satire MODIFIER over the standard read: apply the
+    full rubric first, then re-read the same text through the satire modifier
+    (compose_satire_prompt). Satire is composed-only and lyric-only today (the
+    composed scorer is wired for the lyric path); the /api/score router gates it.
+    The router rejects satire for a type that cannot offer it, so reaching here
+    with satire=True implies the lyric path.
     """
     # No text, no read. A calibration cannot exist without the page, so return
     # the explicit null result without burning an API call (v3 short-circuit).
@@ -234,16 +262,31 @@ async def calibrate_song_async(
     # 2026-06-18 dynamic run). Fail-closed: any composition error keeps the
     # monolith prompt built above, so a bad lens can never blank a calibration.
     # Lazy import so the flag-off path never touches app.rubric.
-    if settings.compose_rubric and artifact_type == "lyric":
+    #
+    # Satire (the universal modifier) is defined against compose, so a satire
+    # request composes the satire prompt regardless of the LEC_COMPOSE_RUBRIC flag
+    # (prod runs it on anyway); only the lyric path is wired. compose_satire_prompt
+    # is compose_cutover_prompt + the satire overlay spliced in.
+    if artifact_type == "lyric" and (settings.compose_rubric or satire):
         try:
-            from app.rubric.lec_full_prompt import compose_cutover_prompt
+            from app.rubric.lec_full_prompt import (
+                compose_cutover_prompt, compose_satire_prompt,
+            )
             from app.rubric.lec_lens import get_lens, load_gospel
-            system_prompt = compose_cutover_prompt(load_gospel(), get_lens("rc-lyric"))
+            gospel = load_gospel()
+            lens = get_lens("rc-lyric")
+            if satire:
+                system_prompt = compose_satire_prompt(gospel, lens)
+                user_prompt = user_prompt + _SATIRE_USER_SUFFIX
+            else:
+                system_prompt = compose_cutover_prompt(gospel, lens)
         except Exception:
             logger.exception(
-                "composed rubric failed for '%s' by %s; using the monolith rubric",
-                title, artist,
+                "composed rubric failed for '%s' by %s (satire=%s); using the "
+                "monolith rubric", title, artist, satire,
             )
+
+    read_max_tokens = _SATIRE_MAX_TOKENS if satire else 3500
 
     # First pass at the default model. The model emits components only; the
     # server composes the charge and derives the tier (charge_composition).
@@ -252,6 +295,7 @@ async def calibrate_song_async(
     read = await _read_v3(
         client, AGENT_MODEL, system_prompt, user_prompt,
         title=title, artist=artist, target_year=target_year,
+        max_tokens=read_max_tokens,
     )
     if read is None:
         # Output never validated, even after the corrective retry. Explicit
@@ -282,6 +326,7 @@ async def calibrate_song_async(
         repass = await _read_v3(
             client, escalation_model, system_prompt, user_prompt,
             title=title, artist=artist, target_year=target_year,
+            max_tokens=read_max_tokens,
         )
         if repass is not None:
             first_pass = {

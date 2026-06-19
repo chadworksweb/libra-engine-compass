@@ -95,6 +95,13 @@ class ScoreIn(BaseModel):
                     "Phase 1: the corpus is not synced yet, so true scores "
                     "statelessly for now.",
     )
+    satire: bool = Field(
+        default=False,
+        description="re-read through the universal satire MODIFIER (apply the "
+                    "standard rubric first, then re-read for expose-vs-endorse). "
+                    "Composed-only + lyric-only today; rejected (422) for any type "
+                    "that cannot offer it.",
+    )
 
 
 @router.get("/rubric")
@@ -140,6 +147,18 @@ async def post_score(body: ScoreIn, _: None = Depends(require_api_key)):
         # so there is nothing to inject. Score statelessly and note the request.
         logger.info("use_precedents=true requested but the corpus is not synced yet; scoring stateless")
 
+    if body.satire:
+        # The satire modifier is composed against a lens, and only the lyric path
+        # runs the composed scorer today, so satire is lyric-only. The rc-lyric
+        # lens must offer satire. Reject (not silently ignore) any other request.
+        # Lazy import keeps app.rubric off the non-satire request path.
+        from app.rubric.lec_lens import get_lens
+        if artifact_type != "lyric" or not get_lens("rc-lyric").satire_available:
+            raise HTTPException(
+                status_code=422,
+                detail="satire re-read is available only for type 'lyric'.",
+            )
+
     calibration = await calibrate_song_async(
         body.title or "",
         body.artist or "",
@@ -147,6 +166,7 @@ async def post_score(body: ScoreIn, _: None = Depends(require_api_key)):
         db=None,            # no session -> no read, no write (stateless)
         skip_cache=True,    # no cache lookup
         artifact_type=artifact_type,
+        satire=body.satire,
     )
 
     color = calibration.get("rubric_color")
@@ -164,6 +184,7 @@ async def post_score(body: ScoreIn, _: None = Depends(require_api_key)):
     return {
         "status": "scored",
         "type": artifact_type,
+        "satire": body.satire,  # echo: this read applied the satire modifier
         "intent_source": intent_source,
         "tier": COLOR_LABELS[color].lower(),
         "color_key": color,  # consumer maps to its OWN palette; LEC hex != LT/charger hex
