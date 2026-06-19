@@ -51,13 +51,13 @@ from __future__ import annotations
 import sys
 
 from app.rubric.lec_lens import Lens, compose, get_lens, load_gospel
-from app.services.agents.compass_agent_rubric import (
+from app.services.agents.lec_compass_agent_rubric import (
     CALIBRATION_FORMAT,
     CALIBRATION_FORMAT_POST,
     CALIBRATION_FORMAT_PRE,
     SUMMARY_VOICE_RULES,
 )
-from app.services.agents.rubric_builder import render_precedent_table
+from app.services.agents.lec_rubric_builder import render_precedent_table
 
 # The domain-specific lines in the method's summary-voice block, matched by a
 # stable ASCII substring so the em-dash in the title rule never needs to be

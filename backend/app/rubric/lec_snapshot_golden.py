@@ -20,8 +20,8 @@ import os
 import shutil
 from pathlib import Path
 
-from app.services.agents.compass_agent_rubric import build_calibration_prompt
-from app.services.agents.rubric_builder import load_tenets
+from app.services.agents.lec_compass_agent_rubric import build_calibration_prompt
+from app.services.agents.lec_rubric_builder import load_tenets
 from app.routers.score import rubric_version
 
 try:

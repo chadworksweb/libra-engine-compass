@@ -8,8 +8,8 @@ precedent table carry the anchoring. What remains is the rubric text + the
 calibration prompt builder.
 """
 
-from app.constants import ARTIFACT_TYPE_LABELS
-from app.services.agents.rubric_builder import RUBRIC_DEFINITION, render_precedent_table
+from app.lec_constants import ARTIFACT_TYPE_LABELS
+from app.services.agents.lec_rubric_builder import RUBRIC_DEFINITION, render_precedent_table
 
 
 SUMMARY_VOICE_RULES = """

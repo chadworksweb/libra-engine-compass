@@ -18,14 +18,14 @@ from anthropic import AsyncAnthropic
 from sqlalchemy.orm import Session
 
 from app.config import settings
-from app.services.charge_composition import (
+from app.services.lec_charge_composition import (
     CompositionError,
     compose,
     evaluate_escalation,
     validate_components,
 )
 from app.services.claude_meter import tracked_create_async
-from app.services.agents.compass_agent_rubric import build_calibration_prompt
+from app.services.agents.lec_compass_agent_rubric import build_calibration_prompt
 from app.services.agents.summary_guard import (
     CORRECTIVE_NUDGE as _SUMMARY_NUDGE,
     summary_from_json_text,

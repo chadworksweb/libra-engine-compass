@@ -20,7 +20,7 @@ lives here, so the guard does too.
 import asyncio
 import json
 
-from app.services.agents import calibrator
+from app.services.agents import lec_calibrator as calibrator
 
 
 def _valid_components_json() -> str:

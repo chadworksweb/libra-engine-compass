@@ -22,12 +22,12 @@ import logging
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel, Field
 
-from app.constants import (
+from app.lec_constants import (
     ARTIFACT_TYPES, COLOR_HEX, COLOR_LABELS, TIER_ORDER,
 )
 from app.deps import require_api_key
-from app.services.agents.calibrator import calibrate_song_async
-from app.services.agents.rubric_builder import RUBRIC_DEFINITION, load_tenets
+from app.services.agents.lec_calibrator import calibrate_song_async
+from app.services.agents.lec_rubric_builder import RUBRIC_DEFINITION, load_tenets
 
 logger = logging.getLogger(__name__)
 

@@ -52,13 +52,13 @@ text for the lyric-only rules (R1, R12), the contamination + dogma worked
 examples, the music-bound summary-voice rules, and the verbatim-guard config.
 
 **compose(gospel, lens)** (`lec_lens.py`) joins them into the rubric-definition,
-mirroring `rubric_builder.build_rubric_definition()`. It renders the law through
+mirroring `lec_rubric_builder.build_rubric_definition()`. It renders the law through
 the lens glossary, attaches the lens skin by id, substitutes the lens's full R1/R12
 for their thin gospel siblings, and splices each rule's canonical exemplar in
 where the gospel core left the deferred-exemplar sentinel. It emits ONLY the
 rubric-definition half; the calibration-format method (route tree, two-axis read,
 precedent table, vernier, checks, JSON schema, summary-voice) still lives in
-`compass_agent_rubric.CALIBRATION_FORMAT` and is joined downstream.
+`lec_compass_agent_rubric.CALIBRATION_FORMAT` and is joined downstream.
 
 **Two parity bars.**
 

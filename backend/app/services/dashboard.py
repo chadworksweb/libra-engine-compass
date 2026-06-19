@@ -11,7 +11,7 @@ from datetime import datetime, timedelta
 from sqlalchemy.orm import Session
 
 from app.config import settings
-from app.constants import (
+from app.lec_constants import (
     ARTIFACT_TYPE_LABELS, COLOR_BG, COLOR_HEX, COLOR_LABELS, TIER_ORDER,
 )
 from app.database import engine

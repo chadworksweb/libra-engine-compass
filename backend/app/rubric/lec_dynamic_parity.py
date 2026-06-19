@@ -44,9 +44,9 @@ from anthropic import AsyncAnthropic
 from app.config import settings
 from app.rubric.lec_full_prompt import compose_full_prompt
 from app.rubric.lec_lens import get_lens, load_gospel
-from app.services.agents.calibrator import _read_v3
-from app.services.agents.compass_agent_rubric import build_calibration_prompt
-from app.services.charge_composition import compose as compose_charge
+from app.services.agents.lec_calibrator import _read_v3
+from app.services.agents.lec_compass_agent_rubric import build_calibration_prompt
+from app.services.lec_charge_composition import compose as compose_charge
 
 HERE = Path(__file__).resolve().parent
 GOLDEN = HERE / "lec-golden-2026-06-18"
