@@ -1,7 +1,7 @@
 """LEC FastAPI service -- the Libra Engine Compass.
 
 Stands up the scoring brain over HTTP: POST /api/score + GET /api/rubric (in
-routers/score.py). On startup it self-initializes its OWN database schema
+routers/lec_score.py). On startup it self-initializes its OWN database schema
 (create_all over the ORM models -- the 001 baseline), so a fresh deploy needs no
 manual migration step. LEC connects only to its own libra_engine_compass DB; it
 never reads Rising Compass.
@@ -43,4 +43,4 @@ app.include_router(lec_admin.router)
 @app.get("/health")
 async def health():
     """Liveness probe for the co-located RC client + the nginx upstream check."""
-    return {"status": "ok", "service": "lec", "rubric_version": score.rubric_version()}
+    return {"status": "ok", "service": "lec", "rubric_version": lec_score.rubric_version()}
