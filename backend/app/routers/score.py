@@ -18,10 +18,12 @@ true currently scores statelessly like false.
 
 import hashlib
 import logging
+from functools import lru_cache
 
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel, Field
 
+from app.config import settings
 from app.lec_constants import (
     ARTIFACT_TYPES, COLOR_HEX, COLOR_LABELS, TIER_ORDER,
 )
@@ -34,11 +36,37 @@ logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/api", tags=["compass"])
 
 
+@lru_cache(maxsize=1)
+def _composed_definition() -> str:
+    """The composed rubric-definition half (gospel + rc-lyric lens) -- the lyric
+    path's definition under the cutover. Static at runtime (the gospel + lens
+    files do not change while the process runs), so build it once. Mirrors
+    RUBRIC_DEFINITION being a module-level constant."""
+    from app.rubric.lec_lens import compose, load_gospel, get_lens
+    return compose(load_gospel(), get_lens("rc-lyric"))
+
+
+def published_definition() -> str:
+    """The rubric-definition half actually IN FORCE for the lyric path: the
+    composed gospel + rc-lyric when LEC_COMPOSE_RUBRIC is on, else the monolith.
+    Fail-closed -- any composition error serves the monolith, matching the
+    calibrator. This is what /api/rubric publishes and what rubric_version hashes,
+    so the published version tracks what actually scores."""
+    if settings.compose_rubric:
+        try:
+            return _composed_definition()
+        except Exception:
+            logger.exception("composed rubric publish failed; serving the monolith definition")
+    return RUBRIC_DEFINITION
+
+
 def rubric_version() -> str:
-    """Stable short version derived from the assembled rubric. Changes whenever
-    the rubric text changes, so consumers can cache + detect staleness. There is
-    no RUBRIC_VERSION constant; the rubric is assembled from rc-lyric-live/rc-lyric-rubric.json."""
-    return hashlib.sha256(RUBRIC_DEFINITION.encode("utf-8")).hexdigest()[:12]
+    """Stable short version derived from the in-force rubric definition. Changes
+    whenever the rubric text changes (including the monolith <-> composed swap),
+    so consumers can cache + detect staleness. There is no RUBRIC_VERSION
+    constant; off the flag it is rc-lyric-live/rc-lyric-rubric.json, on the flag
+    it is the composed gospel + rc-lyric definition."""
+    return hashlib.sha256(published_definition().encode("utf-8")).hexdigest()[:12]
 
 
 def _tenet_count() -> int | None:
@@ -72,11 +100,12 @@ class ScoreIn(BaseModel):
 @router.get("/rubric")
 async def get_rubric(_: None = Depends(require_api_key)):
     """The current published rubric. Stateless, no model call -- just serializes
-    RUBRIC_DEFINITION + version + tier table. Consumers cache this and fall back
-    to their last good copy on failure."""
+    the in-force definition (composed gospel + rc-lyric when the cutover flag is
+    on, else the monolith) + version + tier table. Consumers cache this and fall
+    back to their last good copy on failure."""
     return {
         "version": rubric_version(),
-        "rubric_text": RUBRIC_DEFINITION,
+        "rubric_text": published_definition(),
         "tenet_count": _tenet_count(),
         "tiers": [
             {
