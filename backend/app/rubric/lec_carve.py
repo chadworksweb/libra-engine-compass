@@ -23,7 +23,7 @@ import json
 from pathlib import Path
 
 AGENTS = Path(__file__).resolve().parent.parent / "services" / "agents"
-CORE_PATH = AGENTS / "tenets" / "rc-lyric-rubric.json"
+CORE_PATH = AGENTS / "rc-lyric-live" / "rc-lyric-rubric.json"
 
 OUT = Path(__file__).resolve().parent
 SCAFFOLD_PATH = OUT / "le-baseline" / "le-scaffold.json"

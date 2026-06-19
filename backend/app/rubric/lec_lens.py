@@ -33,7 +33,7 @@ Design + boundary: `Dropbox/Libra Engine/Libra Engine Compass (LEC)/plans and
 docs/LEC-DECOUPLING-PART1-BOUNDARY-MAP.md`. Hub: LIBRA-ENGINE-ALTITUDE-PLAN.md.
 
 Nothing here is wired into the live calibrator. RC still renders from
-services/agents/tenets/rc-lyric-rubric.json via rubric_builder; this is the parallel,
+services/agents/rc-lyric-live/rc-lyric-rubric.json via rubric_builder; this is the parallel,
 parity-bound path being built beside it.
 """
 

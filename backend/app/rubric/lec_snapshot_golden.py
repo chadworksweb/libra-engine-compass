@@ -33,7 +33,7 @@ except Exception:  # pragma: no cover - config should always import
 SNAPSHOT_DATE = os.environ.get("GOLDEN_DATE", "2026-06-18")
 HERE = Path(__file__).resolve().parent
 OUT = HERE / f"lec-golden-{SNAPSHOT_DATE}"
-TENETS = HERE.parent / "services" / "agents" / "tenets"
+TENETS = HERE.parent / "services" / "agents" / "rc-lyric-live"
 
 
 def main() -> int:

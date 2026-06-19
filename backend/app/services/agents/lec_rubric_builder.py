@@ -2,7 +2,7 @@
 
 The tenets (five tiers of numbered criteria, the contamination modifier, and
 the procedural rules) are the public-facing, amendable portion of the rubric.
-They live in tenets/rc-lyric-rubric.json as the single source of truth. The prose that
+They live in rc-lyric-live/rc-lyric-rubric.json as the single source of truth. The prose that
 surrounds them (how to read lyrics, start-at-zero discipline, love-song
 examples) is agent-only methodology and stays in this module as string
 constants.
@@ -16,11 +16,11 @@ import json
 import logging
 from pathlib import Path
 
-TENETS_PATH = Path(__file__).parent / "tenets" / "rc-lyric-rubric.json"
-PRECEDENTS_PATH = Path(__file__).parent / "tenets" / "rc-lyric-precedents.json"
+TENETS_PATH = Path(__file__).parent / "rc-lyric-live" / "rc-lyric-rubric.json"
+PRECEDENTS_PATH = Path(__file__).parent / "rc-lyric-live" / "rc-lyric-precedents.json"
 # Per-type benchmark corpora (one file per non-lyric artifact type, e.g.
 # rc-lyric-precedents/poem.json). `lyric` uses the canonical PRECEDENTS_PATH above.
-PRECEDENTS_DIR = Path(__file__).parent / "tenets" / "rc-lyric-precedents"
+PRECEDENTS_DIR = Path(__file__).parent / "rc-lyric-live" / "rc-lyric-precedents"
 
 logger = logging.getLogger(__name__)
 

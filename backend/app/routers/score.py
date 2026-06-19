@@ -37,7 +37,7 @@ router = APIRouter(prefix="/api", tags=["compass"])
 def rubric_version() -> str:
     """Stable short version derived from the assembled rubric. Changes whenever
     the rubric text changes, so consumers can cache + detect staleness. There is
-    no RUBRIC_VERSION constant; the rubric is assembled from tenets/rc-lyric-rubric.json."""
+    no RUBRIC_VERSION constant; the rubric is assembled from rc-lyric-live/rc-lyric-rubric.json."""
     return hashlib.sha256(RUBRIC_DEFINITION.encode("utf-8")).hexdigest()[:12]
 
 
