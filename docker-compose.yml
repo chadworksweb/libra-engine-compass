@@ -57,6 +57,32 @@ services:
       start_period: 15s
     restart: unless-stopped
 
+  # The Compass GOVERNANCE venue (lecg-) -- the second app (Decoupling Part 2,
+  # Decision 4). Same image as lec, different ASGI app. Cut 1 is READ-ONLY +
+  # PUBLIC: serves the canonical constitution from the le-baseline files baked
+  # into the image -- no Anthropic key, no admin, no DB, no auth. The host nginx
+  # serves lecg.libraengine.com (deploy/nginx-lecg.conf) and proxies here over
+  # le-proxy. Cut 2 adds the write surfaces (shared Clerk + a governance DB) and
+  # their env. Kept a SEPARATE service from lec so the instrument/venue seam holds.
+  lecg:
+    build: ./backend
+    container_name: lecg-backend
+    command: ["uvicorn", "governance.lecg_main:app", "--host", "0.0.0.0", "--port", "8014"]
+    networks:
+      default:
+      le-proxy:
+        aliases:
+          - lecg           # the LE site UI reaches the governance API via lecg.libraengine.com
+    ports:
+      - "127.0.0.1:8014:8014"
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8014/health').status==200 else 1)\""]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+    restart: unless-stopped
+
 networks:
   le-proxy:
     external: true
