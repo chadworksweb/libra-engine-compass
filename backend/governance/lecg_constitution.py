@@ -59,14 +59,22 @@ def _governance(item: dict) -> dict:
     }
 
 
-def _assemble() -> dict:
+def _load_dicts(baseline_dir=None):
+    """Load the three le-baseline files (cores, scaffold, method) as raw dicts.
+    baseline_dir overrides the default location (the adoption round-trip reads a
+    temp copy so the real law is never touched by a test)."""
+    base = Path(baseline_dir) if baseline_dir else BASELINE_DIR
+    return (
+        _load_json(base / CORES_PATH.name),
+        _load_json(base / SCAFFOLD_PATH.name),
+        _load_json(base / METHOD_PATH.name),
+    )
+
+
+def _assemble_from_dicts(cores: dict, scaffold: dict, method: dict) -> dict:
     """Merge cores (text) + scaffold (structure + governance) + method (procedure)
     into one governed canonical constitution, keyed by id. Domain-neutral; carries
     NO lens. This is the full record the public governs."""
-    cores = _load_json(CORES_PATH)
-    scaffold = _load_json(SCAFFOLD_PATH)
-    method = _load_json(METHOD_PATH)
-
     sc_tiers = {t["slug"]: t for t in scaffold["tiers"]}
     sc_rules = {r["id"]: r for r in scaffold["rules"]}
     sc_mods = {m["id"]: m for m in scaffold.get("modifiers", [])}
@@ -154,6 +162,12 @@ def _assemble() -> dict:
         "method": method,
         "changelog": scaffold.get("changelog", []),
     }
+
+
+def _assemble(baseline_dir=None) -> dict:
+    """Assemble the canonical constitution from the le-baseline files (default
+    location, or a baseline_dir override for the adoption round-trip)."""
+    return _assemble_from_dicts(*_load_dicts(baseline_dir))
 
 
 def _version_of(constitution: dict) -> str:

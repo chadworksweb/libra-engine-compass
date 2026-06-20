@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Motion Desk &middot; Libra Engine Compass</title>
+  <meta name="description" content="Formal proposals about how the Compass reads: the tenets, the rules, the modifiers, and the methodology. Browse the public motion ledger; reading needs no account.">
+  <link rel="canonical" href="https://lecg.libraengine.com/motion-desk/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://lecg.libraengine.com/motion-desk/">
+  <meta property="og:title" content="Motion Desk &middot; Libra Engine Compass">
+  <meta property="og:description" content="Formal proposals about how the Compass reads. Browse the public motion ledger.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cardo:ital,wght@0,400;0,700;1,400&family=Cormorant+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="motion-desk.css">
+  <link rel="stylesheet" href="../venue.css">
+</head>
+<body>
+  <a class="skip-nav" href="#main">Skip to content</a>
+
+  <header class="lecg-header">
+    <a class="lecg-wordmark" href="/" aria-label="Libra Engine Compass governance home">
+      <span class="lecg-wordmark-mark" aria-hidden="true"></span>
+      <span>Libra Engine Compass</span>
+    </a>
+    <nav class="lecg-nav" aria-label="Governance sections">
+      <a href="/tenets/">Tenets</a>
+      <a href="/motion-desk/" aria-current="page">Motion Desk</a>
+      <a href="/amendments/">Amendments</a>
+    </nav>
+  </header>
+
+  <main id="main" class="md-main">
+
+    <section class="md-hero">
+      <h1 class="md-title">Motion Desk</h1>
+      <p class="md-kicker">Where the framework itself goes up for deliberation.</p>
+      <p class="md-preamble">
+        Motions are formal proposals about how the Compass reads: the
+        <a href="/tenets/">tenets</a>, the rules that govern calibration, the
+        modifiers, and the moral framework beneath all of it. A work may be
+        cited as evidence inside a motion, but a work is never the subject of
+        one. The room is open to read; filing opens with shared sign-in.
+      </p>
+    </section>
+
+    <section class="md-doors" aria-label="What you can do here">
+      <div class="md-door-grid">
+        <button class="md-door" id="fileMotionDoor" type="button">
+          <h3 class="md-door-title">File a motion</h3>
+          <p class="md-door-body">
+            Open a formal proposal: amend a tenet, propose a new one, change a
+            rule, or argue methodology. Filing opens with shared Libra Engine
+            sign-in.
+          </p>
+          <span class="md-door-cta">File a motion &rarr;</span>
+        </button>
+        <a class="md-door" href="#ledger">
+          <h3 class="md-door-title">Browse the ledger</h3>
+          <p class="md-door-body">
+            Every motion ever filed: proposed, deliberating, ratified,
+            covered, rejected. Public reading, no sign-in required.
+          </p>
+          <span class="md-door-cta">Jump to the ledger &rarr;</span>
+        </a>
+      </div>
+    </section>
+
+    <section class="lecg-notice" id="participationNotice" aria-live="polite" hidden>
+      <p class="lecg-notice-title">Filing opens soon</p>
+      <p class="lecg-notice-body" id="participationNoticeBody"></p>
+    </section>
+
+    <section class="md-record" id="ledger" aria-label="Public motion ledger">
+      <h2 class="md-section-label">The ledger</h2>
+      <p class="md-record-help">
+        Every motion ever filed, public from the moment it lands. Amendments to
+        tenets also appear on the <a href="/amendments/">amendment record</a>.
+      </p>
+
+      <div class="md-filter-row">
+        <button class="md-filter active" data-status="open" type="button">Open</button>
+        <button class="md-filter" data-status="filed" type="button">Filed</button>
+        <button class="md-filter" data-status="in_deliberation" type="button">In deliberation</button>
+        <button class="md-filter" data-status="ratified" type="button">Ratified</button>
+        <button class="md-filter" data-status="covered" type="button">Covered</button>
+        <button class="md-filter" data-status="rejected" type="button">Rejected</button>
+        <button class="md-filter" data-status="all" type="button">All</button>
+      </div>
+      <div class="md-filter-row" id="typeFilters">
+        <button class="md-filter active" data-type="all" type="button">All types</button>
+        <button class="md-filter" data-type="amend_tenet" type="button">Amend tenet</button>
+        <button class="md-filter" data-type="new_tenet" type="button">New tenet</button>
+        <button class="md-filter" data-type="remove_tenet" type="button">Remove tenet</button>
+        <button class="md-filter" data-type="amend_rule" type="button">Amend rule</button>
+        <button class="md-filter" data-type="new_rule" type="button">New rule</button>
+        <button class="md-filter" data-type="remove_rule" type="button">Remove rule</button>
+        <button class="md-filter" data-type="process" type="button">Process</button>
+      </div>
+
+      <div class="md-record-list" id="recordList">
+        <p class="md-empty">Loading...</p>
+      </div>
+    </section>
+
+    <footer class="md-footer">
+      <p class="footer-note">
+        See also: <a href="/tenets/">the tenets</a> &middot; <a href="/amendments/">the amendment record</a>
+      </p>
+    </footer>
+
+  </main>
+
+  <script src="../js/lecg-auth.js"></script>
+  <script src="motion-desk.js" defer></script>
+</body>
+</html>

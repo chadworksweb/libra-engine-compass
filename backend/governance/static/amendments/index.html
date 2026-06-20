@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Amendments &middot; Libra Engine Compass</title>
+  <meta name="description" content="The public record of amendments to the tenets: proposals raised, deliberated, ratified, covered, and rejected. The standard is publicly amendable, not by vote but by deliberation.">
+  <link rel="canonical" href="https://lecg.libraengine.com/amendments/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://lecg.libraengine.com/amendments/">
+  <meta property="og:title" content="Amendments &middot; Libra Engine Compass">
+  <meta property="og:description" content="The public record of amendments to the tenets.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cardo:ital,wght@0,400;0,700;1,400&family=Cormorant+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="amendments.css">
+  <link rel="stylesheet" href="../venue.css">
+</head>
+<body>
+  <a class="skip-nav" href="#main">Skip to content</a>
+
+  <header class="lecg-header">
+    <a class="lecg-wordmark" href="/" aria-label="Libra Engine Compass governance home">
+      <span class="lecg-wordmark-mark" aria-hidden="true"></span>
+      <span>Libra Engine Compass</span>
+    </a>
+    <nav class="lecg-nav" aria-label="Governance sections">
+      <a href="/tenets/">Tenets</a>
+      <a href="/motion-desk/">Motion Desk</a>
+      <a href="/amendments/" aria-current="page">Amendments</a>
+    </nav>
+  </header>
+
+  <main id="main" class="am-main">
+
+    <section class="am-hero">
+      <h1 class="am-title">Amendments</h1>
+      <p class="am-kicker">The public record of changes proposed to the tenets.</p>
+      <p class="am-preamble">
+        The tenets are publicly amendable, not by vote but by deliberation,
+        and the burden of changing them is deliberately high. Proposals are
+        argued on the <a href="/motion-desk/">Motion Desk</a>, in the open.
+        The Compass keeps the record. What follows is every proposal that has
+        been raised, where it stands, and what became of it.
+      </p>
+      <div class="am-cta-row" id="venue-cta">
+        <!-- populated from venue in the amendment log -->
+      </div>
+    </section>
+
+    <section class="am-thresholds" aria-label="Ratification thresholds">
+      <div class="am-thresh-grid" id="thresholds"></div>
+    </section>
+
+    <section class="am-sections" id="sections" aria-label="Amendments by status">
+      <!-- one .am-group per status; populated from amendments[] -->
+    </section>
+
+    <footer class="am-footer">
+      <p class="footer-note">Schema <span id="schema-version">&mdash;</span> &middot; Updated <span id="updated-at">&mdash;</span></p>
+    </footer>
+
+  </main>
+
+  <script src="../js/lecg-auth.js"></script>
+  <script src="amendments.js"></script>
+</body>
+</html>

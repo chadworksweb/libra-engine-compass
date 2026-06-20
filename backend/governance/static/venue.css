@@ -1,0 +1,117 @@
+/* ==========================================================================
+   Libra Engine Compass governance venue -- shared standalone header + nav.
+   Reuses the cream/brown deliberation tokens declared in motion-desk.css
+   (--md-*), so this file only styles the venue chrome, not the palette.
+   ========================================================================== */
+
+.lecg-header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 32px;
+  border-bottom: 1px solid var(--md-rule);
+  background: var(--md-bg);
+}
+
+.lecg-wordmark {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--md-ink-bright);
+  text-decoration: none;
+  font-family: 'Cormorant SC', serif;
+  font-weight: 600;
+  font-size: 1.05rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  transition: color 0.2s;
+}
+.lecg-wordmark:hover { color: var(--md-gold); }
+
+.lecg-wordmark-mark {
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--md-gold);
+  border-radius: 50%;
+  position: relative;
+  flex: 0 0 auto;
+}
+.lecg-wordmark-mark::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 2px;
+  height: 7px;
+  background: var(--md-gold);
+  transform: translate(-50%, -85%) rotate(28deg);
+  transform-origin: bottom center;
+}
+
+.lecg-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 4px;
+}
+.lecg-nav a {
+  padding: 6px 14px;
+  color: var(--md-ink-dim);
+  text-decoration: none;
+  font-family: var(--md-font-chrome);
+  font-weight: 500;
+  font-size: 0.82rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  border-bottom: 2px solid transparent;
+  transition: color 0.2s, border-color 0.2s;
+}
+.lecg-nav a:hover { color: var(--md-ink-bright); }
+.lecg-nav a[aria-current="page"] {
+  color: var(--md-gold);
+  border-bottom-color: var(--md-gold);
+}
+
+/* Participation notice -- shown when a write action (file a motion, post an
+   argument) is attempted while shared sign-in is still being wired. Reuses the
+   cream/brown gate surface from motion-desk.css. */
+.lecg-notice {
+  max-width: 720px;
+  margin: 0 auto 60px;
+  padding: 22px 26px;
+  background: var(--md-bg-soft);
+  border: 1px solid var(--md-gold);
+  border-left: 3px solid var(--md-gold);
+  border-radius: 2px;
+}
+.lecg-notice[hidden] { display: none; }
+.lecg-notice-title {
+  font-family: var(--md-font-title);
+  font-size: 1rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--md-ink-bright);
+  margin: 0 0 8px;
+  font-weight: 600;
+}
+.lecg-notice-body {
+  font-family: 'Cardo', serif;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--md-ink);
+  margin: 0;
+}
+
+/* Landing page: three doors instead of two. */
+.lecg-door-grid {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+@media (max-width: 900px) {
+  .lecg-door-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 640px) {
+  .lecg-header { padding: 16px 20px; }
+}

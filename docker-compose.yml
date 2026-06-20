@@ -57,11 +57,56 @@ services:
       start_period: 15s
     restart: unless-stopped
 
-# The Compass GOVERNANCE venue (lecg-) is Cut 2 -- the Motion Desk / Deliberation
-# Chamber / amendment pipeline, its own container on its own subdomain. NOT in
-# Cut 1: the tenets are the LEC tenets and are served by the lec instrument above
-# (lec.libraengine.com/tenets/ + /api/constitution, via governance/lecg_public.py).
-# Cut 2 re-adds a `lecg` service here (uvicorn governance.lecg_main:app, :8014).
+  # The Compass GOVERNANCE venue (lecg-) -- Cut 2. The Motion Desk / Deliberation
+  # Chamber / amendment pipeline (+ the ratification write-back). Second app in
+  # the repo (Decision 4): SAME image as lec, command-overridden to the governance
+  # entrypoint, on its OWN subdomain (lecg.libraengine.com) + its OWN database
+  # (Decision 1: distinct app, distinct DB, distinct deploy). The host nginx
+  # (le-nginx) serves lecg.libraengine.com via deploy/nginx-lecg.conf and proxies
+  # to this container over le-proxy.
+  lecg:
+    build: ./backend
+    container_name: lecg-backend
+    command: ["uvicorn", "governance.lecg_main:app", "--host", "0.0.0.0", "--port", "8014"]
+    networks:
+      default:
+      le-proxy:
+        aliases:
+          - lecg
+    ports:
+      - "127.0.0.1:8014:8014"
+    volumes:
+      - lecg-data:/app/data     # sqlite fallback only; prod uses the Postgres DSN
+    environment:
+      # --- The venue's OWN governance DB (dedicated DB on the shared DO cluster,
+      #     DISTINCT from lec's; via the PgBouncer pool). ---
+      - LECG_DATABASE_URL=${LECG_DATABASE_URL}
+      # --- Shared Clerk identity spine (GATED ON CLERK PRO). Unset => the write
+      #     surfaces are inert (503) until the satellite origin is wired. Same
+      #     Clerk instance as RC; the VALUE of the JWKS URL is shared. ---
+      - LECG_CLERK_JWKS_URL=${LECG_CLERK_JWKS_URL:-}
+      - LECG_CLERK_AUTHORIZED_PARTY=${LECG_CLERK_AUTHORIZED_PARTY:-}
+      - LECG_CLERK_SECRET_KEY=${LECG_CLERK_SECRET_KEY:-}
+      - LECG_CLERK_VERIFIED_CLAIM=${LECG_CLERK_VERIFIED_CLAIM:-verified_human}
+      # --- Local-only dev auth bypass. MUST stay false in prod (it is ignored
+      #     anyway once Clerk is wired, but keep it false). ---
+      - LECG_DEV_AUTH=${LECG_DEV_AUTH:-false}
+      # --- Admin console (obscured login + signed cookie). ALL FOUR required or
+      #     the panel 404s. ---
+      - LECG_ADMIN_LOGIN_TOKEN=${LECG_ADMIN_LOGIN_TOKEN}
+      - LECG_ADMIN_USERNAME=${LECG_ADMIN_USERNAME}
+      - LECG_ADMIN_PASSWORD=${LECG_ADMIN_PASSWORD}
+      - LECG_ADMIN_SECRET=${LECG_ADMIN_SECRET}
+      - LECG_ADMIN_SESSION_HOURS=${LECG_ADMIN_SESSION_HOURS:-12}
+      # --- CORS allow-list for the public read surfaces (LE site / RC). ---
+      - LECG_CORS_ALLOW_ORIGINS=${LECG_CORS_ALLOW_ORIGINS:-*}
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8014/health').status==200 else 1)\""]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+    restart: unless-stopped
 
 networks:
   le-proxy:
@@ -69,3 +114,4 @@ networks:
 
 volumes:
   lec-data:
+  lecg-data:

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Deliberation Chamber &middot; Libra Engine Compass</title>
+  <meta name="description" content="The Deliberation Chamber: the structured argument thread on a motion in front of the framework. Arguments for, against, rebuttals, citations, and clarifications, on the public record.">
+  <link rel="canonical" href="https://lecg.libraengine.com/motion-desk/deliberation-chamber/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Deliberation Chamber &middot; Libra Engine Compass">
+  <meta property="og:description" content="Structured deliberation on a motion in front of the framework.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cardo:ital,wght@0,400;0,700;1,400&family=Cormorant+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="../motion-desk.css">
+  <link rel="stylesheet" href="deliberation-chamber.css">
+  <link rel="stylesheet" href="../../venue.css">
+</head>
+<body>
+  <a class="skip-nav" href="#main">Skip to content</a>
+
+  <header class="lecg-header">
+    <a class="lecg-wordmark" href="/" aria-label="Libra Engine Compass governance home">
+      <span class="lecg-wordmark-mark" aria-hidden="true"></span>
+      <span>Libra Engine Compass</span>
+    </a>
+    <nav class="lecg-nav" aria-label="Governance sections">
+      <a href="/tenets/">Tenets</a>
+      <a href="/motion-desk/" aria-current="page">Motion Desk</a>
+      <a href="/amendments/">Amendments</a>
+    </nav>
+  </header>
+
+  <main id="main" class="dc-main">
+
+    <section class="dc-eyebrow-bar">
+      <p class="dc-eyebrow">
+        <a href="/motion-desk/">Motion Desk</a> &middot;
+        <a href="/motion-desk/#ledger">Ledger</a>
+      </p>
+    </section>
+
+    <section class="dc-motion-header" id="motionHeader" aria-live="polite">
+      <p class="dc-loading">Loading the motion...</p>
+    </section>
+
+    <section class="dc-resolution" id="resolutionBanner" hidden></section>
+
+    <section class="dc-thread-section">
+      <h2 class="dc-thread-title">The Chamber</h2>
+      <div class="dc-thread" id="thread">
+        <p class="dc-empty">Loading the thread...</p>
+      </div>
+    </section>
+
+    <section class="lecg-notice" id="participationNotice" aria-live="polite" hidden>
+      <p class="lecg-notice-title">Posting opens soon</p>
+      <p class="lecg-notice-body" id="participationNoticeBody"></p>
+    </section>
+
+    <footer class="dc-footer">
+      <p class="footer-note">
+        See also: <a href="/motion-desk/#ledger">the motion ledger</a> &middot; <a href="/tenets/">the tenets</a> &middot; <a href="/amendments/">the amendment record</a>
+      </p>
+    </footer>
+
+  </main>
+
+  <script src="../../js/lecg-auth.js"></script>
+  <script src="deliberation-chamber.js" defer></script>
+</body>
+</html>
