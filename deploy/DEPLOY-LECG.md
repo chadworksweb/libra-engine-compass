@@ -35,6 +35,8 @@ read-only, so there is nothing to provision but DNS + cert.
    - `curl -fsS https://lecg.libraengine.com/api/constitution/version`
      -> `{"version":"1373218dda6e",...}`
    - `curl -fsS https://lecg.libraengine.com/api/constitution | head -c 200`
+   - The tenets page: open `https://lecg.libraengine.com/tenets/` -> the organ +
+     all R1-R15 render; `https://lecg.libraengine.com/` redirects there.
 
 ## Steady-state redeploys
 
@@ -42,13 +44,14 @@ read-only, so there is nothing to provision but DNS + cert.
 ships via `git archive | scp | tar`). It rebuilds + restarts both `lec` and
 `lecg` and smoke-tests `lec`'s `/health`.
 
-## The tenets view (LE site)
+## The tenets view (served BY lecg)
 
-The public `/tenets/` page on `libraengine.com` renders the generated
-`tenets/tenets-data.js`. Regenerate it from the canonical constitution with
-`python -m governance.lecg_build_tenets_view` (run in `backend/`) after any
-ratified amendment, then deploy the LE site. (Later: switch the page to fetch
-`https://lecg.libraengine.com/api/constitution` live instead of the static file.)
+The tenets are the LEC tenets: they live ON LEC. lecg serves the public
+`/tenets/` page itself (static UI in `governance/static/tenets/`) and serves
+`/tenets/tenets-data.js` LIVE from the canonical constitution -- there is nothing
+to regenerate after an amendment and no separate site to deploy; the page always
+reflects the current constitution. (The old static copy on the libraengine.com
+site is retired; that page can later redirect to `lecg.libraengine.com/tenets/`.)
 
 ## Notes
 
