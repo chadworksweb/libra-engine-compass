@@ -1,10 +1,16 @@
 # LECG -- governance venue deploy (lecg.libraengine.com)
 
-> Decoupling Part 2, Cut 1. The Libra Engine Compass GOVERNANCE venue (the
-> `lecg-` app) goes live on its own subdomain, a second container beside the
-> `lec-` instrument on le-projects-01. Cut 1 is READ-ONLY + PUBLIC: it serves the
-> canonical constitution. Cut 2 adds the write surfaces (Motion Desk / Chamber /
-> amendments) behind shared Clerk + a governance DB.
+> **STATUS: DEFERRED TO CUT 2.** The tenets are the LEC tenets and live on LEC:
+> in Cut 1 the lec instrument serves `lec.libraengine.com/tenets/` +
+> `/api/constitution` (via `governance/lecg_public.py`), and the `lecg` service +
+> nginx block are NOT deployed. The `lecg.libraengine.com` DNS `A` record + cert
+> are issued and dormant (reuse them for Cut 2). This doc is the recipe for
+> standing the `lecg` VENUE up in Cut 2 (the Motion Desk / Deliberation Chamber /
+> amendment pipeline behind shared Clerk + a governance DB); re-add the `lecg`
+> service to `docker-compose.yml` and the `nginx-lecg.conf` block then.
+
+> The Libra Engine Compass GOVERNANCE venue (the `lecg-` app) is a second
+> container beside the `lec-` instrument on le-projects-01, on its own subdomain.
 
 Topology mirrors `lec` (see `DEPLOY.md`): one container (`lecg-backend`) on the
 external `le-proxy` network as alias `lecg`, bound to `127.0.0.1:8014`. The host
