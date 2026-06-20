@@ -43,4 +43,9 @@ app.include_router(lec_admin.router)
 @app.get("/health")
 async def health():
     """Liveness probe for the co-located RC client + the nginx upstream check."""
-    return {"status": "ok", "service": "lec", "rubric_version": lec_score.rubric_version()}
+    return {
+        "status": "ok",
+        "service": "lec",
+        "rubric_version": lec_score.rubric_version(),
+        "constitution": lec_score.constitution_pin(),
+    }

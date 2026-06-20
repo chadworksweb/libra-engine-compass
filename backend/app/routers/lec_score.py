@@ -18,6 +18,7 @@ true currently scores statelessly like false.
 
 import hashlib
 import logging
+import os
 from functools import lru_cache
 
 from fastapi import APIRouter, Depends, HTTPException
@@ -69,6 +70,40 @@ def rubric_version() -> str:
     return hashlib.sha256(published_definition().encode("utf-8")).hexdigest()[:12]
 
 
+# The constitution version this instrument is BUILT + verified against. The
+# instrument is a CONSUMER of the governance-owned le- law (Decoupling Part 2):
+# it PINS a constitution version, composes against it, and adopting a newer
+# ratified version is a DELIBERATE act (bump this + re-verify scoring), never an
+# automatic pickup. Decision 1/4 -- shared-repo version pin, no inter-service
+# HTTP. Override via env for ops; the code default tracks what shipped.
+PINNED_CONSTITUTION_VERSION = os.getenv("LEC_PINNED_CONSTITUTION_VERSION", "1373218dda6e")
+
+
+def _governed_constitution_version() -> str | None:
+    """The CURRENT constitution version governance publishes. Fail-soft: returns
+    None if the governance package is unavailable (e.g. not yet deployed beside
+    the instrument), never raising into a response or onto the scoring path."""
+    try:
+        from governance.lecg_constitution import constitution_version
+        return constitution_version()
+    except Exception:
+        logger.exception("governed constitution version unavailable")
+        return None
+
+
+def constitution_pin() -> dict:
+    """What constitution version the instrument pins, what governance currently
+    publishes, and whether they agree. in_sync False means the law moved (a
+    ratified amendment) and the instrument has not yet adopted it -- the signal to
+    deliberately bump PINNED_CONSTITUTION_VERSION and re-verify, not an auto-adopt."""
+    current = _governed_constitution_version()
+    return {
+        "pinned": PINNED_CONSTITUTION_VERSION,
+        "current": current,
+        "in_sync": current is not None and current == PINNED_CONSTITUTION_VERSION,
+    }
+
+
 def _tenet_count() -> int | None:
     """Best-effort count of numbered tenets across the five tiers. Returns None
     if the tenets JSON shape is not what we expect (never raises)."""
@@ -112,6 +147,7 @@ async def get_rubric(_: None = Depends(require_api_key)):
     back to their last good copy on failure."""
     return {
         "version": rubric_version(),
+        "constitution": constitution_pin(),
         "rubric_text": published_definition(),
         "tenet_count": _tenet_count(),
         "tiers": [
