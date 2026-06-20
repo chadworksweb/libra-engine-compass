@@ -11,10 +11,12 @@ import logging
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
 
 from app.lec_database import Base, engine
 from app import lec_models  # noqa: F401  (registers the models on Base before create_all)
 from app.routers import lec_admin, lec_score
+from governance.lecg_public import router as constitution_router, STATIC_TENETS
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -39,6 +41,12 @@ app = FastAPI(
 app.include_router(lec_score.router)
 app.include_router(lec_admin.router)
 
+# The tenets are the LEC tenets: they live on LEC and are served here, by the
+# instrument, at lec.libraengine.com. Public, read-only, outside the service-key
+# gate that covers /api/score + /api/rubric. (The lecg- governance VENUE -- the
+# amendment machinery -- is Cut 2, separate.)
+app.include_router(constitution_router)
+
 
 @app.get("/health")
 async def health():
@@ -49,3 +57,9 @@ async def health():
         "rubric_version": lec_score.rubric_version(),
         "constitution": lec_score.constitution_pin(),
     }
+
+
+# The public tenets page UI. tenets-data.js is NOT in this dir -- it is served
+# live by the constitution_router above (included first, so it wins). Mounted
+# last so the explicit routes take precedence.
+app.mount("/tenets", StaticFiles(directory=str(STATIC_TENETS), html=True), name="tenets")
