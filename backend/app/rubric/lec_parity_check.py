@@ -27,7 +27,7 @@ from pathlib import Path
 from app.rubric.lec_lens import compose, get_lens, load_gospel, LENS_EXEMPLAR_SENTINEL
 
 HERE = Path(__file__).resolve().parent
-GOLDEN = HERE / "lec-golden-2026-06-18"  # re-snapshotted post-R15; 2026-06-17 stays as the pre-Decoupling rollback
+GOLDEN = HERE / "lec-golden-2026-06-21"  # re-snapshotted post-R16; 2026-06-18/06-17 stay as the earlier rollbacks
 CALIBRATION_FORMAT_MARKER = "## Required Output"  # where the format half begins
 
 # Rules authored AFTER the active golden freeze, if any. The count check is

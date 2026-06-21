@@ -1,0 +1,24 @@
+{
+  "snapshot_date": "2026-06-21",
+  "purpose": "Immutable golden reference of the LEC calibrator before the Decoupling. The fresh gospel + lyric-lens composition is score-parity checked against this. RC runs on deployed main until parity passes and a deliberate cutover.",
+  "git_commit": "96268596897855b836a8f22c73f7035a854fc0bf",
+  "model": "claude-opus-4-6",
+  "rubric_version": "9f0b59cbb111",
+  "system_prompt_sha256": "016f384f5410dd13000a8bd91979ca1f4d1c2c4077c1bdac1f4d1aeb7d33e7a5",
+  "system_prompt_chars": 69954,
+  "counts": {
+    "tiers": 5,
+    "tenets": 58,
+    "modifiers": 1,
+    "flags": 1,
+    "rules": 16
+  },
+  "files": [
+    "system_prompt_lyric.txt",
+    "user_prompt_lyric.txt",
+    "rc-lyric-rubric.json",
+    "rc-lyric-precedents.json",
+    "rc-lyric-satire.md",
+    "rc-lyric-inhabited-voice.md"
+  ]
+}

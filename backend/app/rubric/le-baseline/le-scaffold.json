@@ -671,6 +671,13 @@
       "version": "1.0",
       "ratified_at": "2026-06-18",
       "status": "ratified"
+    },
+    {
+      "id": "R16",
+      "layer": "baseline",
+      "version": "1.0",
+      "ratified_at": "2026-06-21",
+      "status": "ratified"
     }
   ]
 }

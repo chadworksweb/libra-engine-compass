@@ -38,6 +38,7 @@ RULE_LAYER = {
     "R5": "baseline", "R6": "baseline", "R7": "baseline", "R8": "baseline",
     "R9": "baseline", "R10": "baseline", "R11": "baseline", "R12": "lyric",
     "R13": "baseline", "R14": "baseline", "R15": "baseline",
+    "R16": "baseline",
 }
 
 
