@@ -10,11 +10,12 @@ Hub: `Libra Engine - Entity/LIBRA-ENGINE-ALTITUDE-PLAN.md`.
 
 ## Ownership prefixes (Chad, 2026-06-17)
 
-Ownership is structural in the names. `le-` = Libra Engine baseline/gospel,
-`lec-` = the instrument (the composer + its tooling), `rc-` = the lyric lens
-(Rising Compass's application). Data files and folders use the hyphen form
-(`le-`, `lec-`, `rc-`); Python modules use `lec_` with an underscore so they stay
-importable. The frozen golden snapshot's INTERNAL files keep their verbatim live
+Ownership is structural in the names. `le-` = Libra Engine baseline/gospel
+(universal LAW: cores, scaffold, rules), `lec-` = the instrument (the composer +
+its tooling), `lecg-` = the governance venue, `<lens>-` = domain lenses
+(`rc-lyric` = the lyric lens / Rising Compass's application, `cc-essay`, `lt-`).
+Data files and folders use the hyphen form; Python modules use `lec_` with an
+underscore so they stay importable. The frozen golden snapshot's INTERNAL files keep their verbatim live
 names (it is a faithful freeze of what RC runs), only its directory is prefixed.
 
 ## Layout
@@ -29,13 +30,17 @@ names (it is a faithful freeze of what RC runs), only its directory is prefixed.
       le-scaffold.json       GENERATED: structure + governance (axes, labels, ranges,
                              ids, tenet numbers, rule layers, versioning, changelog)
       le-method.json         HAND-AUTHORED: universal read-method kernels (the procedure)
+      le-satire.json         universal le- satire modifier (shipped as gospel law)
 
-    rc-lyric/
+    rc-lyric/                the lyric lens
       rc-lyric-bundle.json   HAND-AUTHORED: the lyric lens (the contract, filled fresh)
       rc-lyric-text.json     GENERATED: the exact lyric strings (reference only)
 
-    lec-golden-2026-06-17/   IMMUTABLE: frozen live system prompt + tenet files + manifest
-                             (internal files keep verbatim names; the parity baseline)
+    cc-essay/                the second lens (essay), a real domain lens
+
+    lec-golden-<date>/       IMMUTABLE reference data: frozen live system prompt +
+                             tenet files + manifest (internal files keep verbatim
+                             names; the parity baseline). Multiple snapshots kept.
 
 ## The two layers, and how parity is held
 
@@ -87,7 +92,14 @@ precedent table, vernier, checks, JSON schema, summary-voice) still lives in
    on the song set + model cost. Terminal Anthropic calls for RC stay banned; the
    dynamic run goes through the LEC server, not the terminal.
 
-## Status (2026-06-17)
+## Status (Part 1 COMPLETE + LIVE)
+
+The baseline/lens carve is complete and the lyric cutover is LIVE. The composer
+composes gospel + lens; satire shipped as a universal `le-` modifier
+(`le-baseline/le-satire.json`); `cc-essay` is a real second lens
+(`rc-lyric/` and `cc-essay/` both present). The live rubric module dir is
+`backend/app/services/agents/rc-lyric-live/` (renamed from `agents/tenets/`).
+Golden snapshots `lec-golden-*` are kept as reference data.
 
 - Carve mechanism: DONE, parity-proven (5 tiers, 58 tenets, 1 modifier, 1 flag,
   14 rules).
@@ -95,14 +107,11 @@ precedent table, vernier, checks, JSON schema, summary-voice) still lives in
   tiers + 58 tenets, the contamination modifier, the dogma flag, and every rule
   in register A; the universal read-method kernels de-musked into le-method.json.
   R1/R12 carry only their thin universal sibling in the gospel; their full
-  case-bound text lives in the lyric lens.
+  case-bound text lives in the lyric lens. Satire lives in `le-satire.json` as a
+  universal modifier.
 - Composer (lec_lens.compose): DONE. Contract + registry + load_gospel +
   load_lens_bundle + compose, all rendering through the glossary.
-- Lyric lens (rc-lyric-bundle.json): AUTHORED FRESH against the contract.
+- Lyric lens (rc-lyric-bundle.json): AUTHORED FRESH against the contract; the
+  lyric cutover is LIVE (the live module is `services/agents/rc-lyric-live/`).
+- Second lens (`cc-essay/`): a real second lens, present alongside `rc-lyric/`.
 - Static parity harness (lec_parity_check): DONE, 57/57.
-- NOT built yet: the full-prompt composer (compose() + the calibration-format
-  layer) and the dynamic score-parity run. None of this is wired to the live
-  calibrator; RC still renders from services/agents/tenets/rc-lyric-rubric.json.
-
-Working branch: `decoupling-part1-baseline-carve` (local, uncommitted, not
-deployed).
