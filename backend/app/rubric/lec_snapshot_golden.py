@@ -45,7 +45,7 @@ def main() -> int:
     OUT.mkdir(parents=True, exist_ok=True)
     (OUT / "system_prompt_lyric.txt").write_text(system_prompt, encoding="utf-8")
     (OUT / "user_prompt_lyric.txt").write_text(user_prompt, encoding="utf-8")
-    for name in ("rc-lyric-rubric.json", "rc-lyric-precedents.json", "rc-lyric-satire.md"):
+    for name in ("rc-lyric-rubric.json", "rc-lyric-precedents.json", "rc-lyric-satire.md", "rc-lyric-inhabited-voice.md"):
         shutil.copyfile(TENETS / name, OUT / name)
 
     data = load_tenets()
@@ -75,6 +75,7 @@ def main() -> int:
             "rc-lyric-rubric.json",
             "rc-lyric-precedents.json",
             "rc-lyric-satire.md",
+            "rc-lyric-inhabited-voice.md",
         ],
     }
     with open(OUT / "MANIFEST.json", "w", encoding="utf-8") as f:
