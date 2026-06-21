@@ -1,5 +1,12 @@
 # LEC parity harness (Phase 0)
 
+> HISTORICAL (Phase 0 extraction-verification). This harness proved the
+> extraction changed no scoring logic by diffing LEC against RC's then-existing
+> in-process scorer. Since 2026-06-16 LEC is RC's SOLE live scorer and RC carries
+> zero scoring code, so the RC side of this diff no longer exists; the harness is
+> kept as the extraction record. For composed-rubric parity see
+> `app/rubric/lec_parity_check.py` (static) + `lec_dynamic_parity.py`.
+
 Proves the extraction changed no scoring logic: score the same artifacts through
 LEC and through RC, diff tier + charge_value + contamination. The lyric system
 prompt is already byte-identical to RC master (verified), and LEC's calibrator is

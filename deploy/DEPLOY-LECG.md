@@ -1,6 +1,9 @@
 # LECG -- governance venue deploy (lecg.libraengine.com)
 
-> **STATUS: CUT 2 BUILT LOCAL (2026-06-20); NOT deployed.** The `lecg` venue app
+> **STATUS: CUT 2 DEPLOYED DARK + LIVE (2026-06-20)** at `lecg.libraengine.com` (commit
+> `4e9e2b9`). Own governance DB provisioned, `LECG_*` env set, nginx block re-added + dormant
+> Cut-1 cert reused; `/health` ok, read surfaces + tenets live, write surfaces gated 503
+> (Clerk Pro pending). The recipe below is what was run. The `lecg` venue app
 > is built (Motion Desk + Deliberation Chamber + amendment pipeline + the
 > ratification write-back), the `lecg` service is re-added to
 > `docker-compose.yml`, and this nginx block exists. It now has its OWN

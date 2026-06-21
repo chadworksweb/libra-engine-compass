@@ -21,7 +21,7 @@
 >   the proxy copy.
 > - **Verified:** `/health` 200; `/api/rubric` 401 without key / 200 with;
 >   admin login 200, bad token 404; a real `/api/score` returned a scored result
->   through the public domain (180s timeout held). LT key issued (`lec_gxJz…`).
+>   through the public domain (180s timeout held). LT key issued (`lec_gxJz...`).
 > - **Remaining:** cut LT over (point its `RC_API_BASE_URL` at LEC + the LT key);
 >   issue RC's key when RC's Phase 2 deploys. Consider moving to `lec_app` on the
 >   pool (:25061) + rotating `doadmin` (its password transited a transcript).
@@ -35,8 +35,10 @@ DB on the shared DO Managed cluster. RC reaches it internally at
 
 Topology: LEC runs ONE container (`lec-backend`) joined to the existing external
 `le-proxy` network as alias `lec`. It does **not** run its own nginx/certbot --
-the host nginx (RC's, the only thing binding :80/:443) serves the domain via
-`deploy/nginx-lec.conf` and proxies to the container.
+the central shared proxy `le-nginx` (`/root/proxy/`, the thing binding :80/:443)
+serves the domain via `deploy/nginx-lec.conf` and proxies to the container.
+(`deploy.sh` builds BOTH `lec` and the `lecg` governance venue; see
+`DEPLOY-LECG.md`.)
 
 Artifacts in this repo: `backend/Dockerfile`, `docker-compose.yml`,
 `deploy/nginx-lec.conf`, `backend/scripts/issue_key.py`, `deploy/deploy.sh`.
@@ -142,9 +144,9 @@ it pulls + `docker compose up -d --build` + smoke-tests `/health`).
       listener prose is client-enriched per the 2026-06-15 decision).
 - [ ] Retire the local `:8010` shared-brain worktree + SSH tunnel LT used.
 
-RC keeps its in-process calibrator until Phase 2 is proven; the RC->LEC client
-is built on the `lec-integration` branch behind the fail-closed `lec.enabled`
-flag, with `lec_base_url` set to `http://lec:8012` in RC's prod env when enabled.
+RESOLVED 2026-06-16: the RC->LEC cutover landed. RC's in-process calibrator was
+DELETED and LEC is RC's SOLE live scorer (all paths); there is no `lec.enabled`
+flag. RC reaches LEC at `http://lec:8012` through the `rc-lyric` lens only.
 
 ## Notes / open items
 
