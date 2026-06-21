@@ -76,7 +76,7 @@ def rubric_version() -> str:
 # ratified version is a DELIBERATE act (bump this + re-verify scoring), never an
 # automatic pickup. Decision 1/4 -- shared-repo version pin, no inter-service
 # HTTP. Override via env for ops; the code default tracks what shipped.
-PINNED_CONSTITUTION_VERSION = os.getenv("LEC_PINNED_CONSTITUTION_VERSION", "1373218dda6e")
+PINNED_CONSTITUTION_VERSION = os.getenv("LEC_PINNED_CONSTITUTION_VERSION", "46528e8caeed")
 
 
 def _governed_constitution_version() -> str | None:

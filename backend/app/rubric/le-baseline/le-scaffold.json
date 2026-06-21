@@ -61,6 +61,13 @@
       "target": "R15",
       "summary": "Add R15, the reverence-halo / cultural-sanctity strip: a state-sanctioned, patriotic, memorial, civic-ritual, or institutional sanctity (fallen soldiers, the flag, a sacred site, a martyr, a hallowed tradition) is an inherited frame the lyrics must earn on the page, not pre-loaded charge. The civic and institutional generalization of R14's religious reverence-halo, and the same error class as R3 (sacred vocabulary is not substance), R6 (reputation the audience supplies), and R12 (era reverence the listener back-fills). Procedure: separate what the song asserts (the cause was just, the place is holy) from what it delivers (fidelity, consolation, witness); only the delivered content scores, and unexamined valorization dilutes rather than elevates. Strip-test: remove the sacred wrapper and score what survives.",
       "source": "Daily Downloads 2026-06-18, 'The Twenty-One Steps' (PayTreeIt, Tomb of the Unknown Soldier), violet/+83 -> blue/+72 -> blue/+37 across two Chad corrections"
+    },
+    {
+      "at": "2026-06-21",
+      "change": "add",
+      "target": "R16",
+      "summary": "Add R16, sympathy is not a payload: a sympathetic human want or honest acceptance (wanting security or relief from hardship, grieving, releasing blame, longing, naming pain) is not a Degraded payload by itself. The negative_payload route and the Degraded/Corrupted tenets fire only on actual ego-service, objectification, substance-celebration, contempt, cruelty, or destruction on the page. The mirror of the negative_payload principle that a sympathetic surface frame does not DEMOTE a real payload: sympathy neither excuses a real payload nor manufactures a false one. Test: name and quote the specific harm-signal on the page; if you cannot quote it, the negative_payload route does not apply.",
+      "source": "chadlewine mass recalibration 2026-06-21: agents systematically over-fired negative_payload on sympathetic-but-clean songs. Canonical corrections 'Cashing Out' (-26 -> Decent) and 'Don't Blame Me' (-27 -> Decent)."
     }
   ],
   "tiers": [
