@@ -27,6 +27,12 @@ rm -f /tmp/lec-deploy.tgz
 echo "==> Building + starting"
 ssh "$SERVER" "cd '$REMOTE_DIR' && docker compose up -d --build && docker compose ps"
 
-echo "==> Smoke test (internal /health)"
-ssh "$SERVER" "curl -fsS http://127.0.0.1:8012/health" && echo
+# Recreating the container gives it a new IP on the shared le-proxy network, but
+# le-nginx resolved the 'lec' upstream at config-load and caches it, so the public
+# domain 502s until the proxy re-resolves. A graceful reload fixes it.
+echo "==> Reloading shared proxy (re-resolve the recreated upstream)"
+ssh "$SERVER" "docker exec le-nginx nginx -s reload" || echo "WARN: le-nginx reload failed; run: ssh $SERVER \"docker exec le-nginx nginx -s reload\""
+
+echo "==> Smoke test (internal /health, retrying through container boot)"
+ssh "$SERVER" "curl -fsS --retry 10 --retry-delay 2 --retry-all-errors --max-time 60 http://127.0.0.1:8012/health" && echo
 echo "==> Done. Public check: curl -fsS https://lec.libraengine.com/health"
