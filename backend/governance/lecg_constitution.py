@@ -219,7 +219,7 @@ if __name__ == "__main__":
     check("every tenet has core + version + ratified_at + status", gov_ok)
 
     rule_ids = [r["id"] for r in c["rules"]]
-    check("R1..R15 present", rule_ids == [f"R{i}" for i in range(1, 16)])
+    check("R1..R16 present", rule_ids == [f"R{i}" for i in range(1, 17)])
     check("every rule has core + governance", all(r.get("core") and r.get("version") and r.get("status") for r in c["rules"]))
 
     check("contamination modifier", any(m["id"] == "contamination" for m in c["modifiers"]))
@@ -228,6 +228,7 @@ if __name__ == "__main__":
     check("method present", bool(c.get("method")))
     check("changelog present", len(c.get("changelog", [])) >= 8)
     check("changelog includes R15 add", any(e.get("target") == "R15" for e in c["changelog"]))
+    check("changelog includes R16 add", any(e.get("target") == "R16" for e in c["changelog"]))
 
     check("glossary contract", set(c["glossary_contract"]) >= {"the work", "the speaker", "the text", "the audience"})
 
