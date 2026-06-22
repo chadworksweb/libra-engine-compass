@@ -137,6 +137,13 @@ class ScoreIn(BaseModel):
                     "Composed-only + lyric-only today; rejected (422) for any type "
                     "that cannot offer it.",
     )
+    inhabited: bool = Field(
+        default=False,
+        description="re-read through the inhabited-voice lens: an earnest narrator "
+                    "inhabiting a degraded/suffering state to WITNESS it, gated by "
+                    "an in-lyric turn. Composed-only + lyric-only; rejected (422) "
+                    "otherwise. Mutually exclusive with satire.",
+    )
 
 
 @router.get("/rubric")
@@ -195,6 +202,20 @@ async def post_score(body: ScoreIn, _: None = Depends(require_api_key)):
                 detail="satire re-read is available only for type 'lyric'.",
             )
 
+    if body.inhabited:
+        # The inhabited-voice lens is lyric-native + composed-only, like satire,
+        # and mutually exclusive with it (one re-read at a time).
+        if body.satire:
+            raise HTTPException(
+                status_code=422,
+                detail="satire and inhabited are mutually exclusive; pick one re-read.",
+            )
+        if artifact_type != "lyric":
+            raise HTTPException(
+                status_code=422,
+                detail="inhabited-voice re-read is available only for type 'lyric'.",
+            )
+
     calibration = await calibrate_song_async(
         body.title or "",
         body.artist or "",
@@ -203,6 +224,7 @@ async def post_score(body: ScoreIn, _: None = Depends(require_api_key)):
         skip_cache=True,    # no cache lookup
         artifact_type=artifact_type,
         satire=body.satire,
+        inhabited=body.inhabited,
     )
 
     color = calibration.get("rubric_color")
@@ -221,6 +243,7 @@ async def post_score(body: ScoreIn, _: None = Depends(require_api_key)):
         "status": "scored",
         "type": artifact_type,
         "satire": body.satire,  # echo: this read applied the satire modifier
+        "inhabited": body.inhabited,  # echo: this read applied the inhabited-voice lens
         "intent_source": intent_source,
         "tier": COLOR_LABELS[color].lower(),
         "color_key": color,  # consumer maps to its OWN palette; LEC hex != LT/charger hex

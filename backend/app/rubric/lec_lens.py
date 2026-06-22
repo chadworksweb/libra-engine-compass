@@ -49,6 +49,10 @@ CORES_PATH = BASELINE_DIR / "le-cores.json"
 SCAFFOLD_PATH = BASELINE_DIR / "le-scaffold.json"
 METHOD_PATH = BASELINE_DIR / "le-method.json"
 SATIRE_PATH = BASELINE_DIR / "le-satire.json"
+# The rc-lyric inhabited-voice lens doc. Unlike satire (decoupled into the
+# universal le-satire law + a lens skin), inhabited-voice is a single lyric-native
+# lens doc spliced as an overlay; it lives with the live lens data, not le-baseline.
+INHABITED_PATH = HERE.parent / "services" / "agents" / "rc-lyric-live" / "rc-lyric-inhabited-voice.md"
 
 # Sentinel the gospel rule cores use to defer the worked example to the lens
 # (ruling 4: named exemplars are lens-owned). compose() strips it and splices in
@@ -233,6 +237,25 @@ def load_satire() -> dict:
     compose_satire renders it through a lens. Owned by the baseline (le-), available
     to every lens; the lens supplies only its satire SKIN (lens.satire_skin)."""
     return _load_json(SATIRE_PATH)
+
+
+_INHABITED_BENCH_START = "\n\nValidation bench (a change to these tenets"
+_INHABITED_BENCH_END = "\n\nThe inhabited-voice recalibration exists"
+
+
+def load_inhabited() -> str:
+    """The rc-lyric inhabited-voice lens, prompt-ready: the ratified lens doc with
+    the VALIDATION-BENCH block stripped. That block is a regression-test spec
+    naming specific songs + their expected tiers, so it must never enter the
+    scoring prompt (it would pre-judge those exact songs). Everything else in the
+    doc is reading guidance and belongs in the prompt. Lyric-native (no glossary
+    binding): inhabited-voice is a lyric-only lens, not a universal le- modifier."""
+    raw = INHABITED_PATH.read_text(encoding="utf-8")
+    start = raw.find(_INHABITED_BENCH_START)
+    end = raw.find(_INHABITED_BENCH_END)
+    if start != -1 and end != -1 and end > start:
+        raw = raw[:start] + raw[end:]
+    return raw.strip() + "\n"
 
 
 # --- Glossary rendering -----------------------------------------------

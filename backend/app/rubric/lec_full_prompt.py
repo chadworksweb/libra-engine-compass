@@ -189,6 +189,43 @@ def compose_satire_prompt(gospel: dict, lens: Lens) -> str:
     return rubric_def + SATIRE_OVERLAY_PREAMBLE + satire_overlay + "\n---\n" + verbatim_format
 
 
+# Instrument-owned framing that opens the inhabited-voice overlay (mirrors
+# SATIRE_OVERLAY_PREAMBLE). ASCII-only, no dash in the heading.
+INHABITED_OVERLAY_PREAMBLE = (
+    "\n---\n# INHABITED-VOICE RECALIBRATION LENS (APPLIES TO THIS WORK ONLY)\n\n"
+    "An admin has verified an inhabited-voice flag on this work. You are now "
+    "performing a recalibration through the inhabited-voice lens defined below. The "
+    "standard rubric above still applies. The lens sits alongside it as a parallel "
+    "reading framework: apply the standard rubric first, then re-read through the "
+    "lens.\n\n"
+)
+
+
+def compose_inhabited_prompt(gospel: dict, lens: Lens) -> str:
+    """The inhabited-voice recalibration system prompt: the validated cutover prompt
+    with the rc-lyric inhabited-voice lens spliced between the rubric-definition and
+    the calibration-format halves (mirrors compose_satire_prompt).
+
+        rubric_def        = compose(gospel, lens)        # the law, bound
+        inhabited_overlay = load_inhabited()             # the lyric lens doc, bench-stripped
+        format_half       = verbatim CALIBRATION_FORMAT (precedent table via lens.precedents_key)
+        -> rubric_def + PREAMBLE + inhabited_overlay + "---" + format_half
+
+    The lens carries its own output-field schema (LITERAL_SUMMARY / TURN_TEST /
+    ENDORSEMENT_TEST / MODE_BREAKDOWN / CEILING_CHECK), so the format half is the
+    SAME verbatim half the cutover uses. Lyric-only: the doc is lyric-native, not a
+    universal le- modifier like satire. Fail-closed at the call site (calibrator)."""
+    from app.rubric.lec_lens import load_inhabited
+    rubric_def = compose(gospel, lens)
+    inhabited_overlay = load_inhabited()
+    verbatim_format = (
+        CALIBRATION_FORMAT_PRE
+        + render_precedent_table(lens.precedents_key)
+        + CALIBRATION_FORMAT_POST
+    )
+    return rubric_def + INHABITED_OVERLAY_PREAMBLE + inhabited_overlay + "\n---\n" + verbatim_format
+
+
 def run_checks():
     gospel = load_gospel()
     lens = get_lens("rc-lyric")

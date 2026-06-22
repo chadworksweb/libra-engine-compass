@@ -61,6 +61,17 @@ _SATIRE_USER_SUFFIX = (
 # more room than the standard read (RC's recalibrator used 8192).
 _SATIRE_MAX_TOKENS = 8192
 
+# The inhabited-voice read also emits five extra reasoning fields (LITERAL_SUMMARY,
+# TURN_TEST, ENDORSEMENT_TEST, MODE_BREAKDOWN, CEILING_CHECK), so it reuses the
+# wider satire budget. Mirrors RC's recalibrator._build_satire_prompt user tail.
+_INHABITED_USER_SUFFIX = (
+    "\n\nAn admin has verified an inhabited-voice flag on this work. Run the "
+    "inhabited-voice recalibration procedure exactly as described in the lens. "
+    "Output the required reasoning fields (LITERAL_SUMMARY, TURN_TEST, "
+    "ENDORSEMENT_TEST, MODE_BREAKDOWN, CEILING_CHECK) before the JSON. If there is "
+    "no turn in the words, return the literal calibration unchanged."
+)
+
 
 async def _read_v3(
     client: AsyncAnthropic,
@@ -215,6 +226,7 @@ async def calibrate_song_async(
     progress_cb: Callable[[str], None] | None = None,
     artifact_type: str = "lyric",
     satire: bool = False,
+    inhabited: bool = False,
 ) -> dict:
     """The scoring path -- LEC's whole job. Read an artifact against the rubric
     and return the charge package (tier, charge_value, contamination, the v3
@@ -267,10 +279,10 @@ async def calibrate_song_async(
     # request composes the satire prompt regardless of the LEC_COMPOSE_RUBRIC flag
     # (prod runs it on anyway); only the lyric path is wired. compose_satire_prompt
     # is compose_cutover_prompt + the satire overlay spliced in.
-    if artifact_type == "lyric" and (settings.compose_rubric or satire):
+    if artifact_type == "lyric" and (settings.compose_rubric or satire or inhabited):
         try:
             from app.rubric.lec_full_prompt import (
-                compose_cutover_prompt, compose_satire_prompt,
+                compose_cutover_prompt, compose_satire_prompt, compose_inhabited_prompt,
             )
             from app.rubric.lec_lens import get_lens, load_gospel
             gospel = load_gospel()
@@ -278,15 +290,18 @@ async def calibrate_song_async(
             if satire:
                 system_prompt = compose_satire_prompt(gospel, lens)
                 user_prompt = user_prompt + _SATIRE_USER_SUFFIX
+            elif inhabited:
+                system_prompt = compose_inhabited_prompt(gospel, lens)
+                user_prompt = user_prompt + _INHABITED_USER_SUFFIX
             else:
                 system_prompt = compose_cutover_prompt(gospel, lens)
         except Exception:
             logger.exception(
-                "composed rubric failed for '%s' by %s (satire=%s); using the "
-                "monolith rubric", title, artist, satire,
+                "composed rubric failed for '%s' by %s (satire=%s inhabited=%s); "
+                "using the monolith rubric", title, artist, satire, inhabited,
             )
 
-    read_max_tokens = _SATIRE_MAX_TOKENS if satire else 3500
+    read_max_tokens = _SATIRE_MAX_TOKENS if (satire or inhabited) else 3500
 
     # First pass at the default model. The model emits components only; the
     # server composes the charge and derives the tier (charge_composition).
