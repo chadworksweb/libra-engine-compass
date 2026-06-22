@@ -1,15 +1,17 @@
-"""The compass-evolution view -- the public "How the Compass Changed Its Mind"
-timeline (lecg-).
+"""The Calibrator Changelog view -- the public record of changes to the LEC
+calibrator itself (lecg-).
 
-The public /evolution/ page (governance-owned, hosted on the lec instrument)
-renders window.EVOLUTION_DATA: the story of how the LAW matured. It is sourced
-ENTIRELY from LEC's own governed data -- the le-scaffold changelog (the ratified
-rule/law changes) plus the reading-lens additions -- never from Rising Compass.
-The per-song calibration history is RC product data and lives in RC; this page is
-the compass changing ITS mind (how to read), not a song's score changing.
+The public /changelog/ page (governance-owned, hosted on the lec instrument)
+renders window.CHANGELOG_DATA: the change history of the calibrator -- rule
+changes, reading-lens additions, the calibration-method version, and the
+law-version bumps. Sourced ENTIRELY from LEC's own governed data (the le-scaffold
+changelog + the constitution + the curated lens additions), never from Rising
+Compass. This is the calibrator changing (how it reads), NOT a song's score
+changing -- that per-song history is RC product data and lives in RC's own
+"Calibration Log".
 
-build_evolution() -> the render-ready dict; render_data_js() -> the
-window.EVOLUTION_DATA = {...}; string served at /evolution/evolution-data.js.
+build_changelog() -> the render-ready dict; render_data_js() -> the
+window.CHANGELOG_DATA = {...}; string served at /changelog/changelog-data.js.
 """
 
 from __future__ import annotations
@@ -72,8 +74,8 @@ def _changelog_entry(e: dict) -> dict:
     }
 
 
-def build_evolution() -> dict:
-    """The render-ready compass-evolution timeline, newest first."""
+def build_changelog() -> dict:
+    """The render-ready calibrator changelog, newest first."""
     c = load_constitution()
     entries = [_changelog_entry(e) for e in c.get("changelog", [])]
     entries += [dict(x) for x in LENS_TIMELINE]
@@ -90,15 +92,15 @@ def build_evolution() -> dict:
 
 
 def render_data_js() -> str:
-    """The window.EVOLUTION_DATA assignment served at /evolution/evolution-data.js."""
-    body = json.dumps(build_evolution(), ensure_ascii=True, separators=(",", ":"))
-    return f"window.EVOLUTION_DATA = {body};\n"
+    """The window.CHANGELOG_DATA assignment served at /changelog/changelog-data.js."""
+    body = json.dumps(build_changelog(), ensure_ascii=True, separators=(",", ":"))
+    return f"window.CHANGELOG_DATA = {body};\n"
 
 
 if __name__ == "__main__":
-    v = build_evolution()
+    v = build_changelog()
     print(f"constitution_version: {v['constitution_version']}")
-    print(f"{len(v['entries'])} timeline entries; "
+    print(f"{len(v['entries'])} changelog entries; "
           f"{v['rule_count']} rules, {v['tenet_count']} tenets")
     for e in v["entries"]:
         print(f"  {e['date']}  [{e['kind']:4}]  {e['headline']}")

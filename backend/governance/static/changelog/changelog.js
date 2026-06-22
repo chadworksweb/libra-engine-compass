@@ -1,5 +1,5 @@
-/* === How the Compass Changed Its Mind -- render the law-evolution timeline
-       from window.EVOLUTION_DATA (served live at /evolution/evolution-data.js). === */
+/* === Calibrator Changelog -- render the calibrator's change-history timeline
+       from window.CHANGELOG_DATA (served live at /changelog/changelog-data.js). === */
 
 (() => {
   'use strict';
@@ -51,14 +51,14 @@
 
   function boot() {
     const root = document.getElementById('timeline');
-    if (!window.EVOLUTION_DATA) {
+    if (!window.CHANGELOG_DATA) {
       root.appendChild(el('p', 'evo-error', 'The history is momentarily out of reach. Please reload.'));
       return;
     }
     try {
-      render(window.EVOLUTION_DATA);
+      render(window.CHANGELOG_DATA);
     } catch (err) {
-      console.error('Failed to render the evolution timeline:', err);
+      console.error('Failed to render the changelog timeline:', err);
       root.appendChild(el('p', 'evo-error', 'The history is momentarily out of reach. Please reload.'));
     }
   }

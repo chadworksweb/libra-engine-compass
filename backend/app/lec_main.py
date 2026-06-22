@@ -16,7 +16,7 @@ from fastapi.staticfiles import StaticFiles
 from app.lec_database import Base, engine
 from app import lec_models  # noqa: F401  (registers the models on Base before create_all)
 from app.routers import lec_admin, lec_score
-from governance.lecg_public import router as constitution_router, STATIC_TENETS, STATIC_EVOLUTION
+from governance.lecg_public import router as constitution_router, STATIC_TENETS, STATIC_CHANGELOG
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -64,7 +64,7 @@ async def health():
 # last so the explicit routes take precedence.
 app.mount("/tenets", StaticFiles(directory=str(STATIC_TENETS), html=True), name="tenets")
 
-# The public "How the Compass Changed Its Mind" page (the law's evolution timeline).
-# evolution-data.js is served live by constitution_router (included above, so it
+# The public Calibrator Changelog page (changes to the calibrator itself).
+# changelog-data.js is served live by constitution_router (included above, so it
 # wins); this mounts the static UI after.
-app.mount("/evolution", StaticFiles(directory=str(STATIC_EVOLUTION), html=True), name="evolution")
+app.mount("/changelog", StaticFiles(directory=str(STATIC_CHANGELOG), html=True), name="changelog")

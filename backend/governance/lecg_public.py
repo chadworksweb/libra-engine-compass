@@ -12,8 +12,8 @@ Routes (all public, NO service-key gate):
   GET /api/constitution            -> the full canonical governed constitution
   GET /api/constitution/version    -> the governed version (pin/cache probe)
   GET /tenets/tenets-data.js       -> window.TENETS_DATA, LIVE from the constitution
-  GET /api/compass-evolution       -> the law-evolution timeline ("how the compass changed its mind")
-  GET /evolution/evolution-data.js -> window.EVOLUTION_DATA, LIVE from the changelog
+  GET /api/calibrator-changelog      -> the calibrator changelog timeline (rules + lenses + versions)
+  GET /changelog/changelog-data.js   -> window.CHANGELOG_DATA, LIVE from the changelog
 
 The tenets page UI (index.html + tenets.css + tenets.js) is the static dir
 STATIC_TENETS; the host app mounts it at /tenets (StaticFiles, html=True) AFTER
@@ -29,12 +29,12 @@ from fastapi.responses import Response
 
 from governance.lecg_constitution import load_constitution
 from governance.lecg_tenets_view import render_data_js
-from governance.lecg_evolution_view import build_evolution, render_data_js as render_evolution_data_js
+from governance.lecg_changelog_view import build_changelog, render_data_js as render_changelog_data_js
 
 # governance/static/tenets/{index.html,tenets.css,tenets.js} (no tenets-data.js --
 # that is served live by the route below).
 STATIC_TENETS = Path(__file__).resolve().parent / "static" / "tenets"
-STATIC_EVOLUTION = Path(__file__).resolve().parent / "static" / "evolution"
+STATIC_CHANGELOG = Path(__file__).resolve().parent / "static" / "changelog"
 
 router = APIRouter(tags=["constitution"])
 
@@ -65,16 +65,17 @@ async def tenets_data_js():
     return Response(content=render_data_js(), media_type="application/javascript")
 
 
-@router.get("/api/compass-evolution")
-async def get_compass_evolution():
-    """The public 'how the compass changed its mind' timeline: the law's evolution
-    (rule + reading-lens additions), sourced from LEC's own changelog + constitution.
-    Never reads Rising Compass; the per-song calibration log is RC product data."""
-    return build_evolution()
+@router.get("/api/calibrator-changelog")
+async def get_calibrator_changelog():
+    """The public Calibrator Changelog timeline: changes to the calibrator itself
+    (rule changes + reading-lens additions + law versions), sourced from LEC's own
+    changelog + constitution. Never reads Rising Compass; the per-song calibration
+    log is RC product data."""
+    return build_changelog()
 
 
-@router.get("/evolution/evolution-data.js")
-async def evolution_data_js():
-    """window.EVOLUTION_DATA served LIVE from the governed changelog. The static
-    /evolution/ page loads this; never a hand-maintained file."""
-    return Response(content=render_evolution_data_js(), media_type="application/javascript")
+@router.get("/changelog/changelog-data.js")
+async def changelog_data_js():
+    """window.CHANGELOG_DATA served LIVE from the governed changelog. The static
+    /changelog/ page loads this; never a hand-maintained file."""
+    return Response(content=render_changelog_data_js(), media_type="application/javascript")
