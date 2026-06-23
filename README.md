@@ -26,8 +26,8 @@ LEC **owns the canonical constitution/tenets** (the tenets are the LEC tenets;
 they live ON LEC and serve read-only at `lec.libraengine.com/tenets/`). The
 public constitution API (`/api/constitution`, `/api/constitution/version`) is
 served by the governance package's public surface (`governance/lecg_public.py`).
-The governed `constitution_version` is `1373218dda6e`; the instrument's composed
-`rubric_version` is `44d4bad2c55d`. LEC pins the governed constitution version
+The governed `constitution_version` is `46528e8caeed`; the instrument's composed
+`rubric_version` is `716339b3385f`. LEC pins the governed constitution version
 (fail-soft) and adopts new editions deliberately (materialized into `le-baseline`
 plus a git `edition-<version>` tag).
 
