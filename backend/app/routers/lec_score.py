@@ -30,6 +30,7 @@ from app.lec_constants import (
 )
 from app.lec_deps import require_api_key
 from app.services.agents.lec_calibrator import calibrate_song_async
+from app.services.agents.lec_compass_agent_rubric import CALIBRATION_FORMAT
 from app.services.agents.lec_rubric_builder import RUBRIC_DEFINITION, load_tenets
 
 logger = logging.getLogger(__name__)
@@ -156,6 +157,16 @@ async def get_rubric(_: None = Depends(require_api_key)):
         "version": rubric_version(),
         "constitution": constitution_pin(),
         "rubric_text": published_definition(),
+        # The calibration METHOD half (anonymous read -> visceral -> route tree ->
+        # two-axis -> precedent placement + table -> vernier -> contamination /
+        # summary checks -> verdict -> reconciliation -> JSON schema -> charge scale
+        # -> the charge_summary Voice rules). The live calibrator sends
+        # RUBRIC_DEFINITION + this; terminal/operator calibration MUST pull and obey
+        # it from here (the access point), never from an SOP. Carried as its own
+        # field so it does NOT enter rubric_version's hash (prose-only, no score
+        # impact) -- consumers that cache on version still pick up the latest format
+        # on their next fetch.
+        "calibration_format": CALIBRATION_FORMAT,
         "tenet_count": _tenet_count(),
         "tiers": [
             {
