@@ -8,8 +8,8 @@ the composed charges.
   arm A (composed): compose_full_prompt(gospel, get_lens("rc-lyric"))  -- the
                     Decoupling's fresh rubric-definition half + the calibration-
                     format method (precedent table via lens.precedents_key).
-  arm B (golden):   lec-golden-2026-06-18/system_prompt_lyric.txt        -- the
-                    current live rendered prompt (post-R15 re-snapshot).
+  arm B (snapshot): rubric-snapshot-2026-06-18/system_prompt_lyric.txt    -- the
+                    pre-cutover monolith rendered prompt (post-R15 re-snapshot).
 
 The two prompts differ ONLY in the rubric-definition half (fresh register-A
 authoring vs the live rendered text); the calibration-format half is byte-equal.
@@ -49,7 +49,7 @@ from app.services.agents.lec_compass_agent_rubric import build_calibration_promp
 from app.services.lec_charge_composition import compose as compose_charge
 
 HERE = Path(__file__).resolve().parent
-GOLDEN = HERE / "lec-golden-2026-06-18"
+GOLDEN = HERE / "rubric-snapshot-2026-06-18"  # HERE is _snapshots/; the baseline sits beside this script
 
 # Aligned if the composed charge lands within this many points of the golden AND
 # in the same tier. A diagnostic threshold, not a hard gate: surface every song

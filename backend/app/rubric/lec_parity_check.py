@@ -1,7 +1,7 @@
 """Static parity / coverage harness for the Decoupling carve (LEC instrument tooling).
 
 Composes the fresh gospel + rc-lyric lens and proves STRUCTURAL coverage against
-the frozen golden (lec-golden-2026-06-17): every tier, tenet, modifier, flag,
+a frozen snapshot baseline (_snapshots/rubric-snapshot-*): every tier, tenet, modifier, flag,
 rule, method kernel, and canonical exemplar that the live rubric carries must
 appear in the composed rubric-definition, the composition must be ASCII-only,
 the glossary must fully bind (no neutral placeholders leak), and the deferred-
@@ -27,7 +27,7 @@ from pathlib import Path
 from app.rubric.lec_lens import compose, get_lens, load_gospel, LENS_EXEMPLAR_SENTINEL
 
 HERE = Path(__file__).resolve().parent
-GOLDEN = HERE / "lec-golden-2026-06-21"  # re-snapshotted post-R16; 2026-06-18/06-17 stay as the earlier rollbacks
+GOLDEN = HERE / "_snapshots" / "rubric-snapshot-2026-06-21"  # active parity baseline (post-R16); _snapshots/ also holds 06-18/06-17 as earlier rollbacks
 CALIBRATION_FORMAT_MARKER = "## Required Output"  # where the format half begins
 
 # Rules authored AFTER the active golden freeze, if any. The count check is

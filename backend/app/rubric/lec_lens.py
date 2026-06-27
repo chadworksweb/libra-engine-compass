@@ -389,7 +389,7 @@ def compose(gospel: dict, lens: Lens) -> str:
     """Assemble the rubric-definition string from the gospel + a lens bundle.
 
     Mirrors `rubric_builder.build_rubric_definition()` so the lyric lens can be
-    held to SCORE parity against lec-golden-2026-06-17. Assembly order:
+    held to SCORE parity against _snapshots/rubric-snapshot-2026-06-17. Assembly order:
 
       1. lens.product_framing (the domain identity opener), then the gospel
          reading-method kernels (sequential accumulation, read-the-work-not-the-

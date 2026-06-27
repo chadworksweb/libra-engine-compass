@@ -22,10 +22,11 @@ Run:  cd backend && .venv/Scripts/python.exe -m app.rubric.lec_carve
 import json
 from pathlib import Path
 
-AGENTS = Path(__file__).resolve().parent.parent / "services" / "agents"
+# NOTE: this script lives in app/rubric/_snapshots/, so paths climb one extra level.
+AGENTS = Path(__file__).resolve().parent.parent.parent / "services" / "agents"
 CORE_PATH = AGENTS / "rc-lyric-live" / "rc-lyric-rubric.json"
 
-OUT = Path(__file__).resolve().parent
+OUT = Path(__file__).resolve().parent.parent  # app/rubric (holds le-baseline/ + rc-lyric/)
 SCAFFOLD_PATH = OUT / "le-baseline" / "le-scaffold.json"
 LYRIC_PATH = OUT / "rc-lyric" / "rc-lyric-text.json"
 

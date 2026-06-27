@@ -1,18 +1,19 @@
-"""Freeze today's LEC calibrator as the IMMUTABLE golden reference, taken before
-the Decoupling rips the rubric into gospel + lenses.
+"""Freeze the current LEC calibrator as an IMMUTABLE rubric snapshot (a parity +
+rollback baseline). Snapshots land in app/rubric/_snapshots/rubric-snapshot-<date>/.
 
-Why: we author the gospel and the lyric lens fresh (not by lifting RC's text), so
-the new composed prompt will NOT be byte-identical. RC keeps running on deployed
-`main`; the freshly composed `gospel + lyric lens` is validated by SCORE PARITY
-against this snapshot before any cutover. This is the rollback + parity baseline.
+Why: the gospel and lyric lens are authored fresh (not lifted from RC's text), so a
+composed prompt is NOT byte-identical to an older render. A snapshot is the fixed
+reference a composition change is SCORE-parity-checked against (see lec_parity_check)
+and the rollback point. NOTE: as of the 2026-06-27 cutover the composed gospel+lens
+is live; snapshots are history/regression baselines, never the canonical rubric.
 
-Captures the exact rendered lyric SYSTEM prompt RC uses today (RUBRIC_DEFINITION +
-CALIBRATION_FORMAT), the rubric_version, the model id, and verbatim copies of the
-tenet files, plus a manifest with hashes and the git commit.
+Captures the exact rendered lyric SYSTEM prompt (RUBRIC_DEFINITION + CALIBRATION_FORMAT),
+the rubric_version, the model id, and verbatim copies of the tenet files, plus a
+manifest with hashes and the git commit.
 
 Run:
     cd backend
-    GOLDEN_COMMIT=$(git rev-parse HEAD) .venv/Scripts/python.exe -m app.rubric.lec_snapshot_golden
+    GOLDEN_COMMIT=$(git rev-parse HEAD) .venv/Scripts/python.exe -m app.rubric.lec_snapshot
 """
 import hashlib
 import json
@@ -30,9 +31,9 @@ try:
 except Exception:  # pragma: no cover - config should always import
     MODEL = "unknown"
 
-SNAPSHOT_DATE = os.environ.get("GOLDEN_DATE", "2026-06-18")
+SNAPSHOT_DATE = os.environ.get("SNAPSHOT_DATE", os.environ.get("GOLDEN_DATE", "2026-06-18"))
 HERE = Path(__file__).resolve().parent
-OUT = HERE / f"lec-golden-{SNAPSHOT_DATE}"
+OUT = HERE / "_snapshots" / f"rubric-snapshot-{SNAPSHOT_DATE}"
 TENETS = HERE.parent / "services" / "agents" / "rc-lyric-live"
 
 

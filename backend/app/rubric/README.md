@@ -15,15 +15,24 @@ Ownership is structural in the names. `le-` = Libra Engine baseline/gospel
 its tooling), `lecg-` = the governance venue, `<lens>-` = domain lenses
 (`rc-lyric` = the lyric lens / Rising Compass's application, `cc-essay`, `lt-`).
 Data files and folders use the hyphen form; Python modules use `lec_` with an
-underscore so they stay importable. The frozen golden snapshot's INTERNAL files keep their verbatim live
-names (it is a faithful freeze of what RC runs), only its directory is prefixed.
+underscore so they stay importable. A frozen rubric snapshot's INTERNAL files keep their verbatim live
+names (it is a faithful freeze of what was served), only its directory is prefixed.
+
+CUTOVER (2026-06-27): the composed gospel + rc-lyric lens is LIVE in prod
+(`LEC_COMPOSE_RUBRIC=true`). The pre-cutover monolith (`services/agents/rc-lyric-live/`)
+remains only as the fail-closed fallback. Frozen snapshots live in `_snapshots/` and
+are parity/rollback baselines ONLY -- never load one as the canonical rubric.
 
 ## Layout
 
     lec_lens.py              the Lens contract + registry + compose() (the composer)
-    lec_carve.py             lossless split of services/agents/tenets/rc-lyric-rubric.json
-    lec_parity_check.py      static coverage harness: compose() vs the golden
-    lec_snapshot_golden.py   freezes today's live calibrator as the golden reference
+    lec_parity_check.py      static coverage harness: compose() vs a snapshot baseline
+    lec_snapshot.py          freezes the current live calibrator as a rubric snapshot
+
+    _snapshots/              frozen parity/rollback baselines + spent cutover tooling
+      rubric-snapshot-<date>/  IMMUTABLE: frozen system prompt + tenet files + manifest
+      lec_carve.py             lossless split of rc-lyric-live/rc-lyric-rubric.json (spent)
+      lec_dynamic_parity.py    composed-vs-snapshot score parity run (cutover gate, spent)
 
     le-baseline/
       le-cores.json          HAND-AUTHORED: domain-neutral moral cores (the gospel law)
@@ -38,9 +47,7 @@ names (it is a faithful freeze of what RC runs), only its directory is prefixed.
 
     cc-essay/                the second lens (essay), a real domain lens
 
-    lec-golden-<date>/       IMMUTABLE reference data: frozen live system prompt +
-                             tenet files + manifest (internal files keep verbatim
-                             names; the parity baseline). Multiple snapshots kept.
+    (frozen snapshots now live under _snapshots/rubric-snapshot-<date>/, see above)
 
 ## The two layers, and how parity is held
 
@@ -72,12 +79,12 @@ precedent table, vernier, checks, JSON schema, summary-voice) still lives in
    reproduces `rc-lyric-rubric.json` exactly. Because RC still renders from the live
    `rc-lyric-rubric.json`, its prompt is unchanged.
 
-       cd backend && .venv/Scripts/python.exe -m app.rubric.lec_carve
+       cd backend && .venv/Scripts/python.exe -m app.rubric._snapshots.lec_carve
        # -> PARITY OK: recombine(scaffold, lyric_text) == rc-lyric-rubric.json (deep-equal)
 
 2. *Score parity (the fresh path matches the old one).* The gospel and the lyric
    lens are authored FRESH, so compose() will NOT be byte-identical to the
-   golden. The bar is SCORE parity. `lec_parity_check.py` is the cheap static
+   snapshot. The bar is SCORE parity. `lec_parity_check.py` is the cheap static
    pre-flight: it proves the composition drops nothing (every tier, tenet,
    modifier, flag, rule, kernel, exemplar present), is ASCII-only, binds the
    glossary fully, and strips the sentinel.
@@ -86,11 +93,10 @@ precedent table, vernier, checks, JSON schema, summary-voice) still lives in
        # add 'show' to print the composed rubric-definition
        # -> STATIC PARITY: OK (57/57)
 
-   The DYNAMIC score-parity run (scoring a known song set through gospel +
-   rc-lyric vs the golden on a live LEC and comparing composed charges) is the
-   gated next step: it needs a running LEC with model access and Chad's sign-off
-   on the song set + model cost. Terminal Anthropic calls for RC stay banned; the
-   dynamic run goes through the LEC server, not the terminal.
+   The DYNAMIC score-parity run (`_snapshots/lec_dynamic_parity.py`: scoring a known
+   song set through gospel + rc-lyric vs a snapshot on a live LEC and comparing
+   composed charges) was the gated cutover step. Terminal Anthropic calls for RC stay
+   banned; the dynamic run goes through the LEC server, not the terminal.
 
 ## Status (Part 1 COMPLETE + LIVE)
 
@@ -98,8 +104,10 @@ The baseline/lens carve is complete and the lyric cutover is LIVE. The composer
 composes gospel + lens; satire shipped as a universal `le-` modifier
 (`le-baseline/le-satire.json`); `cc-essay` is a real second lens
 (`rc-lyric/` and `cc-essay/` both present). The live rubric module dir is
-`backend/app/services/agents/rc-lyric-live/` (renamed from `agents/tenets/`).
-Golden snapshots `lec-golden-*` are kept as reference data.
+`backend/app/services/agents/rc-lyric-live/` (renamed from `agents/tenets/`), and
+post-cutover it serves only as the fail-closed fallback.
+Frozen baselines `_snapshots/rubric-snapshot-*` are kept as parity/rollback reference
+data only -- never the canonical rubric.
 
 - Carve mechanism: DONE, parity-proven (5 tiers, 58 tenets, 1 modifier, 1 flag,
   14 rules).
