@@ -9,7 +9,7 @@ calibration prompt builder.
 """
 
 from app.lec_constants import ARTIFACT_TYPE_LABELS
-from app.services.agents.lec_rubric_builder import RUBRIC_DEFINITION, render_precedent_table
+from app.services.agents.lec_rubric_builder import render_precedent_table
 
 
 SUMMARY_VOICE_RULES = """
@@ -148,18 +148,20 @@ def build_calibration_prompt(
 
     Returns (system_prompt, user_prompt).
     """
-    system_parts = [RUBRIC_DEFINITION]
-    if examples:
-        system_parts.append(examples)
-    # lyric uses the prebuilt CALIBRATION_FORMAT (byte-for-byte unchanged); other
-    # types rebuild it with their own precedent corpus (lyric-table fallback).
-    if artifact_type == "lyric":
-        system_parts.append(CALIBRATION_FORMAT)
-    else:
-        system_parts.append(
-            CALIBRATION_FORMAT_PRE + render_precedent_table(artifact_type) + CALIBRATION_FORMAT_POST
-        )
-    system_prompt = "\n".join(system_parts)
+    # The monolith RUBRIC_DEFINITION is retired (cutover complete 2026-06-27). The
+    # system prompt is composed fresh from the gospel + the artifact's lens for
+    # EVERY type: lyric -> rc-lyric; other types fall back to the rc-lyric lens
+    # (precedents_key "lyric") until their own lens is authored, matching the old
+    # lyric-table fallback. compose_cutover_prompt is the score-parity-validated
+    # join (rubric-definition + verbatim calibration-format). Lazy import keeps the
+    # agents <- rubric dependency off module load (no cycle with lec_full_prompt).
+    # A composition error propagates: the calibrator turns it into an explicit
+    # needs-human-review result (fail-loud), never a silent monolith fallback.
+    from app.rubric.lec_full_prompt import compose_cutover_prompt
+    from app.rubric.lec_lens import get_lens, load_gospel
+    system_prompt = compose_cutover_prompt(load_gospel(), get_lens(artifact_type))
+    # `examples` is retained for signature compat but unused: few-shot is disabled
+    # (the calibrator always passes "") and the composed prompt carries no slot.
 
     # The no-text case never reaches the model: calibrate_song_async
     # short-circuits to the null calibration before building a prompt.

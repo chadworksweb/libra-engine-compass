@@ -59,12 +59,15 @@ from app.services.agents.lec_calibrator import _SATIRE_USER_SUFFIX, _read_v3
 from app.services.agents.lec_compass_agent_rubric import (
     CALIBRATION_FORMAT, build_calibration_prompt,
 )
-from app.services.agents.lec_rubric_builder import RUBRIC_DEFINITION
+# Monolith retired (cutover 2026-06-27): this obsolete cutover-validation tool now
+# builds the monolith definition on demand from the off-prod backup. It requires
+# rc-lyric-rubric.json to be restored locally and will raise (fail-loud) without it.
+from app.services.agents.lec_rubric_builder import build_rubric_definition
 from app.services.lec_charge_composition import compose as compose_charge
 
-HERE = Path(__file__).resolve().parent
+HERE = Path(__file__).resolve().parent  # now app/rubric/_snapshots/
 LIVE_OVERLAY = (
-    HERE.parent / "services" / "agents" / "rc-lyric-live" / "rc-lyric-satire.md"
+    HERE.parent.parent / "services" / "agents" / "rc-lyric-live" / "rc-lyric-satire.md"
 )
 SATIRE_MAX_TOKENS = 8192
 
@@ -78,7 +81,7 @@ def _live_satire_prompt() -> str:
     _build_satire_prompt (rubric-def, preamble, satire tenets, '---', format)."""
     overlay = LIVE_OVERLAY.read_text(encoding="utf-8").strip() + "\n"
     return (
-        RUBRIC_DEFINITION
+        build_rubric_definition()
         + SATIRE_OVERLAY_PREAMBLE
         + overlay
         + "\n---\n"

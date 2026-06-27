@@ -1,3 +1,6 @@
 
 # orient.sh session output (local rubric cache)
 .orient/
+
+# Retired monolith rubric, kept off-prod as a local backup (cutover 2026-06-27)
+_monolith-backup/

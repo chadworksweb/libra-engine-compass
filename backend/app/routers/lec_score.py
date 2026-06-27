@@ -31,7 +31,9 @@ from app.lec_constants import (
 from app.lec_deps import require_api_key
 from app.services.agents.lec_calibrator import calibrate_song_async
 from app.services.agents.lec_compass_agent_rubric import CALIBRATION_FORMAT
-from app.services.agents.lec_rubric_builder import RUBRIC_DEFINITION, load_tenets
+# RUBRIC_DEFINITION / load_tenets (the retired monolith) are no longer imported:
+# the published rubric is composed (published_definition) and the tenet count comes
+# from the gospel (_tenet_count). See lec_rubric_builder for the cutover note.
 
 logger = logging.getLogger(__name__)
 
@@ -40,26 +42,20 @@ router = APIRouter(prefix="/api", tags=["compass"])
 
 @lru_cache(maxsize=1)
 def _composed_definition() -> str:
-    """The composed rubric-definition half (gospel + rc-lyric lens) -- the lyric
-    path's definition under the cutover. Static at runtime (the gospel + lens
-    files do not change while the process runs), so build it once. Mirrors
-    RUBRIC_DEFINITION being a module-level constant."""
+    """The composed rubric-definition half (gospel + rc-lyric lens) -- the live
+    instrument since the cutover. Static at runtime (the gospel + lens files do not
+    change while the process runs), so build it once and cache."""
     from app.rubric.lec_lens import compose, load_gospel, get_lens
     return compose(load_gospel(), get_lens("rc-lyric"))
 
 
 def published_definition() -> str:
-    """The rubric-definition half actually IN FORCE for the lyric path: the
-    composed gospel + rc-lyric when LEC_COMPOSE_RUBRIC is on, else the monolith.
-    Fail-closed -- any composition error serves the monolith, matching the
-    calibrator. This is what /api/rubric publishes and what rubric_version hashes,
-    so the published version tracks what actually scores."""
-    if settings.compose_rubric:
-        try:
-            return _composed_definition()
-        except Exception:
-            logger.exception("composed rubric publish failed; serving the monolith definition")
-    return RUBRIC_DEFINITION
+    """The rubric-definition half IN FORCE: the composed gospel + rc-lyric lens.
+    The monolith is retired (cutover 2026-06-27), so this is UNCONDITIONAL and
+    FAIL-LOUD -- a composition error propagates (there is no monolith fallback).
+    This is what /api/rubric publishes and what rubric_version hashes, so the
+    published version tracks what actually scores."""
+    return _composed_definition()
 
 
 def rubric_version() -> str:
@@ -109,7 +105,8 @@ def _tenet_count() -> int | None:
     """Best-effort count of numbered tenets across the five tiers. Returns None
     if the tenets JSON shape is not what we expect (never raises)."""
     try:
-        data = load_tenets()
+        from app.rubric.lec_lens import load_gospel
+        data = load_gospel()
         total = 0
         for tier in data.get("tiers", []):
             total += len(tier.get("criteria", []) or tier.get("tenets", []) or [])

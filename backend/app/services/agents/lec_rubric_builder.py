@@ -1,15 +1,15 @@
-"""Assembles the Compass Agent rubric from the canonical tenets JSON.
+"""Legacy monolith rubric assembler (RETIRED from the live path 2026-06-27).
 
-The tenets (five tiers of numbered criteria, the contamination modifier, and
-the procedural rules) are the public-facing, amendable portion of the rubric.
-They live in rc-lyric-live/rc-lyric-rubric.json as the single source of truth. The prose that
-surrounds them (how to read lyrics, start-at-zero discipline, love-song
-examples) is agent-only methodology and stays in this module as string
-constants.
+Historically this module assembled RUBRIC_DEFINITION at import from the monolith
+rc-lyric-live/rc-lyric-rubric.json. Since the Decoupling cutover the live scorer
+composes the gospel (le-baseline) + rc-lyric lens instead (see app.rubric.lec_lens
+/ lec_full_prompt), so the monolith is no longer the instrument and the file is
+kept off-prod as a backup.
 
-At import time this module assembles RUBRIC_DEFINITION — the exact string the
-Compass Agent receives as its system prompt. Byte-for-byte equivalent to the
-historical hardcoded rubric.
+What remains in use on the live path: `render_precedent_table` (reads the precedent
+JSON, which stays on prod). `build_rubric_definition` / `load_tenets` survive for
+offline tooling only and require the backup rc-lyric-rubric.json to be present;
+they raise (fail-loud) if it is absent. Nothing here is built at import anymore.
 """
 
 import json
@@ -218,4 +218,9 @@ def build_rubric_definition() -> str:
     )
 
 
-RUBRIC_DEFINITION = build_rubric_definition()
+# RUBRIC_DEFINITION (the monolith render of rc-lyric-rubric.json) is RETIRED as of
+# the 2026-06-27 cutover: the live scorer composes the gospel + rc-lyric lens
+# instead, so nothing reads rc-lyric-rubric.json at import anymore (the file is
+# kept off-prod as a backup). `build_rubric_definition` / `load_tenets` remain as
+# functions for offline tooling only; calling them requires the backup file to be
+# present locally and will raise (fail-loud) if it is not.

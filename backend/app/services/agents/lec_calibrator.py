@@ -264,25 +264,22 @@ async def calibrate_song_async(
     # builder was a stateless-scoring coupling and was removed entirely).
     examples = ""
 
-    system_prompt, user_prompt = build_calibration_prompt(
-        title, artist, lyrics=lyrics, examples=examples, artifact_type=artifact_type
-    )
-
-    # Decoupling cutover (Part 1), dark by default. When LEC_COMPOSE_RUBRIC is on,
-    # swap the lyric rubric-definition for the composed gospel + rc-lyric lens (the
-    # score-parity-validated path: compose_cutover_prompt == arm A of the
-    # 2026-06-18 dynamic run). Fail-closed: any composition error keeps the
-    # monolith prompt built above, so a bad lens can never blank a calibration.
-    # Lazy import so the flag-off path never touches app.rubric.
+    # Build the composed system prompt. The rubric-definition base is composed from
+    # the gospel + the artifact's lens INSIDE build_calibration_prompt now (the
+    # monolith is retired, cutover 2026-06-27); satire / inhabited-voice re-reads
+    # (lyric-only) swap in their overlay prompt below.
     #
-    # Satire (the universal modifier) is defined against compose, so a satire
-    # request composes the satire prompt regardless of the LEC_COMPOSE_RUBRIC flag
-    # (prod runs it on anyway); only the lyric path is wired. compose_satire_prompt
-    # is compose_cutover_prompt + the satire overlay spliced in.
-    if artifact_type == "lyric" and (settings.compose_rubric or satire or inhabited):
-        try:
+    # FAIL-LOUD: there is no monolith fallback anymore. Any composition error returns
+    # an explicit needs-human-review result rather than silently scoring on stale or
+    # partial law. compose_satire/inhabited are compose_cutover_prompt + their
+    # overlay spliced in.
+    try:
+        system_prompt, user_prompt = build_calibration_prompt(
+            title, artist, lyrics=lyrics, examples=examples, artifact_type=artifact_type
+        )
+        if artifact_type == "lyric" and (satire or inhabited):
             from app.rubric.lec_full_prompt import (
-                compose_cutover_prompt, compose_satire_prompt, compose_inhabited_prompt,
+                compose_satire_prompt, compose_inhabited_prompt,
             )
             from app.rubric.lec_lens import get_lens, load_gospel
             gospel = load_gospel()
@@ -293,13 +290,13 @@ async def calibrate_song_async(
             elif inhabited:
                 system_prompt = compose_inhabited_prompt(gospel, lens)
                 user_prompt = user_prompt + _INHABITED_USER_SUFFIX
-            else:
-                system_prompt = compose_cutover_prompt(gospel, lens)
-        except Exception:
-            logger.exception(
-                "composed rubric failed for '%s' by %s (satire=%s inhabited=%s); "
-                "using the monolith rubric", title, artist, satire, inhabited,
-            )
+    except Exception:
+        logger.exception(
+            "rubric composition failed for '%s' by %s (satire=%s inhabited=%s); "
+            "returning needs-human-review (no monolith fallback post-cutover)",
+            title, artist, satire, inhabited,
+        )
+        return _fallback_result(title, artist, "")
 
     read_max_tokens = _SATIRE_MAX_TOKENS if (satire or inhabited) else 3500
 
