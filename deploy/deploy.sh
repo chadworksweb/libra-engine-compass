@@ -19,9 +19,20 @@ REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 echo "==> Packaging committed tree (HEAD)"
 git -C "$REPO_ROOT" archive --format=tar.gz -o /tmp/lec-deploy.tgz HEAD
 
-echo "==> Shipping to $SERVER:$REMOTE_DIR (preserving .env + data volume)"
+echo "==> Shipping to $SERVER:$REMOTE_DIR (mirror with deletes; preserving .env + data volume)"
 scp -q /tmp/lec-deploy.tgz "$SERVER:/tmp/lec-deploy.tgz"
-ssh "$SERVER" "set -e; mkdir -p '$REMOTE_DIR' && tar xzf /tmp/lec-deploy.tgz -C '$REMOTE_DIR' && rm -f /tmp/lec-deploy.tgz"
+# Mirror the committed tree onto the server with rsync --delete so files DELETED
+# from the repo are also removed on prod (a plain `tar` extract-over only adds and
+# overwrites -- it NEVER deletes, so a removed file lingers in the build context and
+# gets re-baked into the image; that bit us with the retired monolith 2026-06-27).
+# Any file named .env (root or nested) is excluded so server-side secrets survive;
+# the lec-data docker volume lives outside this dir and is untouched.
+ssh "$SERVER" "set -e
+  STAGE=\$(mktemp -d)
+  tar xzf /tmp/lec-deploy.tgz -C \"\$STAGE\"
+  mkdir -p '$REMOTE_DIR'
+  rsync -a --delete --exclude='.env' \"\$STAGE\"/ '$REMOTE_DIR'/
+  rm -rf \"\$STAGE\" /tmp/lec-deploy.tgz"
 rm -f /tmp/lec-deploy.tgz
 
 echo "==> Building + starting"
