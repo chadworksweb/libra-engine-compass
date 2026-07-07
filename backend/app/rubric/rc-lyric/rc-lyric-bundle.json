@@ -1,5 +1,13 @@
 {
   "lens_version": "rc-0.1-part1-lyric",
+  "lens_changelog": [
+    {
+      "at": "2026-07-07",
+      "change": "remove",
+      "target": "rule_examples.R16",
+      "summary": "Removed the 'Don't Blame Me' canonical exemplar from R16 (artist-confirmed misread). It described the song as a breakup releasing blame for an ending that was no one's fault; the artist (Chad Lewine) confirmed the song is a 'don't shoot the messenger' truth-bearer stance, so the example described a song that does not exist. R16's rule core (baseline law) is unchanged; the 'Cashing Out' exemplar stands. Lens-owned change per Ruling 4 (named exemplars are lens-owned), so no constitution amendment; constitution pin stayed in sync. rubric_version 716339b3385f -> 069e4968a63c."
+    }
+  ],
   "pinned_baseline": "le-0.1-part1-cores",
   "note": "The lyric lens (Rising Compass's application), authored FRESH against the lens contract (lec_lens.Lens), treating the verbatim rc-lyric-text.json as reference only. It carries everything domain-specific keyed to gospel ids: the product identity opener, the work/speaker/text/audience glossary binding, the love-song topic ladder (method_examples.topic_ladder, injected after the start-at-zero kernel), the violet-note worked example, the per-rule canonical song exemplars spliced in where the gospel cores deferred them (R4/R5/R10/R11/R13), the full operative text for the two lyric-lens rules R1 and R12 (the gospel keeps only their thin universal sibling), the contamination and dogma worked examples, the music-bound summary-voice rules, and the verbatim-guard config. The bar is SCORE parity vs _snapshots/rubric-snapshot-2026-06-17, not byte parity. lens_version/pinned_baseline/note are metadata and are ignored by load_lens_bundle.",
 
