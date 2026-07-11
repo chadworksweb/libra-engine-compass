@@ -11,12 +11,13 @@ from pydantic_settings import BaseSettings
 
 class Settings(BaseSettings):
     # --- Anthropic (LEC's own workspace/key) ---
-    # The model MUST match RC's for scoring parity (claude-opus-4-6); LEC's
-    # difference from RC is the METER pricing (correct $5/$25 Opus), not the
-    # model. LEC's own key is a Phase 0/1 open item -- per-product cost + blast
-    # radius, the same principle as Lyric Transformer's key.
+    # LATEST Opus (per Chad 2026-07-11): the calibrator tracks the newest Opus
+    # rather than staying pinned to RC's historical model. This DELIBERATELY breaks
+    # the old score-parity pin (was claude-opus-4-6) and re-baselines scoring; bump
+    # this when a newer Opus ships (there is no "latest" alias in the API). LEC's
+    # difference from RC is the METER pricing (correct $5/$25 Opus), not the model.
     anthropic_api_key: str = ""
-    agent_model: str = "claude-opus-4-6"
+    agent_model: str = "claude-opus-4-8"
 
     # Calibrator v3 escalation gate. Defaults mirror RC (Opus everywhere, re-pass
     # off -> the gate only records triggers; no second model call).
