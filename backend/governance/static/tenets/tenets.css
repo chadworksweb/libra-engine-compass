@@ -111,11 +111,12 @@ body {
 }
 
 .preamble {
-  font-size: 0.89rem;
+  font-size: 0.98rem;
   line-height: 1.45;
   color: var(--tn-ink);
   margin: 0 auto;
-  text-align: left;
+  text-align: justify;
+  hyphens: auto;
   max-width: 520px;
 }
 
