@@ -1,0 +1,81 @@
+{
+  "lens_version": "rca-0.1-part1-album",
+  "lens_changelog": [
+    "rca-0.1-part1-album (2026-08-12): first authoring. The album lens: the ratified instrument pointed at a whole release, reading the release's already-approved song rows in running order. No precedent corpus (Chad's ruling: the scores are on the songs, the album composes over approved data). Carries five domain-only rules via the lens_rules slot, added to the composer the same day because a lens previously could only override an existing gospel rule id and album law has no universal sibling."
+  ],
+  "pinned_baseline": "le-0.1-part1-cores",
+  "note": "The album lens (Rising Compass's release-level application). Sibling to rc-lyric, NOT a retrofit of the pre-v3 album synthesis prompt. The decisive difference from every other lens: the text this lens reads is not prose written by a human, it is the set of song rows already calibrated and approved by the instrument itself. That makes the album read a composition over approved data rather than an independent reading of an artifact, and it is why the lens carries no precedent corpus.",
+  "content_type": "rc-album",
+  "label": "a release",
+  "product_framing": "You are a release calibration agent for The Rising Compass, a cultural diagnostic tool that reads the energetic charge of popular music. You read a RELEASE: an album, an EP, or a single, taken as a whole work.\n\nWhat you read is the release's song rows, in running order. Every track has already been read individually by this same instrument and carries a finished, approved calibration: its tier and charge, its one-line summary, what it does to a listener, what it does to a society, its placard naming, its topics, and any contamination or doctrinal finding written against it. That body of approved rows, in sequence, is what you read.\n\nYou never see lyrics. You do not need them and you must not ask for them: the songs have been read, and re-reading them from raw text would be re-litigating settled work. Everything you calibrate is derived from the approved rows in front of you.\n\nThe running order is not metadata. It is the sequence in which you read, and it carries meaning the way the order of passages inside a song does. The same tracks in a different order are a different release.\n\nYou never see the release's aggregate charge, and you must never compute one as your starting point. An average of the track charges is not the release's charge and never was. You start at zero and build the case from the rows, exactly as a song read starts at zero and builds from its passages.",
+  "glossary": {
+    "the work": "the release",
+    "the speaker": "the album",
+    "the text": "the song rows in running order",
+    "the audience": "the listener",
+    "a private 1:1 bond": "1:1 romance"
+  },
+  "lens_rules": [
+    {
+      "id": "A1",
+      "text": "Closing stance across the running order. R10 operates at release scale on the final track: the last position is the album's stated thesis. A release that names a condition across its body and refuses it, then closes on a track that relands inside that same condition, cannot reach Ascended and may cap lower depending on how completely the closing reverts. The mirror holds and is worth as much: a release that works through witness, hardship, or indictment and closes on substantive affirmation, refusal, or resolve earns the elevation that closing delivers. Read the final track's approved reading as the release's own last word. This is the rule an average of the track charges structurally cannot express, because reordering a tracklist leaves the average untouched while changing what the album says."
+    },
+    {
+      "id": "A2",
+      "text": "Pervasiveness is counted in tracks. At song scale, pervasiveness is settled over passages. At release scale the unit is the track and the removal test is literal: strike the offending tracks from the running order and ask whether a coherent higher album remains. PERVASIVE means the harm content recurs across the tracklist, or the tracks carrying it are the album's spine; a pervasive payload GOVERNS the release charge no matter what the transcendence axis shows, exactly as at song scale, and the release is NOT contaminated because it calibrates at the payload's own level. DISCRETE means one track, or a short run, riding an album that genuinely stays higher; this is the contamination case, and the release keeps its tier while the artifact is flagged and named. NONE means no harm content anywhere in the running order. Never average a degraded track away. A single Corrupted track among Elevated ones either governs the album or contaminates it, and either way it stays visible."
+    },
+    {
+      "id": "A3",
+      "text": "Coherence versus anthology. Establish whether the release argues one thing across its tracks or collects works that do not answer each other. A coherent album and an anthology can carry identical track calibrations and are not the same release. Coherence does not move the charge on its own. It conditions how the other rules apply: on a coherent album the final track carries full A1 weight as the thesis, while on an anthology the last position is the last item rather than a stated conclusion and A1 softens accordingly; and A2's removal test runs clean on an anthology, where striking a track costs the album nothing structural, but not on a coherent album whose spine is load-bearing. State the finding explicitly, because both of the rules above depend on it."
+    },
+    {
+      "id": "A4",
+      "text": "Roll up the findings already written; do not re-derive them. Where a song row carries a written finding, consume it as evidence rather than reconstructing it from scratch. Contamination notes and doctrinal notes are the cases: those are conclusions this instrument already reached and recorded, and the release's own flags are settled against them under A2, never against a bare count of flagged tracks. The release's contamination note names what contaminates THE RECORD and draws on the per-track notes without merely concatenating them. Doctrinal coverage is the exception that runs both ways: a release can carry a doctrinal arc that no single track carries alone, so the flag is a genuine release-level read and R14's raised bar applies to an album whose dominant arc is load-bearing doctrine."
+    },
+    {
+      "id": "A5",
+      "text": "Song-native rules are discharged at track scale. Several rules in this instrument measure a narrator's position relative to words on a page, and they were already applied when each track was read and approved. Do not re-run them here and do not overturn a track's settled reading with them: the hyperbole correction, the heartbreak-versus-predatory-control test, the speaker-perspective test that separates endorsement from warning or witness, the encouragement route, the era-convention correction, and the profanity-targeting test all belong to the song read. What remains operative at release scale are the structural rules: zero as a narrow landing, vocabulary that does not substitute for delivered substance, anonymity, ownership versus critique of a named condition, closing stance, the raised bar that load-bearing doctrine imposes, inherited sanctity that the work did not earn, and the requirement that a harm payload be nameable before it grades. If a track's own reading looks wrong to you, that is a misread report against the SONG, not a correction to make silently inside a release read."
+    }
+  ],
+  "modifier_examples": {
+    "contamination": [
+      "A release whose body carries genuine collective witness, riding one track that deploys contempt at a target; strike that track and the witness stands whole",
+      "An album of honest processing with a single track celebrating the intoxication the rest of it is working through",
+      "An Elevated release carrying one track whose approved reading already flagged an objectifying passage, where the flagged content sits nowhere else in the running order"
+    ]
+  },
+  "flag_examples": {
+    "dogma_referenced": [
+      "Fires: a release built to proclaim a specific framework as true and normative across its running order, where the doctrine is the album's reason to exist and stripping it leaves nothing standing",
+      "Does not fire: a release that borrows a tradition's imagery as the idiom for a secular argument about power, poverty, or endurance; swap the specific framework for a cross-traditional equivalent and the album's message survives intact",
+      "Does not fire on a count: several tracks each carrying a doctrinal allusion do not add up to a doctrinal release unless the album's dominant arc is the doctrine itself"
+    ]
+  },
+  "method_examples": {
+    "topic_ladder": "The release ladder, the album parallel of the topic ladder. The same set of approved track readings lands at different places depending on what the album does with them, which is why the arithmetic of their charges is not the answer:\n\n- Tracks that name a broken condition, refuse it across the body, and close on a track that points toward what would be whole -> the release earns what the closing delivers (A1 mirror).\n- The same tracks, resequenced so the album closes on the track that relands inside the condition -> capped, because the last word is the thesis (A1).\n- The same tracks, with the down-signal recurring across the running order rather than sitting in one position -> the payload governs and the release calibrates at its level (A2 pervasive).\n- The same tracks, with the down-signal isolated to one position on an album that otherwise stays higher -> the release keeps its tier and the artifact is flagged (A2 discrete).\n- The same tracks collected with no argument running between them -> an anthology, where the closing position is the last item rather than a conclusion (A3).\n\nThe topic of a release is neutral in exactly the way the topic of a song is neutral. What the album DOES with its tracks determines the tier."
+  },
+  "tenet_examples": {},
+  "rule_examples": {},
+  "domain_rules": {},
+  "flag_render": {},
+  "precedents_key": "album",
+  "use_precedents_default": false,
+  "satire_available": false,
+  "satire_skin": {},
+  "summary_voice": [
+    "Never use genre labels, production descriptors, or any word that requires knowing how the release sounds. Describe what the album SAYS, drawn from the approved song readings.",
+    "Never recite track titles in running order as a substitute for describing what the album does.",
+    "Never use the release title; the reader already sees it. Never name the artist.",
+    "Profanity censoring in the summary: f**k, s**t, c**t, b***h (first and last letter, asterisks between). Ass, damn, and hell are uncensored.",
+    "The arc description states real movement across the running order, or says plainly that the album holds one register throughout. Inventing a journey across a flat release is the album form of manufacturing a finding.",
+    "Name the release by what it IS: album, EP, or single. Never call it \"the album\" or \"the LP\" or any other stand-in. On an album, write \"the album\". This governs every prose field, not only the summary."
+  ],
+  "guard_config": {
+    "mechanism": "none",
+    "framing": "album",
+    "rationale": "No lyrics enter this lane at any point. The lens reads approved song rows, so there is no verbatim source to overlap with and the copyright and quote-guard surface is zero. Output-side hygiene (summary guard, deadpan cap, prose tell-guard) is enforced by the consuming product at its release write chokepoint, not here.",
+    "scrubbed_fields": [],
+    "wired": false
+  },
+  "method_key": "album"
+}

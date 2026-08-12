@@ -114,6 +114,14 @@ class Lens:
     #   "lens_example_after": "<slot>" gets this block injected after it (lyric:
     #   "topic_ladder" = the love-song ladder).
     method_examples: dict = field(default_factory=dict)
+    # lens_rules: domain-only rules that have NO universal sibling in the gospel,
+    #   rendered after the gospel rules in order. Each entry: {"id": "A1", "text": ...}.
+    #   `domain_rules` can only OVERRIDE an existing gospel rule id, so a lens whose
+    #   domain law has no gospel host (the album lens: pervasiveness counted in
+    #   tracks, coherence-vs-anthology) had nowhere to put it. Empty for every lens
+    #   that does not need it, so composition stays byte-identical for rc-lyric and
+    #   cc-essay. Added 2026-08-12 for the rc-album lens.
+    lens_rules: list = field(default_factory=list)
     # flag_render: optional id -> a fully rendered prompt block for a flag. Escape
     #   hatch for parity: when present, compose() emits it verbatim instead of
     #   composing gospel core + lens examples + instruction. Instrument-owned today;
@@ -124,6 +132,14 @@ class Lens:
     precedents_key: str = "lyric"      # artifact_type the precedent corpus loads under
                                        # (points at the live per-type corpus selector)
     use_precedents_default: bool = True
+    method_key: str = "lyric"          # which calibration-format skeleton the lens
+                                       # calibrates BY. "lyric" is the verbatim song
+                                       # method (seven song routes, mandatory precedent
+                                       # placement, precedent-relative vernier). A lens
+                                       # whose procedure differs in kind, not just in
+                                       # vocabulary, selects its own: rc-album -> "album".
+                                       # Defaults keep rc-lyric and cc-essay byte-identical.
+                                       # Added 2026-08-12 for the rc-album lens.
     satire_available: bool = False     # whether the lens offers a parallel satire re-read
     satire_skin: dict = field(default_factory=dict)    # the lens's satire SKIN: song-specific
                                        # worked examples keyed by le-satire tenet id (e.g. S8).
@@ -374,11 +390,29 @@ def _render_rules(gospel: dict, lens: Lens) -> str:
             # lens carries the full operative rule; gospel has only the thin sibling
             text = lens.domain_rules[rid].strip()
         else:
-            text = _apply_glossary(rule["core"], lens.glossary).strip()
+            # Strip the deferred-exemplar sentinel BEFORE binding the glossary.
+            # _apply_glossary is a plain str.replace with no word boundaries, so
+            # binding first rewrites "the work" INSIDE "the worked exemplar" and
+            # the sentinel stops matching: rc-lyric shipped "The lens supplies the
+            # songed exemplar." into the live prompt, cc-essay "the essayed
+            # exemplar." The parity check missed it because it only asserts the
+            # literal sentinel is absent, and a corrupted sentinel is also absent.
+            # Fixed 2026-08-12 while authoring rc-album.
+            core = rule["core"]
+            if LENS_EXEMPLAR_SENTINEL in core:
+                core = core.replace(LENS_EXEMPLAR_SENTINEL, "").strip()
+            text = _apply_glossary(core, lens.glossary).strip()
             example = lens.rule_examples.get(rid)
-            if LENS_EXEMPLAR_SENTINEL in text:
-                text = text.replace(LENS_EXEMPLAR_SENTINEL, "").strip()
             text = _attach(text, example)
+        parts.append(f"{rid}. {text}")
+    # Domain-only rules with no universal sibling, appended in lens order. Empty
+    # for lenses that do not carry any, so the composed text is unchanged.
+    for extra in lens.lens_rules:
+        rid = (extra.get("id") or "").strip()
+        text = _apply_glossary((extra.get("text") or "").strip(), lens.glossary)
+        if not rid or not text:
+            continue
+        parts.append("")
         parts.append(f"{rid}. {text}")
     return "\n".join(parts)
 

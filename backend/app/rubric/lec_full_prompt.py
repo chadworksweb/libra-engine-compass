@@ -87,6 +87,57 @@ def _render_summary_voice(lens: Lens) -> str:
     return universal + (("\n" + lens_lines) if lens_lines else "") + "\n"
 
 
+def _compose_album_format(lens: Lens) -> str:
+    """The album method half. Selected by lens.method_key == "album".
+
+    Differs from the song method in KIND, not vocabulary: no precedent placement
+    (Chad's ruling 2026-08-12, the release composes over approved song data), a
+    vernier re-anchored on the track rows instead of a precedent, and no
+    seven-route tree (every track already ran it; lens rule A5). The song method
+    is untouched, so lyric parity is unaffected.
+    """
+    from app.rubric.lec_album_format import (
+        ALBUM_CALIBRATION_FORMAT_PRE,
+        ALBUM_CALIBRATION_FORMAT_POST,
+    )
+    # SUMMARY_VOICE_RULES was treated as universal output hygiene, but it is not:
+    # it says "the song" throughout and names song-method steps (ROUTE, PRECEDENT
+    # PLACEMENT) that the album procedure does not have. MUSIC_SUMMARY_VOICE_MARKERS
+    # only lifts three lines, so the rest leaked song vocabulary into any non-song
+    # lens. Corrected here on the album path ONLY, leaving the verbatim song block
+    # untouched so lyric parity is unaffected.
+    sv = _render_summary_voice(lens)
+    sv = sv.replace(
+        "(DOMINANT ARC, ROUTE, TWO-AXIS READ, PRECEDENT PLACEMENT, tier defense)",
+        "(DOMINANT ARC, COHERENCE, TWO-AXIS READ, CENTER, tier defense)",
+    )
+    # The block is song-shaped throughout, not just in the three lifted lines.
+    for a, b in (
+        ("This song is about", "This release is about"),
+        ("the song's subject, stance, and what the lyrics actually say",
+         "the release's subject and stance, and what the track readings actually found"),
+        ("the song works", "the release works"),
+        ("the song IS", "the release IS"),
+        ("the song says", "the release says"),
+        ("the song succeeds", "the release succeeds"),
+        ("what the song is about", "what the release is about"),
+        ("description of the song", "description of the release"),
+        ("assess the song", "assess the release"),
+        ("what the song actually does on the page",
+         "what the release actually does across its running order"),
+        ("If the song operates on two mechanisms",
+         "If the release operates on two mechanisms"),
+        ("—", ","),   # the block's one non-ASCII char, no double-space artifact
+    ):
+        sv = sv.replace(a, b)
+    sv = sv.replace(" ,  ", ", ").replace(" , ", ", ")
+    return (
+        ALBUM_CALIBRATION_FORMAT_PRE
+        + ALBUM_CALIBRATION_FORMAT_POST
+        + sv
+    )
+
+
 def compose_calibration_format(lens: Lens) -> str:
     """The calibration-format half, lens-driven where it should be:
       - the precedent TABLE via lens.precedents_key,
@@ -100,6 +151,8 @@ def compose_calibration_format(lens: Lens) -> str:
     score-affecting sub-step that needs a dynamic re-validation pass, tracked
     separately. For rc-lyric the only difference from the live CALIBRATION_FORMAT
     is the summary-voice block (lens-distilled), which is prose-only."""
+    if lens.method_key == "album":
+        return _compose_album_format(lens)
     post_without_sv = CALIBRATION_FORMAT_POST.replace(SUMMARY_VOICE_RULES, "")
     return (
         CALIBRATION_FORMAT_PRE
