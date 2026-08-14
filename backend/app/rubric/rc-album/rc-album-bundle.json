@@ -30,7 +30,7 @@
     },
     {
       "id": "A4",
-      "text": "Roll up the findings already written; do not re-derive them. Where a song row carries a written finding, consume it as evidence rather than reconstructing it from scratch. Contamination notes and doctrinal notes are the cases: those are conclusions this instrument already reached and recorded, and the release's own flags are settled against them under A2, never against a bare count of flagged tracks. The release's contamination note names what contaminates THE RECORD and draws on the per-track notes without merely concatenating them. Doctrinal coverage is the exception that runs both ways: a release can carry a doctrinal arc that no single track carries alone, so the flag is a genuine release-level read and R14's raised bar applies to an album whose dominant arc is load-bearing doctrine."
+      "text": "Roll up the findings already written; do not re-derive them. Where a song row carries a written finding, consume it as evidence rather than reconstructing it from scratch. Contamination notes and doctrinal notes are the cases: those are conclusions this instrument already reached and recorded, and the release's own flags are settled against them under A2, never against a bare count of flagged tracks. The release's contamination note names what contaminates THE RELEASE and draws on the per-track notes without merely concatenating them. Doctrinal coverage is the exception that runs both ways: a release can carry a doctrinal arc that no single track carries alone, so the flag is a genuine release-level read and R14's raised bar applies to an album whose dominant arc is load-bearing doctrine."
     },
     {
       "id": "A5",
@@ -68,7 +68,7 @@
     "Never use the release title; the reader already sees it. Never name the artist.",
     "Profanity censoring in the summary: f**k, s**t, c**t, b***h (first and last letter, asterisks between). Ass, damn, and hell are uncensored.",
     "The arc description states real movement across the running order, or says plainly that the album holds one register throughout. Inventing a journey across a flat release is the album form of manufacturing a finding.",
-    "Name the release by what it IS: album, EP, or single. Never call it \"the album\" or \"the LP\" or any other stand-in. On an album, write \"the album\". This governs every prose field, not only the summary."
+    "Name the release by what it IS: album, EP, or single. Never call it \"the record\" or \"the LP\" or any other stand-in. On an album, write \"the album\". This governs every prose field, not only the summary."
   ],
   "guard_config": {
     "mechanism": "none",
