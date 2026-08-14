@@ -40,31 +40,51 @@ logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/api", tags=["compass"])
 
 
-@lru_cache(maxsize=1)
-def _composed_definition() -> str:
-    """The composed rubric-definition half (gospel + rc-lyric lens) -- the live
+# The lens /api/rubric publishes when the caller names none. RC's terminal
+# read-gate pins the version of THIS composition, so the default must never
+# move as a side effect of another lens being published.
+PUBLISHED_LENS = "rc-lyric"
+
+
+@lru_cache(maxsize=4)
+def _composed_definition(lens_key: str = PUBLISHED_LENS) -> str:
+    """The composed rubric-definition half (gospel + a lens) -- the live
     instrument since the cutover. Static at runtime (the gospel + lens files do not
-    change while the process runs), so build it once and cache."""
+    change while the process runs), so build it once per lens and cache."""
     from app.rubric.lec_lens import compose, load_gospel, get_lens
-    return compose(load_gospel(), get_lens("rc-lyric"))
+    return compose(load_gospel(), get_lens(lens_key, fallback=lens_key))
 
 
-def published_definition() -> str:
-    """The rubric-definition half IN FORCE: the composed gospel + rc-lyric lens.
-    The monolith is retired (cutover 2026-06-27), so this is UNCONDITIONAL and
-    FAIL-LOUD -- a composition error propagates (there is no monolith fallback).
-    This is what /api/rubric publishes and what rubric_version hashes, so the
-    published version tracks what actually scores."""
-    return _composed_definition()
+def published_definition(lens_key: str = PUBLISHED_LENS) -> str:
+    """The rubric-definition half IN FORCE for a lens: the composed gospel + that
+    lens. Defaults to rc-lyric, the song instrument. The monolith is retired
+    (cutover 2026-06-27), so this is UNCONDITIONAL and FAIL-LOUD -- a composition
+    error propagates (there is no monolith fallback), and an unknown lens raises
+    rather than falling back to the song lens. This is what /api/rubric publishes
+    and what rubric_version hashes, so the published version tracks what actually
+    scores."""
+    return _composed_definition(lens_key)
 
 
-def rubric_version() -> str:
-    """Stable short version derived from the in-force rubric definition. Changes
-    whenever the rubric text changes (including the monolith <-> composed swap),
-    so consumers can cache + detect staleness. There is no RUBRIC_VERSION
-    constant; off the flag it is rc-lyric-live/rc-lyric-rubric.json, on the flag
-    it is the composed gospel + rc-lyric definition."""
-    return hashlib.sha256(published_definition().encode("utf-8")).hexdigest()[:12]
+def _calibration_format(lens_key: str = PUBLISHED_LENS) -> str:
+    """The calibration METHOD half for a lens. The default lens serves the live
+    CALIBRATION_FORMAT constant verbatim, so the published song format stays
+    byte-identical to what the calibrator sends. Any other lens composes its own,
+    which is how the album lens's method half (a different procedure, not just a
+    different vocabulary -- see Lens.method_key) reaches an operator at all."""
+    if lens_key == PUBLISHED_LENS:
+        return CALIBRATION_FORMAT
+    from app.rubric.lec_full_prompt import compose_calibration_format
+    from app.rubric.lec_lens import get_lens
+    return compose_calibration_format(get_lens(lens_key, fallback=lens_key))
+
+
+def rubric_version(lens_key: str = PUBLISHED_LENS) -> str:
+    """Stable short version derived from a lens's in-force rubric definition.
+    Changes whenever that rubric text changes, so consumers can cache + detect
+    staleness. Each lens versions independently: publishing the album instrument
+    cannot move the song version RC's read-gate pins."""
+    return hashlib.sha256(published_definition(lens_key).encode("utf-8")).hexdigest()[:12]
 
 
 # The constitution version this instrument is BUILT + verified against. The
@@ -145,15 +165,29 @@ class ScoreIn(BaseModel):
 
 
 @router.get("/rubric")
-async def get_rubric(_: None = Depends(require_api_key)):
+async def get_rubric(lens: str | None = None, _: None = Depends(require_api_key)):
     """The current published rubric. Stateless, no model call -- just serializes
-    the in-force definition (composed gospel + rc-lyric when the cutover flag is
-    on, else the monolith) + version + tier table. Consumers cache this and fall
-    back to their last good copy on failure."""
+    the in-force definition (composed gospel + the lens) + version + tier table.
+    Consumers cache this and fall back to their last good copy on failure.
+
+    `lens` names which instrument to publish, defaulting to rc-lyric. The album
+    instrument (`?lens=rc-album`) is published on the same endpoint so an operator
+    read-gate file can be a real pull instead of a local compose -- which is what
+    LEC-ALBUM-RUBRIC-LIVE.md was, its header saying so in as many words. Each lens
+    hashes independently, so the default response is unchanged by any of this."""
+    lens_key = (lens or PUBLISHED_LENS).strip()
+    try:
+        definition = published_definition(lens_key)
+    except (KeyError, FileNotFoundError):
+        raise HTTPException(
+            status_code=422,
+            detail=f"Unknown lens {lens_key!r}.",
+        )
     return {
-        "version": rubric_version(),
+        "version": rubric_version(lens_key),
+        "lens": lens_key,
         "constitution": constitution_pin(),
-        "rubric_text": published_definition(),
+        "rubric_text": definition,
         # The calibration METHOD half (anonymous read -> visceral -> route tree ->
         # two-axis -> precedent placement + table -> vernier -> contamination /
         # summary checks -> verdict -> reconciliation -> JSON schema -> charge scale
@@ -163,7 +197,7 @@ async def get_rubric(_: None = Depends(require_api_key)):
         # field so it does NOT enter rubric_version's hash (prose-only, no score
         # impact) -- consumers that cache on version still pick up the latest format
         # on their next fetch.
-        "calibration_format": CALIBRATION_FORMAT,
+        "calibration_format": _calibration_format(lens_key),
         "tenet_count": _tenet_count(),
         "tiers": [
             {

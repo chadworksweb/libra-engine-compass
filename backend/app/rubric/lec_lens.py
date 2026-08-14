@@ -158,6 +158,23 @@ LENS_REGISTRY: dict = {}
 _LENS_FIELDS = {f.name for f in fields(Lens)}
 DEFAULT_LENS = "rc-lyric"
 
+# Which lens an /api/score artifact_type is read BY. Only types that need a lens
+# other than the default appear here; everything else resolves through
+# `get_lens`'s fallback to rc-lyric, which is the existing behavior for every
+# type LEC has ever scored (a poem and an essay share the song lens until their
+# own is authored).
+#
+# This map exists because that fallback is silent, and silence is the wrong
+# answer for an album. `get_lens("album")` finds no bundle and quietly returns
+# rc-lyric, so an album would be read by the SONG lens -- seven song routes,
+# mandatory precedent placement, lyric vocabulary -- and produce a plausible,
+# wrong reading with nothing in the response to say so. A type listed here is
+# resolved FAIL-LOUD by `get_lens_for_artifact`: its declared lens or an error,
+# never a different lens.
+LENS_FOR_ARTIFACT = {
+    "album": "rc-album",
+}
+
 
 def register_lens(lens: Lens) -> None:
     """Register a lens under its content_type. Re-registering replaces it."""
@@ -179,6 +196,21 @@ def get_lens(content_type: str, *, fallback: str = DEFAULT_LENS) -> Lens:
     raise KeyError(
         f"No lens for content_type {content_type!r} and no {fallback!r} fallback bundle"
     )
+
+
+def get_lens_for_artifact(artifact_type: str) -> Lens:
+    """Resolve the lens an /api/score artifact_type is read by.
+
+    A type in LENS_FOR_ARTIFACT gets its declared lens with NO cross-lens
+    fallback: if that bundle cannot load, this raises rather than handing back
+    the song lens. An unlisted type keeps the historical behavior exactly
+    (`get_lens(artifact_type)`, falling back to rc-lyric), so lyric, poem,
+    essay, script, message, email and article compose byte-identically to
+    before."""
+    declared = LENS_FOR_ARTIFACT.get(artifact_type)
+    if declared is None:
+        return get_lens(artifact_type)
+    return get_lens(declared, fallback=declared)
 
 
 def load_lens_bundle(content_type: str) -> Lens:

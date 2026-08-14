@@ -183,8 +183,20 @@ def compose_cutover_prompt(gospel: dict, lens: Lens) -> str:
 
     `compose_full_prompt` (with the lens-sourced summary-voice, and later the
     route lift) is for the multi-lens future and is NOT yet score-validated; do
-    not point the live calibrator at it until those lifts are re-validated."""
+    not point the live calibrator at it until those lifts are re-validated.
+
+    A lens whose method differs in KIND takes its own format half. The verbatim
+    method below is the SONG procedure -- seven song routes, mandatory precedent
+    placement, precedent-relative vernier -- and there is no verbatim album
+    method for it to be faithful to: the album procedure exists only as
+    _compose_album_format. Falling through would compose the album LAW (A1-A5,
+    the release vocabulary) onto the SONG method and ask for a `route` the album
+    JSON contract does not contain, which is the silent-wrong-instrument failure
+    LENS_FOR_ARTIFACT prevents one layer up. The parity guarantee is unaffected:
+    rc-lyric (method_key "lyric") still takes the verbatim path byte for byte."""
     rubric_def = compose(gospel, lens)
+    if lens.method_key != "lyric":
+        return rubric_def + "\n" + compose_calibration_format(lens)
     verbatim_format = (
         CALIBRATION_FORMAT_PRE
         + render_precedent_table(lens.precedents_key)

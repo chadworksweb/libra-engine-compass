@@ -83,6 +83,7 @@ async def _read_v3(
     artist: str,
     target_year: int | None,
     max_tokens: int = 3500,
+    lane: str = "lyric",
 ) -> dict | None:
     """Run ONE calibration read at `model`: call, split reasoning from JSON,
     run the output guards, parse, and validate into v3 components -- with one
@@ -163,7 +164,8 @@ async def _read_v3(
             )
         if parsed is not None:
             try:
-                components = validate_components(parsed)
+                # The album lane emits `coherence` where a song emits `route`.
+                components = validate_components(parsed, lane=lane)
             except CompositionError as exc:
                 parse_retries += 1
                 problems.append(f"JSON failed component validation ({exc})")
@@ -304,10 +306,14 @@ async def calibrate_song_async(
     # server composes the charge and derives the tier (charge_composition).
     if progress_cb:
         progress_cb("calibrating")
+    # The composition lane follows the artifact: an album emits `coherence` and
+    # no `route`, so it validates under the album lane. Every other type is a
+    # song-shaped read.
+    lane = "album" if artifact_type == "album" else "lyric"
     read = await _read_v3(
         client, AGENT_MODEL, system_prompt, user_prompt,
         title=title, artist=artist, target_year=target_year,
-        max_tokens=read_max_tokens,
+        max_tokens=read_max_tokens, lane=lane,
     )
     if read is None:
         # Output never validated, even after the corrective retry. Explicit
@@ -338,7 +344,7 @@ async def calibrate_song_async(
         repass = await _read_v3(
             client, escalation_model, system_prompt, user_prompt,
             title=title, artist=artist, target_year=target_year,
-            max_tokens=read_max_tokens,
+            max_tokens=read_max_tokens, lane=lane,
         )
         if repass is not None:
             first_pass = {

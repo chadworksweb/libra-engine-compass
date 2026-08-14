@@ -31,5 +31,10 @@ ARTIFACT_TYPE_LABELS = {
     "message": "message",
     "email": "email",
     "article": "article",
+    # A release read as one work. Unlike every other type, its text is not prose
+    # the lens interprets: it is the artifact's own approved song ROWS in running
+    # order. It is also the only type that does NOT read by the song lens -- see
+    # LENS_FOR_ARTIFACT in app/rubric/lec_lens.py.
+    "album": "album",
 }
 ARTIFACT_TYPES = frozenset(ARTIFACT_TYPE_LABELS)

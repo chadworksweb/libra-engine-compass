@@ -158,8 +158,12 @@ def build_calibration_prompt(
     # A composition error propagates: the calibrator turns it into an explicit
     # needs-human-review result (fail-loud), never a silent monolith fallback.
     from app.rubric.lec_full_prompt import compose_cutover_prompt
-    from app.rubric.lec_lens import get_lens, load_gospel
-    system_prompt = compose_cutover_prompt(load_gospel(), get_lens(artifact_type))
+    from app.rubric.lec_lens import get_lens_for_artifact, load_gospel
+    # get_lens_for_artifact, NOT get_lens: a type with its own declared lens
+    # (album -> rc-album) resolves fail-loud, because get_lens's fallback would
+    # hand an album the SONG lens without saying so. Unlisted types behave
+    # exactly as before.
+    system_prompt = compose_cutover_prompt(load_gospel(), get_lens_for_artifact(artifact_type))
     # `examples` is retained for signature compat but unused: few-shot is disabled
     # (the calibrator always passes "") and the composed prompt carries no slot.
 
@@ -169,6 +173,19 @@ def build_calibration_prompt(
         user_parts = [f'Calibrate this song: "{song_title}" by {song_artist}']
         if lyrics:
             user_parts.append(f"\nLyrics:\n{lyrics}")
+    elif artifact_type == "album":
+        # The album's "text" is not prose to interpret -- it is the release's own
+        # approved song rows in running order, which the lens reads as the work.
+        # Saying so here keeps the frame honest; the running order is
+        # load-bearing, so the rows arrive in sequence and are read in sequence.
+        title_part = f': "{song_title}"' if song_title else ""
+        by_part = f" by {song_artist}" if song_artist else ""
+        user_parts = [
+            f"Calibrate this release{title_part}{by_part}, taken as one whole work."
+        ]
+        if lyrics:
+            user_parts.append(
+                "\nIts song rows, in running order:\n" + lyrics)
     else:
         label = ARTIFACT_TYPE_LABELS.get(artifact_type, "text")
         title_part = f' titled "{song_title}"' if song_title else ""
