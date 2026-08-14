@@ -12,6 +12,48 @@ from app.lec_constants import ARTIFACT_TYPE_LABELS
 from app.services.agents.lec_rubric_builder import render_precedent_table
 
 
+# ============================== QUARANTINED ==============================
+# THIS IS THE PRE-RETUNE BAN-WALL. It is still LIVE in the composed prompt for
+# every song and album summary, and it should not be treated as the standard.
+#
+# The 2026-07-09 editorial voice retune (RC-VOICE-RETUNE-STANDARD.md, now
+# archived) named THREE surfaces in scope: the two server prose prompts AND
+# "the terminal-supplied prose (charge_summary, editorial, album synthesis)".
+# Its stated rationale, verbatim: "the old prompts were long negative 'never'
+# lists. Research and practice both say that fails: a negative instruction is a
+# soft constraint against a hard training prior, so banning one phrase just
+# pushes the model to the next high-probability construction." The replacement
+# was to be a short POSITIVE spec + gold exemplars carried in the prompt + a
+# code-side validator.
+#
+# That retune shipped on 2026-07-09/10 (RC d99511d, 870b3c3) and rewrote
+# listener_effects_prose.py and societal_effects_prose.py, which RC owns. This
+# constant had already moved to LEC on 2026-06-19 (9fbef41, a RENAME pass), and
+# RC was stripped of rubric code on 2026-06-21. So the retune stopped at the
+# Decoupling boundary and never reached the surface it explicitly scoped.
+#
+# The content below has NEVER been edited -- the only commit touching it is that
+# rename. It is 12 bullets and ~22 prohibitions with ZERO exemplars and no named
+# register, which is not the shape the retune settled on.
+#
+# WHAT THIS IS NOT EVIDENCE OF (corrected 2026-08-14). This block was first
+# flagged while diagnosing a weak album summary, with the claim that the missing
+# retune caused it. That claim is WRONG and the corpus disproves it: releases
+# 1349 and 1351 were read under exactly this block and both produced summaries
+# Chad accepts, 1351's being the current bar. A stale spec and a weak output
+# were correlated in one instance and I attributed cause. The drift below is
+# real and worth recording; it is not a standing explanation for bad prose, and
+# it should not be cited as one.
+#
+# Left in place deliberately. Replacing it is an editorial call (the original
+# retune ran as a line-by-line rejection loop with Chad) and there is now no
+# evidence it is urgent. Sibling in the same state: rising-compass
+# backend/app/services/album_synthesis.py :: ALBUM_VOICE.
+#
+# NOTE: this block renders into the METHOD half only, which is NOT hashed into
+# rubric_version -- so it can be replaced without moving the version consumers
+# pin against.
+# =========================================================================
 SUMMARY_VOICE_RULES = """
 ## charge_summary Voice
 
