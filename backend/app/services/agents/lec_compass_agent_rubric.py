@@ -12,9 +12,28 @@ from app.lec_constants import ARTIFACT_TYPE_LABELS
 from app.services.agents.lec_rubric_builder import render_precedent_table
 
 
-# ============================== QUARANTINED ==============================
-# THIS IS THE PRE-RETUNE BAN-WALL. It is still LIVE in the composed prompt for
-# every song and album summary, and it should not be treated as the standard.
+# ================= LIVE AND LOAD-BEARING -- READ BEFORE EDITING =================
+# THIS IS THE UNIVERSAL SUMMARY-VOICE BASE. It was CARVED, not retired, and it
+# is in the composed prompt for every song and album summary right now.
+#
+# HOW THE CARVE WORKS (rubric/lec_full_prompt.py). `_render_summary_voice(lens)`
+# strips the three music-specific lines named in `MUSIC_SUMMARY_VOICE_MARKERS`
+# -- those moved to `lens.summary_voice`, where each lens states its own domain
+# rules -- and appends the lens's lines to the universal remainder below.
+# Keeping that remainder in one place is the DESIGN. A previous marker here
+# called this orphaned code awaiting replacement; that was wrong in the exact
+# opposite direction, and this header replaces it.
+#
+# IT CANNOT BE DELETED TODAY, whatever its text drift. It is embedded in
+# `CALIBRATION_FORMAT_POST`, which `compose_cutover_prompt` uses VERBATIM, and
+# that is the LIVE SONG PATH. Removing it breaks every song calibration.
+# Retiring it takes two steps in order: (1) move the universal lines into the
+# baseline -- `le-format.json` already holds a tokenized version -- then (2)
+# repoint the live song path off `compose_cutover_prompt` onto the composed
+# format. Step 2 has never been score-validated, which is exactly why the live
+# prompt still carries the verbatim block. Gated work, not a backlog item.
+#
+# WHAT IS ACTUALLY WRONG WITH IT is only the TEXT, and only mildly:
 #
 # The 2026-07-09 editorial voice retune (RC-VOICE-RETUNE-STANDARD.md, now
 # archived) named THREE surfaces in scope: the two server prose prompts AND
@@ -45,10 +64,16 @@ from app.services.agents.lec_rubric_builder import render_precedent_table
 # real and worth recording; it is not a standing explanation for bad prose, and
 # it should not be cited as one.
 #
-# Left in place deliberately. Replacing it is an editorial call (the original
-# retune ran as a line-by-line rejection loop with Chad) and there is now no
-# evidence it is urgent. Sibling in the same state: rising-compass
-# backend/app/services/album_synthesis.py :: ALBUM_VOICE.
+# Left in place deliberately. Retuning the text is an editorial call (the
+# original retune ran as a line-by-line rejection loop with Chad), it is gated
+# behind the format-half lift above, and there is no evidence it is urgent.
+#
+# NOT the same case as rising-compass backend/app/services/album_synthesis.py ::
+# ALBUM_VOICE, which the 2026-08-14 note paired with this one. That constant IS
+# superseded -- the rc-album lens replaces it, and Chad ruled on 2026-08-17 that
+# the public Album Charger gets rebuilt by adapting the terminal v3 calibrator
+# once it is approved. This one is not going anywhere; it is the base both
+# lenses render from.
 #
 # NOTE: this block renders into the METHOD half only, which is NOT hashed into
 # rubric_version -- so it can be replaced without moving the version consumers
