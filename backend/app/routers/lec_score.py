@@ -162,6 +162,32 @@ class ScoreIn(BaseModel):
                     "an in-lyric turn. Composed-only + lyric-only; rejected (422) "
                     "otherwise. Mutually exclusive with satire.",
     )
+    # THE ONLY TWO FIELDS HERE CARRYING A STRANGER'S WORDS. Everything else on
+    # this model is written by the consumer or is the work itself; these two
+    # originate with an anonymous reader of a published instrument and land in
+    # the prompt. LEC caps them itself rather than trusting each consumer to have
+    # done it, because LEC is the shared instrument and RC is only one of the
+    # clients holding a key. A cap is not a substitute for the consumer's guard
+    # (see contest_note) -- it is the floor underneath it.
+    contest_directs: str | None = Field(
+        default=None,
+        max_length=240,
+        description="a CONTESTED re-read: the question a reader's objection puts "
+                    "to the text (the consumer owns the axis vocabulary; LEC "
+                    "takes only the question). Supplying it re-runs the standard "
+                    "rubric with the objection as a place to look and the prior "
+                    "verdict withheld. Lyric-only; mutually exclusive with satire "
+                    "and inhabited. Capped short: in practice it is one sentence "
+                    "drawn from a closed set, never free prose.",
+    )
+    contest_note: str | None = Field(
+        default=None,
+        max_length=400,
+        description="the reader's pointer at the text, already guard-checked by "
+                    "the consumer for tier language. Ignored without "
+                    "contest_directs. Capped at 400 to match the bound RC's own "
+                    "contest guard enforces before it ever gets here.",
+    )
 
 
 @router.get("/rubric")
@@ -258,6 +284,22 @@ async def post_score(body: ScoreIn, _: None = Depends(require_api_key)):
                 detail="inhabited-voice re-read is available only for type 'lyric'.",
             )
 
+    if body.contest_directs:
+        # A contest is a third re-read and takes the same one-at-a-time rule the
+        # other two take. It is lyric-only for the same reason they are: the
+        # composed scorer is the lyric path.
+        if body.satire or body.inhabited:
+            raise HTTPException(
+                status_code=422,
+                detail="contest is mutually exclusive with satire and inhabited; "
+                       "pick one re-read.",
+            )
+        if artifact_type != "lyric":
+            raise HTTPException(
+                status_code=422,
+                detail="a contested re-read is available only for type 'lyric'.",
+            )
+
     calibration = await calibrate_song_async(
         body.title or "",
         body.artist or "",
@@ -267,6 +309,8 @@ async def post_score(body: ScoreIn, _: None = Depends(require_api_key)):
         artifact_type=artifact_type,
         satire=body.satire,
         inhabited=body.inhabited,
+        contest_directs=body.contest_directs,
+        contest_note=body.contest_note,
     )
 
     color = calibration.get("rubric_color")
@@ -286,6 +330,8 @@ async def post_score(body: ScoreIn, _: None = Depends(require_api_key)):
         "type": artifact_type,
         "satire": body.satire,  # echo: this read applied the satire modifier
         "inhabited": body.inhabited,  # echo: this read applied the inhabited-voice lens
+        # echo: this read was a contested re-read (bool, never the reader's text)
+        "contested": bool(body.contest_directs),
         "intent_source": intent_source,
         "tier": COLOR_LABELS[color].lower(),
         "color_key": color,  # consumer maps to its OWN palette; LEC hex != LT/charger hex

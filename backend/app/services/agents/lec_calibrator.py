@@ -72,6 +72,36 @@ _INHABITED_USER_SUFFIX = (
     "no turn in the words, return the literal calibration unchanged."
 )
 
+# Appended for a CONTESTED re-read: a reader of the published instrument says an
+# earlier read of this same text missed something, and points at a line.
+#
+# This one differs from satire and inhabited in kind, and the wording is the
+# guard. Those two are reading MODES the rubric defines and the model derives
+# for itself. A contest carries text written by a stranger, so the tail does
+# three things deliberately:
+#
+#   - it supplies the reader's POINTER and nothing else. RC's contest_guard has
+#     already hard-failed any note carrying a tier, a colour, or a directional
+#     demand, so no verdict reaches this string.
+#   - it never states the earlier tier. Naming it would anchor the re-read to a
+#     number and turn a re-derivation into a negotiation against it.
+#   - it says plainly that the objection may be wrong. A contest that cannot
+#     come back unchanged is not a re-read, it is a request.
+#
+# The axis is a closed set (RC owns the vocabulary); `directs` is the question
+# that axis puts to the text, not a claim about the answer.
+_CONTEST_USER_SUFFIX = (
+    "\n\nA reader of an earlier calibration of this same text says the read "
+    "missed something, and points at the work itself.\n\n"
+    "What they say was missed: {directs}\n"
+    "What they point at: {note}\n\n"
+    "Read the text again from the beginning against the full rubric. Address "
+    "what they point at explicitly and say what it does in the work. Their "
+    "objection is a place to look, not a finding: if the text does not support "
+    "it, say so and calibrate the work as it reads. The earlier calibration's "
+    "tier is deliberately withheld from you -- derive this one from the text."
+)
+
 
 async def _read_v3(
     client: AsyncAnthropic,
@@ -229,6 +259,8 @@ async def calibrate_song_async(
     artifact_type: str = "lyric",
     satire: bool = False,
     inhabited: bool = False,
+    contest_directs: str | None = None,
+    contest_note: str | None = None,
 ) -> dict:
     """The scoring path -- LEC's whole job. Read an artifact against the rubric
     and return the charge package (tier, charge_value, contamination, the v3
@@ -292,6 +324,17 @@ async def calibrate_song_async(
             elif inhabited:
                 system_prompt = compose_inhabited_prompt(gospel, lens)
                 user_prompt = user_prompt + _INHABITED_USER_SUFFIX
+        # A contest composes against the STANDARD rubric and adds only the
+        # per-call tail. It has no gospel modifier of its own yet: authoring one
+        # (le-baseline/le-contest.json, with its parity harness) is a governance
+        # act on the published definition, and merging it would move
+        # rubric_version. Until that is reviewed, this is the honest version of
+        # the same instrument -- the full rubric, re-run, with the reader's
+        # pointer supplied and the prior verdict withheld.
+        elif artifact_type == "lyric" and contest_directs:
+            user_prompt = user_prompt + _CONTEST_USER_SUFFIX.format(
+                directs=contest_directs, note=(contest_note or "").strip(),
+            )
     except Exception:
         logger.exception(
             "rubric composition failed for '%s' by %s (satire=%s inhabited=%s); "
@@ -300,7 +343,13 @@ async def calibrate_song_async(
         )
         return _fallback_result(title, artist, "")
 
-    read_max_tokens = _SATIRE_MAX_TOKENS if (satire or inhabited) else 3500
+    # A contest takes the wider re-read budget too. Its tail asks for work ON TOP
+    # of a standard read -- address what the reader points at explicitly and say
+    # what it does in the work -- and a re-read that runs out of room mid-argument
+    # is a failed one. The whole premise of the lane is that the second look is
+    # more considered than the first, which it cannot be on a thinner budget.
+    _wide = satire or inhabited or bool(contest_directs)
+    read_max_tokens = _SATIRE_MAX_TOKENS if _wide else 3500
 
     # First pass at the default model. The model emits components only; the
     # server composes the charge and derives the tier (charge_composition).
